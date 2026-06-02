@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PadelConnect vous aide à trouver des partenaires compatibles, réserver un terrain en quelques secondes et profiter d’un jeu fluide, sans prise de tête.">
+    <meta name="description"
+        content="PadelConnect vous aide à trouver des partenaires compatibles, réserver un terrain en quelques secondes et profiter d'un jeu fluide, sans prise de tête.">
     <title>PadelConnect – Jouez au padel quand vous voulez</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="./Images/favicon.ico" type="image/x-icon">
@@ -14,13 +16,12 @@
     <!-- NAVBAR -->
     <header class="navbar">
         <div class="nav-left">
-            <img src="logo.png" alt="Logo PadelConnect" class="logo">
+            <img src="./Images/logoW.png" alt="Logo PadelConnect" class="logo">
             <h1>PadelConnect</h1>
         </div>
-
         <div class="nav-right">
-            <a href="#">Se connecter</a>
-            <a href="#" class="btn-primary">S’inscrire</a>
+            <a href="#">Se connecter /</a>
+            <a href="#"> S'inscrire</a>
         </div>
     </header>
 
@@ -29,14 +30,14 @@
     <section class="hero">
         <div class="hero-text">
             <h2>Jouez au padel quand vous voulez,<br> avec qui vous voulez</h2>
-            <p>PadelConnect vous aide à trouver des partenaires compatibles, réserver un terrain en quelques secondes et profiter d’un jeu fluide, sans prise de tête.</p>
+            <p>PadelConnect vous aide à trouver des partenaires compatibles, réserver un terrain en quelques secondes et
+                profiter d'un jeu fluide, sans prise de tête.</p>
+            <div class="hero-img">
+                <img src="./Images/padelraquette.png" alt="Padel raquette">
+            </div>
 
-            <a href="#" class="btn-primary hero-btn">S’inscrire gratuitement</a>
-            <p class="micro-text">Aucun engagement – Disponible partout en France</p>
-        </div>
-
-        <div class="hero-img">
-            <img src="hero.jpg" alt="Padel terrain">
+            <a href="#" class="btn-primary hero-btn">S'inscrire gratuitement</a>
+            <p class="micro-text">Aucun engagement<br>Disponible partout en France</p>
         </div>
     </section>
 
@@ -45,30 +46,39 @@
     <section class="steps">
         <h3>Comment ça marche</h3>
 
-        <div class="steps-grid">
+        <!-- ⚠️ Ajout du wrapper .steps-body pour le layout 2 colonnes -->
+        <div class="steps-body">
+            <div class="steps-grid">
 
-            <div class="step-card">
-                <img src="icon-match.png" class="icon">
-                <h4>Matcher</h4>
-                <p>Trouvez des partenaires compatibles</p>
+                <div class="step-card">
+                    <img src="./Images/matcher.png" class="icon" alt="">
+                    <div>
+                        <h4>Matcher</h4>
+                        <p>Trouvez des partenaires compatibles</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <img src="./Images/calendar.png" class="icon" alt="">
+                    <div>
+                        <h4>Réserver</h4>
+                        <p>Réservez un terrain en quelques secondes</p>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <img src="./Images/smile.png" class="icon" alt="">
+                    <div>
+                        <h4>S'amuser</h4>
+                        <p>Profitez d'un match fluide, équilibré et sans prise de tête</p>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="step-card">
-                <img src="icon-reserve.png" class="icon">
-                <h4>Réserver</h4>
-                <p>Réservez un terrain en quelques secondes</p>
+            <div class="steps-img">
+                <img src="./Images/padelterrain.png" alt="Joueurs de padel">
             </div>
-
-            <div class="step-card">
-                <img src="icon-play.png" class="icon">
-                <h4>S’amuser</h4>
-                <p>Profitez d’un match fluide et équilibré</p>
-            </div>
-
-        </div>
-
-        <div class="steps-img">
-            <img src="padel-court.jpg" alt="Joueurs de padel">
         </div>
     </section>
 
@@ -80,33 +90,39 @@
         <div class="adv-grid">
 
             <div class="adv-card">
-                <img src="icon-balance.png" class="icon">
+                <img src="./Images/equilibre.png" class="icon" alt="">
                 <h4>Matchs équilibrés</h4>
-                <p>Grâce à un système de niveau intelligent</p>
+                <p>grâce à un système de niveau</p>
             </div>
 
             <div class="adv-card">
-                <img src="icon-reserve2.png" class="icon">
+                <img src="./Images/reservation.png" class="icon" alt="">
                 <h4>Réservation simplifiée</h4>
-                <p>Réservez un terrain sans prise de tête</p>
+                <p>pour réserver un terrain sans prise de tête</p>
             </div>
 
             <div class="adv-card">
-                <img src="icon-notif.png" class="icon">
+                <img src="./Images/notification.png" class="icon" alt="">
                 <h4>Notifications intelligentes</h4>
-                <p>Recevez des propositions de matchs disponibles</p>
+                <p>pour vous proposer des matchs disponibles</p>
             </div>
 
         </div>
 
-        <a href="#" class="btn-primary adv-btn">S’inscrire</a>
+        <a href="#" class="btn-primary adv-btn">S'inscrire</a>
     </section>
+
+
+    <!-- BACK TO TOP -->
+    <a href="#" class="back-to-top" aria-label="Retour en haut">
+        <img src="./Images/fleche.png" alt="">
+    </a>
 
 
     <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-left">
-            <img src="logo.png" class="logo">
+            <img src="./Images/logoN.png" class="logo" alt="">
             <span>PadelConnect</span>
         </div>
 
@@ -117,9 +133,10 @@
         </div>
 
         <div class="footer-right">
-            © 2026 PadelConnect – All rights reserved
+            © 2026 PadelConnect All rights reserved
         </div>
     </footer>
 
 </body>
+
 </html>
