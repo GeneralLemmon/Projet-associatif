@@ -1,4 +1,14 @@
-import requests
+import subprocess
+import sys
+
+try:
+    import requests
+except ImportError:
+    print("📦 Installation de la bibliothèque 'requests' en cours...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
+    import requests
+    print("✅ Installation réussie !\n")
+
 from datetime import datetime
 
 clubs = {
