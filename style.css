@@ -65,22 +65,29 @@ a {
     top: 0;
     z-index: 100;
     background: var(--blue);
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     padding: 0 48px;
     height: 60px;
 }
 
+/* NAV LEFT */
 .nav-left {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.nav-left .logo {
-    width: 28px;
-    height: 28px;
+.nav-left a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    width: 32px;
+    height: 32px;
     object-fit: contain;
 }
 
@@ -90,9 +97,37 @@ a {
     color: #fff;
 }
 
+/* NAV CENTER */
+.nav-center {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+}
+
+.nav-center a {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+}
+
+.nav-center a:hover {
+    opacity: 1;
+}
+
+/* NAV RIGHT */
 .nav-right {
     display: flex;
+    justify-content: flex-end;
     align-items: center;
+    gap: 16px;
+}
+
+.nav-right img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
 }
 
 .nav-right a {
@@ -105,8 +140,8 @@ a {
 
 .nav-right a:hover {
     opacity: 1;
-
 }
+
 
 .hero {
     background: var(--bg-white);
@@ -122,7 +157,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 18px;
+    gap: 30px;
     max-width: 620px;
 }
 
@@ -130,6 +165,7 @@ a {
     font-size: clamp(1.9rem, 3.5vw, 2.6rem);
     font-weight: 800;
     line-height: 1.22;
+    width: 954px;
     color: var(--text-dark);
     letter-spacing: -0.025em;
     block-size: max-content;

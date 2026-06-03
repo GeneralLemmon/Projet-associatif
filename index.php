@@ -15,8 +15,9 @@
 <body>
     <header class="navbar">
         <div class="nav-left">
-            <img src="./Images/logoW.png" alt="Logo PadelConnect" class="logo">
-            <h1>PadelConnect</h1>
+            <a href="index.php"><img src="Images/logoW.png" alt="Logo PadelConnect" class="logo">
+                <h1>PadelConnect</h1>
+            </a>
         </div>
         <div class="nav-right">
             <a href="#">Se connecter /</a>
