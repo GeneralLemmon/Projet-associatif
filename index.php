@@ -10,31 +10,28 @@
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="./Images/favicon.ico" type="image/x-icon">
 </head>
-<!-- PHP if pour change de page si connetion -->
 
 <body>
-    <header class="navbar">
-        <div class="nav-left">
-            <a href="index.php"><img src="Images/logoW.png" alt="Logo PadelConnect" class="logo">
-                <h1>PadelConnect</h1>
-            </a>
-        </div>
-        <div class="nav-right">
-            <a href="#">Se connecter /</a>
-            <a href="#"> S'inscrire</a>
-        </div>
-    </header>
+
+<?php require "navbar.php"; ?>
+
+<?php if (!isset($_SESSION['user'])): ?>
+
+    <!-- ===========================
+         VERSION VISITEUR (non connecté)
+    ============================ -->
 
     <section class="hero">
         <div class="hero-text">
             <h2>Jouez au padel quand vous voulez,<br> avec qui vous voulez</h2>
             <p>PadelConnect vous aide à trouver des partenaires compatibles, réserver un terrain en quelques secondes et
                 profiter d'un jeu fluide, sans prise de tête.</p>
+
             <div class="hero-img">
                 <img src="./Images/padelraquette.png" alt="Padel raquette">
             </div>
 
-            <a href="#" class="btn-primary hero-btn">S'inscrire gratuitement</a>
+            <a href="signup.php" class="btn-primary hero-btn">S'inscrire gratuitement</a>
             <p class="micro-text">Aucun engagement<br>Disponible partout en France</p>
         </div>
     </section>
@@ -102,17 +99,70 @@
 
         </div>
 
-        <a href="#" class="btn-primary adv-btn">S'inscrire</a>
+        <a href="signup.php" class="btn-primary adv-btn">S'inscrire</a>
     </section>
-
-    <a href="#" class="mod"></a>
 
     <a href="#" class="back-to-top" aria-label="Retour en haut">
         <img src="./Images/fleche.png" alt="Flèche vers le haut">
     </a>
 
-    <?php require "footer.php" ?>
+<?php else: ?>
+
+    <!-- ===========================
+         VERSION CONNECTÉE
+    ============================ -->
+
+    <main class="matchs-page">
+
+        <h2 class="matchs-greeting">
+            Bonjour <?= htmlspecialchars($_SESSION['user']['name']) ?>
+        </h2>
+
+        <section class="matchs-section">
+            <h3 class="matchs-title">Mes prochains matchs</h3>
+
+            <div class="matchs-container">
+
+                <!-- Exemple de cartes -->
+                <div class="match-card match-card--active">
+                    <p class="match-date">14 juin 2026 - 18h</p>
+                    <div class="match-info">
+                        <img src="Images/lieu.png" alt="Lieu">
+                        <span>Puteaux Île</span>
+                    </div>
+                    <div class="match-info">
+                        <img src="Images/player.png" alt="Joueurs">
+                        <span>4/4 Joueurs</span>
+                    </div>
+                    <div class="match-info">
+                        <img src="Images/level.png" alt="Niveau">
+                        <span>Niveau moyen : 3</span>
+                    </div>
+                </div>
+
+                <div class="match-card">
+                    <p class="match-date">18 juillet 2026 - 8h</p>
+                    <div class="match-info">
+                        <img src="Images/lieu.png" alt="Lieu">
+                        <span>Forest Hill la Défense</span>
+                    </div>
+                    <div class="match-info">
+                        <img src="Images/player.png" alt="Joueurs">
+                        <span>3/4 Joueurs</span>
+                    </div>
+                    <div class="match-info">
+                        <img src="Images/level.png" alt="Niveau">
+                        <span>Niveau moyen : 3</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+<?php endif; ?>
+
+<?php require "footer.php"; ?>
 
 </body>
-
 </html>

@@ -1,7 +1,5 @@
 <?php
 
-session_start();
-
 spl_autoload_register(function (string $class) {
     require "$class.php";
 });

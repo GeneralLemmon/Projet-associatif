@@ -1,10 +1,10 @@
 <?php
-
 session_start();
 
 spl_autoload_register(function (string $class) {
     require "$class.php";
 });
+
 
 $userController = new UserController();
 $message = "";
@@ -16,9 +16,13 @@ if ($_POST) {
     $user = $userController->login($email, $password);
 
     if ($user) {
-        $_SESSION['user_id']   = $user->getId();
-        $_SESSION['user_name'] = $user->getFullName();
-        $_SESSION['is_admin']  = $user->getIsAdmin();
+
+        $_SESSION['user'] = [
+            "id"      => $user->getId(),
+            "name"    => $user->getFullName(),
+            "isAdmin" => $user->getIsAdmin()
+        ];
+
         echo "<script>window.location.href='index.php'</script>";
     } else {
         $message = "Email ou mot de passe incorrect.";
@@ -26,14 +30,17 @@ if ($_POST) {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="fr-FR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PadelConnect - Connexion</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <?php include('navbar.php'); ?>
@@ -61,4 +68,5 @@ if ($_POST) {
     <?php include('footer.php'); ?>
 
 </body>
+
 </html>
