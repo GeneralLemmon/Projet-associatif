@@ -1,6 +1,6 @@
 <footer class="footer">
     <div class="footer-left">
-        <img src="Images/logoW.png" alt="Logo PadelConnect" class="logo" width="50">
+        <img src="Images/logoN.png" alt="Logo PadelConnect" class="logo" width="50">
         <span>PadelConnect</span>
     </div>
 
