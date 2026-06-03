@@ -132,6 +132,7 @@ a {
     line-height: 1.22;
     color: var(--text-dark);
     letter-spacing: -0.025em;
+    block-size: max-content;
 }
 
 .micro-text {
