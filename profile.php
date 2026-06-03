@@ -26,59 +26,99 @@
       <div class="card">
         <p class="card-title">Informations personnelles</p>
 
-        <form action="profil.php" method="POST">
+        <?php if (isset($_GET['mode']) && $_GET['mode'] === 'edit') : ?>
+
+          <!-- MODE MODIFICATION -->
+          <form action="profil.php" method="POST">
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label for="prenom">Prénom</label>
+                <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($user['prenom']); ?>" required />
+              </div>
+
+              <div class="form-group">
+                <label for="nom">Nom</label>
+                <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($user['nom']); ?>" required />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required />
+              </div>
+
+              <div class="form-group">
+                <label for="telephone">Téléphone</label>
+                <input type="tel" id="telephone" name="telephone" value="<?php echo htmlspecialchars($user['telephone']); ?>" />
+              </div>
+
+              <div class="form-group full">
+                <div class="niveau-label-row">
+                  <label for="niveau">Niveau de jeu</label>
+                  <button type="button" class="btn-aide" id="btn-niveau">?</button>
+                </div>
+                <select id="niveau" name="niveau">
+                  <option value="1" <?php echo $user['niveau'] == 1 ? 'selected' : ''; ?>>Niveau 1 – Débutant</option>
+                  <option value="2" <?php echo $user['niveau'] == 2 ? 'selected' : ''; ?>>Niveau 2 – Perfectionnement</option>
+                  <option value="3" <?php echo $user['niveau'] == 3 ? 'selected' : ''; ?>>Niveau 3 – Élémentaire</option>
+                  <option value="4" <?php echo $user['niveau'] == 4 ? 'selected' : ''; ?>>Niveau 4 – Intermédiaire</option>
+                  <option value="5" <?php echo $user['niveau'] == 5 ? 'selected' : ''; ?>>Niveau 5 – Confirmé</option>
+                  <option value="6" <?php echo $user['niveau'] == 6 ? 'selected' : ''; ?>>Niveau 6 – Avancé</option>
+                  <option value="7" <?php echo $user['niveau'] == 7 ? 'selected' : ''; ?>>Niveau 7 – Expert</option>
+                  <option value="8" <?php echo $user['niveau'] == 8 ? 'selected' : ''; ?>>Niveau 8 – Élite</option>
+                </select>
+              </div>
+
+              <div class="form-group full">
+                <label for="presentation">Présentation</label>
+                <textarea id="presentation" name="presentation" rows="3"><?php echo htmlspecialchars($user['presentation']); ?></textarea>
+              </div>
+
+            </div>
+
+            <div class="save-bar">
+              <a href="profil.php" class="btn-secondary">Annuler</a>
+              <button type="submit" class="btn-primary btn-save">Enregistrer</button>
+            </div>
+
+          </form>
+
+        <?php else : ?>
+
+          <!-- MODE AFFICHAGE -->
           <div class="form-grid">
 
             <div class="form-group">
-              <label for="prenom">Prénom</label>
-              <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required />
+              <label>Prénom</label>
+              <p class="profil-value"><?php echo htmlspecialchars($user['prenom']); ?></p>
             </div>
 
             <div class="form-group">
-              <label for="nom">Nom</label>
-              <input type="text" id="nom" name="nom" placeholder="Votre nom" required />
+              <label>Nom</label>
+              <p class="profil-value"><?php echo htmlspecialchars($user['nom']); ?></p>
             </div>
 
             <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" placeholder="Votre adresse email" required />
-            </div>
-
-            <div class="form-group">
-              <label for="telephone">Téléphone</label>
-              <input type="tel" id="telephone" name="telephone" placeholder="Votre numéro de téléphone" />
+              <label>Email</label>
+              <p class="profil-value"><?php echo htmlspecialchars($user['email']); ?></p>
             </div>
 
             <div class="form-group full">
               <div class="niveau-label-row">
-                <label for="niveau">Niveau de jeu</label>
+                <label>Niveau de jeu</label>
                 <button type="button" class="btn-aide" id="btn-niveau">?</button>
               </div>
-              <select id="niveau" name="niveau">
-                <option value="1">Niveau 1 – Débutant</option>
-                <option value="2">Niveau 2 – Perfectionnement</option>
-                <option value="3">Niveau 3 – Élémentaire</option>
-                <option value="4">Niveau 4 – Intermédiaire</option>
-                <option value="5">Niveau 5 – Confirmé</option>
-                <option value="6">Niveau 6 – Avancé</option>
-                <option value="7">Niveau 7 – Expert</option>
-                <option value="8">Niveau 8 – Élite</option>
-              </select>
-            </div>
-
-            <div class="form-group full">
-              <label for="presentation">Présentation</label>
-              <textarea id="presentation" name="presentation" rows="3" placeholder="Décrivez-vous en quelques mots…"></textarea>
+              <p class="profil-value"><?php echo htmlspecialchars($user['niveau']); ?></p>
             </div>
 
           </div>
 
           <div class="save-bar">
-            <a href="index.php" class="btn-secondary">Annuler</a>
-            <button type="submit" class="btn-primary btn-save">Enregistrer</button>
+            <a href="profil.php?mode=edit" class="btn-primary btn-save">✏️ Modifier mon profil</a>
           </div>
 
-        </form>
+        <?php endif; ?>
+
       </div>
 
     </main>
