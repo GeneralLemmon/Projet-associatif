@@ -25,56 +25,60 @@
 
       <div class="card">
         <p class="card-title">Informations personnelles</p>
-        <div class="form-grid">
 
-          <div class="form-group">
-            <label>Prénom</label>
-            <input type="text" value="Prénom" />
-          </div>
+        <form action="profil.php" method="POST">
+          <div class="form-grid">
 
-          <div class="form-group">
-            <label>Nom</label>
-            <input type="text" value="Nom" />
-          </div>
-
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" value="monadressemail@example.com" />
-          </div>
-
-          <div class="form-group">
-            <label>Téléphone</label>
-            <input type="tel" value="+33 6 12 34 56 78" />
-          </div>
-
-          <div class="form-group full">
-            <div class="niveau-label-row">
-              <label>Niveau de jeu</label>
-              <button type="button" class="btn-aide" id="btn-niveau">?</button>
+            <div class="form-group">
+              <label for="prenom">Prénom</label>
+              <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required />
             </div>
-            <select>
-              <option>Niveau 1 – Débutant</option>
-              <option>Niveau 2 – Perfectionnement</option>
-              <option>Niveau 3 – Élémentaire</option>
-              <option selected>Niveau 4 – Intermédiaire</option>
-              <option>Niveau 5 – Confirmé</option>
-              <option>Niveau 6 – Avancé</option>
-              <option>Niveau 7 – Expert</option>
-              <option>Niveau 8 – Élite</option>
-            </select>
+
+            <div class="form-group">
+              <label for="nom">Nom</label>
+              <input type="text" id="nom" name="nom" placeholder="Votre nom" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="Votre adresse email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="telephone">Téléphone</label>
+              <input type="tel" id="telephone" name="telephone" placeholder="Votre numéro de téléphone" />
+            </div>
+
+            <div class="form-group full">
+              <div class="niveau-label-row">
+                <label for="niveau">Niveau de jeu</label>
+                <button type="button" class="btn-aide" id="btn-niveau">?</button>
+              </div>
+              <select id="niveau" name="niveau">
+                <option value="1">Niveau 1 – Débutant</option>
+                <option value="2">Niveau 2 – Perfectionnement</option>
+                <option value="3">Niveau 3 – Élémentaire</option>
+                <option value="4">Niveau 4 – Intermédiaire</option>
+                <option value="5">Niveau 5 – Confirmé</option>
+                <option value="6">Niveau 6 – Avancé</option>
+                <option value="7">Niveau 7 – Expert</option>
+                <option value="8">Niveau 8 – Élite</option>
+              </select>
+            </div>
+
+            <div class="form-group full">
+              <label for="presentation">Présentation</label>
+              <textarea id="presentation" name="presentation" rows="3" placeholder="Décrivez-vous en quelques mots…"></textarea>
+            </div>
+
           </div>
 
-          <div class="form-group full">
-            <label>Présentation</label>
-            <textarea rows="3" placeholder="Décrivez-vous en quelques mots…"></textarea>
+          <div class="save-bar">
+            <a href="index.php" class="btn-secondary">Annuler</a>
+            <button type="submit" class="btn-primary btn-save">Enregistrer</button>
           </div>
 
-        </div>
-
-        <div class="save-bar">
-          <button class="btn-secondary">Annuler</button>
-          <button class="btn-primary btn-save">Enregistrer</button>
-        </div>
+        </form>
       </div>
 
     </main>
@@ -83,7 +87,7 @@
     <div class="modal-overlay" id="modal-niveau">
       <div class="modal-content">
         <button class="modal-close" id="modal-close">✕</button>
-        <img src="images/niveaupadel_png-1.png" alt="Tableau des niveaux de padel 2025" />
+        <img src="images/niveaupadel1.png" alt="Tableau des niveaux de padel 2025" />
       </div>
     </div>
 
