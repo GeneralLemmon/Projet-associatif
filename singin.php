@@ -13,8 +13,8 @@ if ($_POST) {
     $passwordHashed = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
     $newUser = new User([
-        'lastName'  => htmlspecialchars($_POST['last_name']),
-        'firstName' => htmlspecialchars($_POST['first_name']),
+        'last_name'  => htmlspecialchars($_POST['last_name']),
+        'first_name' => htmlspecialchars($_POST['first_name']),
         'level'     => htmlspecialchars($_POST['level']),
         'email'     => htmlspecialchars($_POST['email']),
         'password'  => $passwordHashed,
@@ -25,19 +25,21 @@ if ($_POST) {
         $message = "Cet email est déjà utilisé.";
     } else {
         $userController->create($newUser);
-        echo "<script>window.location.href='login.php'</script>";
+        echo "<script>window.location.href='index.php'</script>";
     }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="fr-FR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PadelConnect - Inscription</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <?php include('navbar.php'); ?>
@@ -83,4 +85,5 @@ if ($_POST) {
     <?php require "footer.php" ?>
 
 </body>
+
 </html>

@@ -2,18 +2,18 @@
 
 class User
 {
-    private int $id;
-    private string $lastName;
-    private string $firstName;
+    private int $id_user;
+    private string $last_name;
+    private string $first_name;
     private string $level;
     private string $email;
     private string $password;
-    private bool $isAdmin;
+    private bool $is_admin;
 
     # Méthodes
     public function __construct(array $data)
     {
-        $this->isAdmin = false;
+        $this->is_admin = false;
         $this->hydrate($data);
     }
 
@@ -29,40 +29,40 @@ class User
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->id_user;
     }
 
-    public function setId(int $id): self
+    public function setId_user(int $id_user): self
     {
-        $this->id = $id;
+        $this->id_user = $id_user;
         return $this;
     }
 
     public function getLastName(): string
     {
-        return $this->lastName;
+        return $this->last_name;
     }
 
-    public function setLastName(string $lastName): self
+    public function setLast_name(string $last_name): self
     {
-        $this->lastName = $lastName;
+        $this->last_name = $last_name;
         return $this;
     }
 
     public function getFirstName(): string
     {
-        return $this->firstName;
+        return $this->first_name;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setFirst_name(string $first_name): self
     {
-        $this->firstName = $firstName;
+        $this->first_name = $first_name;
         return $this;
     }
 
     public function getFullName(): string
     {
-        return $this->firstName . " " . $this->lastName;
+        return $this->first_name . " " . $this->last_name;
     }
 
     public function getLevel(): string
@@ -100,12 +100,12 @@ class User
 
     public function getIsAdmin(): bool
     {
-        return $this->isAdmin;
+        return $this->is_admin;
     }
 
-    public function setIsAdmin(bool $isAdmin): self
+    public function setIs_admin(bool $is_admin): self
     {
-        $this->isAdmin = $isAdmin;
+        $this->is_admin = $is_admin;
         return $this;
     }
 }
