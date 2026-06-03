@@ -13,156 +13,159 @@
 
 <body>
 
-<?php require "navbar.php"; ?>
+    <?php
+    session_start();
+    require "navbar.php"; ?>
 
-<?php if (!isset($_SESSION['user'])): ?>
+    <?php if (!isset($_SESSION['user'])): ?>
 
-    <!-- ===========================
+        <!-- ===========================
          VERSION VISITEUR (non connecté)
     ============================ -->
 
-    <section class="hero">
-        <div class="hero-text">
-            <h2>Jouez au padel quand vous voulez,<br> avec qui vous voulez</h2>
-            <p>PadelConnect vous aide à trouver des partenaires compatibles, réserver un terrain en quelques secondes et
-                profiter d'un jeu fluide, sans prise de tête.</p>
+        <section class="hero">
+            <div class="hero-text">
+                <h2>Jouez au padel quand vous voulez,<br> avec qui vous voulez</h2>
+                <p>PadelConnect vous aide à trouver des partenaires compatibles, réserver un terrain en quelques secondes et
+                    profiter d'un jeu fluide, sans prise de tête.</p>
 
-            <div class="hero-img">
-                <img src="./Images/padelraquette.png" alt="Padel raquette">
-            </div>
-
-            <a href="signup.php" class="btn-primary hero-btn">S'inscrire gratuitement</a>
-            <p class="micro-text">Aucun engagement<br>Disponible partout en France</p>
-        </div>
-    </section>
-
-    <section class="steps">
-        <h3>Comment ça marche</h3>
-
-        <div class="steps-body">
-            <div class="steps-grid">
-
-                <div class="step-card">
-                    <img src="./Images/matcher.png" class="icon" alt="Matcher">
-                    <div>
-                        <h4>Matcher</h4>
-                        <p>Trouvez des partenaires compatibles</p>
-                    </div>
+                <div class="hero-img">
+                    <img src="./Images/padelraquette.png" alt="Padel raquette">
                 </div>
 
-                <div class="step-card">
-                    <img src="./Images/calendar.png" class="icon" alt="Calendrier">
-                    <div>
-                        <h4>Réserver</h4>
-                        <p>Réservez un terrain en quelques secondes</p>
+                <a href="signup.php" class="btn-primary hero-btn">S'inscrire gratuitement</a>
+                <p class="micro-text">Aucun engagement<br>Disponible partout en France</p>
+            </div>
+        </section>
+
+        <section class="steps">
+            <h3>Comment ça marche</h3>
+
+            <div class="steps-body">
+                <div class="steps-grid">
+
+                    <div class="step-card">
+                        <img src="./Images/matcher.png" class="icon" alt="Matcher">
+                        <div>
+                            <h4>Matcher</h4>
+                            <p>Trouvez des partenaires compatibles</p>
+                        </div>
                     </div>
+
+                    <div class="step-card">
+                        <img src="./Images/calendar.png" class="icon" alt="Calendrier">
+                        <div>
+                            <h4>Réserver</h4>
+                            <p>Réservez un terrain en quelques secondes</p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <img src="./Images/smile.png" class="icon" alt="S'amuser">
+                        <div>
+                            <h4>S'amuser</h4>
+                            <p>Profitez d'un match fluide, équilibré et sans prise de tête</p>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="step-card">
-                    <img src="./Images/smile.png" class="icon" alt="S'amuser">
-                    <div>
-                        <h4>S'amuser</h4>
-                        <p>Profitez d'un match fluide, équilibré et sans prise de tête</p>
-                    </div>
+                <div class="steps-img">
+                    <img src="./Images/padelterrain.png" alt="Joueurs de padel">
+                </div>
+            </div>
+        </section>
+
+        <section class="advantages">
+            <h3>Avantages</h3>
+
+            <div class="adv-grid">
+
+                <div class="adv-card">
+                    <img src="./Images/equilibre.png" class="icon" alt="Équilibre">
+                    <h4>Matchs équilibrés</h4>
+                    <p>grâce à un système de niveau</p>
+                </div>
+
+                <div class="adv-card">
+                    <img src="./Images/reservation.png" class="icon" alt="Réservation">
+                    <h4>Réservation simplifiée</h4>
+                    <p>pour réserver un terrain sans prise de tête</p>
+                </div>
+
+                <div class="adv-card">
+                    <img src="./Images/notification.png" class="icon" alt="Notification">
+                    <h4>Notifications intelligentes</h4>
+                    <p>pour vous proposer des matchs disponibles</p>
                 </div>
 
             </div>
 
-            <div class="steps-img">
-                <img src="./Images/padelterrain.png" alt="Joueurs de padel">
-            </div>
-        </div>
-    </section>
+            <a href="signup.php" class="btn-primary adv-btn">S'inscrire</a>
+        </section>
 
-    <section class="advantages">
-        <h3>Avantages</h3>
+        <a href="#" class="back-to-top" aria-label="Retour en haut">
+            <img src="./Images/fleche.png" alt="Flèche vers le haut">
+        </a>
 
-        <div class="adv-grid">
+    <?php else: ?>
 
-            <div class="adv-card">
-                <img src="./Images/equilibre.png" class="icon" alt="Équilibre">
-                <h4>Matchs équilibrés</h4>
-                <p>grâce à un système de niveau</p>
-            </div>
-
-            <div class="adv-card">
-                <img src="./Images/reservation.png" class="icon" alt="Réservation">
-                <h4>Réservation simplifiée</h4>
-                <p>pour réserver un terrain sans prise de tête</p>
-            </div>
-
-            <div class="adv-card">
-                <img src="./Images/notification.png" class="icon" alt="Notification">
-                <h4>Notifications intelligentes</h4>
-                <p>pour vous proposer des matchs disponibles</p>
-            </div>
-
-        </div>
-
-        <a href="signup.php" class="btn-primary adv-btn">S'inscrire</a>
-    </section>
-
-    <a href="#" class="back-to-top" aria-label="Retour en haut">
-        <img src="./Images/fleche.png" alt="Flèche vers le haut">
-    </a>
-
-<?php else: ?>
-
-    <!-- ===========================
+        <!-- ===========================
          VERSION CONNECTÉE
     ============================ -->
 
-    <main class="matchs-page">
+        <main class="matchs-page">
 
-        <h2 class="matchs-greeting">
-            Bonjour <?= htmlspecialchars($_SESSION['user']['name']) ?>
-        </h2>
+            <h2 class="matchs-greeting">
+                Bonjour <?= htmlspecialchars($_SESSION['user']['name']) ?>
+            </h2>
 
-        <section class="matchs-section">
-            <h3 class="matchs-title">Mes prochains matchs</h3>
+            <section class="matchs-section">
+                <h3 class="matchs-title">Mes prochains matchs</h3>
 
-            <div class="matchs-container">
+                <div class="matchs-container">
 
-                <!-- Exemple de cartes -->
-                <div class="match-card match-card--active">
-                    <p class="match-date">14 juin 2026 - 18h</p>
-                    <div class="match-info">
-                        <img src="Images/lieu.png" alt="Lieu">
-                        <span>Puteaux Île</span>
+                    <!-- Exemple de cartes -->
+                    <div class="match-card match-card--active">
+                        <p class="match-date">14 juin 2026 - 18h</p>
+                        <div class="match-info">
+                            <img src="Images/lieu.png" alt="Lieu">
+                            <span>Puteaux Île</span>
+                        </div>
+                        <div class="match-info">
+                            <img src="Images/player.png" alt="Joueurs">
+                            <span>4/4 Joueurs</span>
+                        </div>
+                        <div class="match-info">
+                            <img src="Images/level.png" alt="Niveau">
+                            <span>Niveau moyen : 3</span>
+                        </div>
                     </div>
-                    <div class="match-info">
-                        <img src="Images/player.png" alt="Joueurs">
-                        <span>4/4 Joueurs</span>
+
+                    <div class="match-card">
+                        <p class="match-date">18 juillet 2026 - 8h</p>
+                        <div class="match-info">
+                            <img src="Images/lieu.png" alt="Lieu">
+                            <span>Forest Hill la Défense</span>
+                        </div>
+                        <div class="match-info">
+                            <img src="Images/player.png" alt="Joueurs">
+                            <span>3/4 Joueurs</span>
+                        </div>
+                        <div class="match-info">
+                            <img src="Images/level.png" alt="Niveau">
+                            <span>Niveau moyen : 3</span>
+                        </div>
                     </div>
-                    <div class="match-info">
-                        <img src="Images/level.png" alt="Niveau">
-                        <span>Niveau moyen : 3</span>
-                    </div>
+
                 </div>
+            </section>
+        </main>
 
-                <div class="match-card">
-                    <p class="match-date">18 juillet 2026 - 8h</p>
-                    <div class="match-info">
-                        <img src="Images/lieu.png" alt="Lieu">
-                        <span>Forest Hill la Défense</span>
-                    </div>
-                    <div class="match-info">
-                        <img src="Images/player.png" alt="Joueurs">
-                        <span>3/4 Joueurs</span>
-                    </div>
-                    <div class="match-info">
-                        <img src="Images/level.png" alt="Niveau">
-                        <span>Niveau moyen : 3</span>
-                    </div>
-                </div>
+    <?php endif; ?>
 
-            </div>
-        </section>
-    </main>
-
-<?php endif; ?>
-
-<?php require "footer.php"; ?>
+    <?php require "footer.php"; ?>
 
 </body>
+
 </html>

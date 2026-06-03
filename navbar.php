@@ -26,7 +26,7 @@ $isAdmin = $isConnected && $_SESSION['user']['isAdmin'];
     <div class="nav-right">
         <?php if ($isConnected): ?>
             <a href="profile.php">
-                <img src="./Images/profilL.png" alt="Profil" class="profile-icon">
+                <img src="./Images/profilL.png" alt="Profil" class="profile-icon"><?= htmlspecialchars($_SESSION['user']['firstName']) ?>
             </a>
         <?php else: ?>
             <a href="login.php">Se connecter</a>

@@ -19,7 +19,9 @@ if ($_POST) {
 
         $_SESSION['user'] = [
             "id"      => $user->getId(),
-            "name"    => $user->getFullName(),
+            "firstName" => $user->getFirstName(),
+            "lastName"  => $user->getLastName(),
+            "name"      => $user->getFullName(),
             "isAdmin" => $user->getIsAdmin()
         ];
 
