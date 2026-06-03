@@ -22,7 +22,25 @@
             <img src="Images/player.png" alt="Joueurs" width="50">
             <p> 2/4 Joueurs</p>
             <img src="Images/level.png" alt="Niveau" width="50">
-            <p> Niveau moyen : 3.7</p>
+            <p> Niveau : 3</p>
+        </div>
+        <div class="match-card">
+            <p>8 juillet 2026 - 13h</p>
+            <img src="Images/lieu.png" alt="Lieu" width="50">
+            <p> Forest Hill la Défense</p>
+            <img src="Images/player.png" alt="Joueurs" width="50">
+            <p> 4/4 Joueurs</p>
+            <img src="Images/level.png" alt="Niveau" width="50">
+            <p> Niveau : 3</p>
+        </div>
+        <div class="match-card">
+            <p>14 juin 2026 - 18h</p>
+            <img src="Images/lieu.png" alt="Lieu" width="50">
+            <p> Sportfield la Défense</p>
+            <img src="Images/player.png" alt="Joueurs" width="50">
+            <p> 1/4 Joueurs</p>
+            <img src="Images/level.png" alt="Niveau" width="50">
+            <p> Niveau : 4</p>
         </div>
     </div>
 
