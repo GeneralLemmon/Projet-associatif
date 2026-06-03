@@ -56,8 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </select>
         <br><br>
 
-        <label for="lieu">Lieu :</label>
-        <input type="text" id="lieu" name="lieu" value="<?php echo htmlspecialchars($currentVenue); ?>" required>
+        <label for="Lieu">Lieu :</label>
+        <select id="lieu" name="lieu">
+            <option value="Puteaux Île">Puteaux Île</option>
+            <option value="Forest Hill la Défense">Forest Hill la Défense</option>
+            <option value="Sportfield la Défense">Sportfield la Défense</option>
+        </select>
         <br><br>
 
         <button type="submit" class="btn-primary">Enregistrer les modifications</button>
