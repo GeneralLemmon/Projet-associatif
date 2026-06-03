@@ -11,20 +11,7 @@
 
 <body>
 
-        <header class="navbar">
-            <div class="nav-left">
-                <img src="Images/logoW.png" alt="Logo PadelConnect" class="logo">
-                <h1>PadelConnect</h1>
-            </div>
-            <nav class="nav-links">
-                <a href="index.html">Accueil</a>
-                <a href="search.html">Chercher un match</a>
-                <a href="matchs.html">Mes prochains matchs</a>
-                <a href="profile.html">Mon profil</a>
-                <a href="levels.html">Les niveaux</a>
-            </nav>
-
-        </header>
+    <?php require "navbar.html"; ?>
 
     <main>
         <h2>Chercher un match</h2>
