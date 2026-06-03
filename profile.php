@@ -1,3 +1,15 @@
+<?php
+// À remplacer plus tard par la vraie requête BDD
+$user = [
+    'prenom'       => 'Jean',
+    'nom'          => 'Dupont',
+    'email'        => 'jean.dupont@acensi.fr',
+    'telephone'    => '+33 6 12 34 56 78',
+    'niveau'       => 4,
+    'presentation' => ''
+];
+?>
+
 <!doctype html>
 <html lang="fr-FR">
   <head>
