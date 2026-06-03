@@ -9,7 +9,7 @@
   <body>
     <header class="navbar">
       <div class="nav-left">
-        <img src="logo.png" alt="Logo PadelConnect" class="logo" />
+        <img src="images/logoW.png" alt="Logo PadelConnect" class="logo" />
         <h1>PadelConnect</h1>
       </div>
 
@@ -19,7 +19,6 @@
       </div>
     </header>
 
-    <h2>Mon profil</h2>
 
     <script src="script.js"></script>
     <div class="card">
@@ -47,7 +46,7 @@
             <option>Niveau 1 – Débutant</option>
             <option>Niveau 2 – Perfectionnement</option>
             <option>Niveau 3 – Élémentaire</option>
-            <option selected>Niveau 4 – Intermédiaire</option>
+            <option>Niveau 4 – Intermédiaire</option>
             <option>Niveau 5 – Confirmé</option>
             <option>Niveau 6 – Avancé</option>
             <option>Niveau 7 – Expert</option>
@@ -55,7 +54,7 @@
           </select>
           <div class="niveau-info">
             <img
-              src="niveaupadel_png-1.png"
+              src="images/niveaupadel.png-1.png"
               alt="Tableau des niveaux de padel 2025"
               class="niveau-img"
             />
@@ -72,20 +71,7 @@
         <button class="btn-filled">Enregistrer</button>
       </div>
     </div>
+        <?php require "footer.php"; ?>
   </body>
 
-  <footer class="footer">
-    <div class="footer-left">
-      <img src="logo.png" class="logo" />
-      <span>PadelConnect</span>
-    </div>
-
-    <div class="footer-links">
-      <a href="#">CGU</a>
-      <a href="#">Confidentialité</a>
-      <a href="#">Cookies</a>
-    </div>
-
-    <div class="footer-right">© 2026 PadelConnect – All rights reserved</div>
-  </footer>
 </html>

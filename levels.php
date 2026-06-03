@@ -11,12 +11,9 @@
 
 <body>
 
-    <header class="navbar">
-        <div class="nav-left">
-            <img src="Images/paddle-tennis-racket (1).png" alt="Logo PadelConnect" class="logo">
-            <h1>PadelConnect</h1>
-        </div>
-    </header>
+    <?php require "navbar.php"; ?>
+
+
 
     <main>
         <section class="levels-section">
@@ -77,23 +74,8 @@
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="footer-left">
-            <img src="Images/paddle-tennis-racket (1).png" alt="Logo PadelConnect" class="logo">
-            <span>PadelConnect</span>
-        </div>
-
-        <div class="footer-links">
-            <a href="#">CGU</a>
-            <a href="#">Confidentialité</a>
-            <a href="#">Cookies</a>
-        </div>
-
-        <div class="footer-right">
-            © 2026 PadelConnect – All rights reserved
-        </div>
-    </footer>
-
+    
+    <?php require "footer.php"; ?>
     <script src="script.js"></script>
 </body>
 
