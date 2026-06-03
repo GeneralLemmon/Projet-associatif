@@ -1,6 +1,6 @@
 <header class="navbar">
     <div class="nav-left">
-        <a href="index.php"><img src="Images/logoW.png" alt="Logo PadelConnect" class="logo">
+        <a href="index.php"><img src="./Images/logoW.png" alt="Logo PadelConnect" class="logo">
             <h1>PadelConnect</h1>
         </a>
     </div>
@@ -10,7 +10,7 @@
         <!-- PHP is admin <a href="manage.php">Gérer</a> -->
     </div>
     <div class="nav-right">
-        <a href="profile.php"><img src="Images/profilL.png" alt="Profil"><!-- Prenom avec le PHP --></a>
+        <a href="profile.php"><img src="./Images/profilL.png" alt="Profil"><!-- Prenom avec le PHP --></a>
     </div>
 </header>
 
@@ -18,7 +18,7 @@
 <header class="navbar">
     <div class="nav-left">
         <a href="index.php" class="brand">
-            <img src="Images/logoW.png" alt="Logo PadelConnect" class="logo">
+            <img src="./Images/logoW.png" alt="Logo PadelConnect" class="logo">
             <h1>PadelConnect</h1>
         </a>
     </div>
@@ -36,7 +36,7 @@
     <div class="nav-right">
         <?php if ($isConnected): ?>
             <a href="profile.php">
-                <img src="Images/profilL.png" alt="Profil" class="profile-icon">
+                <img src="./Images/profilL.png" alt="Profil" class="profile-icon">
             </a>
         <?php else: ?>
             <a href="login.php">Se connecter</a>

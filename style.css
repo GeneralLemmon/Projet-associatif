@@ -70,13 +70,12 @@ a {
 }
 
 .navbar {
-    top: 0;
-    z-index: 100;
     background: var(--blue);
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 48px;
+    min-height: 60px;
     height: 60px;
 }
 
@@ -107,6 +106,9 @@ a {
 
 /* NAV CENTER */
 .nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     justify-content: center;
     gap: 32px;
@@ -127,9 +129,9 @@ a {
 /* NAV RIGHT */
 .nav-right {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
     gap: 16px;
+    margin-left: auto;
 }
 
 .nav-right img {
@@ -473,7 +475,9 @@ a {
 }
 
 /* INPUTS */
-input, select, textarea {
+input,
+select,
+textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid var(--border);
@@ -494,7 +498,7 @@ input, select, textarea {
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0, 0, 0, 0.55);
     display: none;
     align-items: center;
     justify-content: center;
@@ -569,4 +573,138 @@ input, select, textarea {
         padding: 24px 20px;
         gap: 14px;
     }
+}
+
+/* ============================================
+   PAGE MES MATCHS
+   ============================================ */
+
+.matchs-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 52px 40px 80px;
+}
+
+/* Titre de salutation */
+.matchs-greeting {
+    text-align: center;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 52px;
+    letter-spacing: -0.02em;
+}
+
+/* Titre de section "Prochain matchs" */
+.matchs-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 32px;
+    letter-spacing: -0.015em;
+}
+
+.matchs-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.match-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.match-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.match-card--active {
+    background: #1E4ED8;
+    border-color: #1E4ED8;
+    color: #fff;
+}
+
+.match-card--active:hover {
+    box-shadow: 0 6px 24px rgba(37, 99, 235, 0.4);
+}
+
+.match-date {
+    font-size: 0.97rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.match-card:not(.match-card--active) .match-date {
+    color: var(--text-dark);
+}
+
+.match-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.match-info img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+}
+
+
+.match-card--active .match-info img {
+    filter: brightness(0) invert(1);
+}
+
+.match-info span {
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+
+.match-card:not(.match-card--active) .match-info span {
+    color: var(--text-mid);
+}
+
+.match-card--active .match-info span {
+    color: #fff;
+}
+
+/* ---- Bouton notification fixe ---- */
+.notif-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 52px;
+    height: 52px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.notif-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.notif-btn img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
 }
