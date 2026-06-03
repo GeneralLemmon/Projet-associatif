@@ -118,23 +118,6 @@
     </a>
 
     <?php require "footer.php" ?>
-    <!-- FOOTER -->
-<!--     <footer class="footer">
-        <div class="footer-left">
-            <img src="./Images/logoN.png" class="logo" alt="Logo PadelConnect">
-            <span>PadelConnect</span>
-        </div>
-
-        <div class="footer-links">
-            <a href="#">CGU</a>
-            <a href="#">Confidentialité</a>
-            <a href="#">Cookies</a>
-        </div>
-
-        <div class="footer-right">
-            © 2026 PadelConnect All rights reserved
-        </div>
-    </footer> -->
 
 </body>
 
