@@ -46,7 +46,7 @@
             <option>Niveau 1 – Débutant</option>
             <option>Niveau 2 – Perfectionnement</option>
             <option>Niveau 3 – Élémentaire</option>
-            <option selected>Niveau 4 – Intermédiaire</option>
+            <option>Niveau 4 – Intermédiaire</option>
             <option>Niveau 5 – Confirmé</option>
             <option>Niveau 6 – Avancé</option>
             <option>Niveau 7 – Expert</option>

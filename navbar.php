@@ -1,6 +1,6 @@
 <header class="navbar">
     <div class="nav-left">
-        <img src="Images/logoW.png" alt="Logo PadelConnect">
+        <img src="Images/logoW.png" alt="Logo PadelConnect" width="50" />
         <h1>PadelConnect</h1>
     </div>
     <nav class="nav-links">
