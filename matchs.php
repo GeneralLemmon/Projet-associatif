@@ -9,7 +9,7 @@
 
 <body>
 
-    <?php require "navbar.html"; ?>
+    <?php require "navbar.php"; ?>
 
     <h2>Mes prochains matchs</h2>
 

@@ -10,7 +10,7 @@
 
 <body>
 
-    <?php require "navbar.html"; ?>
+    <?php require "navbar.php"; ?>
 
     <h2>Gérer</h2>
 

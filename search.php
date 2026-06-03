@@ -11,7 +11,7 @@
 
 <body>
 
-    <?php require "navbar.html"; ?>
+    <?php require "navbar.php"; ?>
 
     <main>
         <h2>Chercher un match</h2>
