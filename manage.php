@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Initialisation des données fictives en session si elles n'existent pas encore
 if (!isset($_SESSION['matches'])) {
     $_SESSION['matches'] = [
         1 => [
