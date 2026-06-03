@@ -23,14 +23,22 @@
 
 html {
     scroll-behavior: smooth;
+    height: 100%;
 }
 
 body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     font-family: var(--font);
     color: var(--text-dark);
     background: var(--bg-white);
     line-height: 1.6;
     font-size: 16px;
+}
+
+main {
+    flex: 1;
 }
 
 img {
@@ -405,6 +413,119 @@ a {
     color: #4A4A4A;
     font-size: 0.78rem;
 }
+
+/* ============================
+   PAGE PROFIL
+============================ */
+
+.profil-page {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 0 24px;
+}
+
+.profil-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 32px;
+    color: var(--text-dark);
+}
+
+/* CARD */
+.card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow);
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+/* GRID */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+/* LABELS + VALUES */
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 6px;
+    display: block;
+}
+
+.profil-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+/* INPUTS */
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    background: #fff;
+}
+
+/* SAVE BAR */
+.save-bar {
+    margin-top: 32px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+/* MODALE */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: var(--radius);
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+
+
 
 @media (max-width: 900px) {
     .steps-body {
