@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 </head>
 
 <body>
+    <img src="images/logoW.png" class="logo" alt="Logo PadelConnect" />
 
     <?php require "navbar.php"; ?>
 
@@ -90,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         </div>
 
     </div>
-
 
     <?php require "footer.php"; ?>
     <script src="script.js"></script>
