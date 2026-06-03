@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="./Images/favicon.ico" type="image/x-icon">
 </head>
+<!-- PHP if pour change de page si connetion -->
 
 <body>
-    <!-- NAVBAR -->
     <header class="navbar">
         <div class="nav-left">
             <img src="./Images/logoW.png" alt="Logo PadelConnect" class="logo">
@@ -24,8 +24,6 @@
         </div>
     </header>
 
-
-    <!-- HERO -->
     <section class="hero">
         <div class="hero-text">
             <h2>Jouez au padel quand vous voulez,<br> avec qui vous voulez</h2>
@@ -40,12 +38,9 @@
         </div>
     </section>
 
-
-    <!-- COMMENT ÇA MARCHE -->
     <section class="steps">
         <h3>Comment ça marche</h3>
 
-        <!-- ⚠️ Ajout du wrapper .steps-body pour le layout 2 colonnes -->
         <div class="steps-body">
             <div class="steps-grid">
 
@@ -81,8 +76,6 @@
         </div>
     </section>
 
-
-    <!-- AVANTAGES -->
     <section class="advantages">
         <h3>Avantages</h3>
 
@@ -111,8 +104,8 @@
         <a href="#" class="btn-primary adv-btn">S'inscrire</a>
     </section>
 
+    <a href="#" class="mod"></a>
 
-    <!-- BACK TO TOP -->
     <a href="#" class="back-to-top" aria-label="Retour en haut">
         <img src="./Images/fleche.png" alt="Flèche vers le haut">
     </a>
