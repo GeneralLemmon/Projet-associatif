@@ -14,7 +14,7 @@
 
     <h2>Gérer</h2>
 
-
+    <?php require "footer.php"; ?>
     <script src="script.js"></script>
 </body>
 
