@@ -1,30 +1,29 @@
-/* ============================================
-   PADELCONNECT — style.css
-   ============================================ */
-
-/* ---------- Reset & Base ---------- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 :root {
-    --blue:       #2563EB;
+    --blue: #2563EB;
     --blue-hover: #1D4ED8;
-    --text-dark:  #111827;
-    --text-mid:   #374151;
-    --text-soft:  #6B7280;
-    --bg-white:   #FFFFFF;
-    --bg-gray:    #F3F4F6;
-    --border:     #E5E7EB;
-    --radius:     12px;
-    --shadow:     0 2px 12px rgba(0,0,0,0.08);
-    --font:       'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-    --max-w:      1100px;
+    --text-dark: #111827;
+    --text-mid: #4A4A4A;
+    --text-soft: #6B7280;
+    --bg-white: #FFFFFF;
+    --bg-gray: #F3F4F6;
+    --border: #E5E7EB;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --font: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --max-w: 1100px;
 }
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     font-family: var(--font);
@@ -34,10 +33,15 @@ body {
     font-size: 16px;
 }
 
-img { display: block; max-width: 100%; }
-a   { text-decoration: none; color: inherit; }
+img {
+    display: block;
+    max-width: 100%;
+}
 
-/* ---------- Button ---------- */
+a {
+    text-decoration: none;
+}
+
 .btn-primary {
     display: inline-block;
     background: var(--blue);
@@ -51,16 +55,13 @@ a   { text-decoration: none; color: inherit; }
     border: none;
     text-align: center;
 }
+
 .btn-primary:hover {
     background: var(--blue-hover);
     transform: translateY(-1px);
 }
 
-/* ============================================
-   NAVBAR
-   ============================================ */
 .navbar {
-    position: sticky;
     top: 0;
     z-index: 100;
     background: var(--blue);
@@ -81,7 +82,6 @@ a   { text-decoration: none; color: inherit; }
     width: 28px;
     height: 28px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
 }
 
 .nav-left h1 {
@@ -102,11 +102,12 @@ a   { text-decoration: none; color: inherit; }
     opacity: 0.92;
     transition: opacity 0.2s;
 }
-.nav-right a:hover { opacity: 1; text-decoration: underline; }
 
-/* ============================================
-   HERO
-   ============================================ */
+.nav-right a:hover {
+    opacity: 1;
+
+}
+
 .hero {
     background: var(--bg-white);
     display: flex;
@@ -133,45 +134,49 @@ a   { text-decoration: none; color: inherit; }
     letter-spacing: -0.025em;
 }
 
-.hero-text > p {
+.micro-text {
+    font-size: 0.76rem;
+    color: #000000;
+    line-height: 1.6;
+}
+
+.hero-text p {
     font-size: 0.93rem;
     color: var(--text-mid);
     max-width: 420px;
     line-height: 1.7;
 }
 
-.hero-btn {
-    margin-top: 8px;
-    padding: 15px 44px;
-    font-size: 1rem;
-    border-radius: 10px;
-}
-
-.micro-text {
-    font-size: 0.76rem;
-    color: var(--text-soft);
-    line-height: 1.6;
-}
-
 .hero-img {
     width: 100%;
     max-width: 480px;
 }
+
 .hero-img img {
     width: 100%;
     border-radius: var(--radius);
     object-fit: cover;
 }
 
-/* ============================================
-   COMMENT ÇA MARCHE
-   ============================================ */
+.hero-btn {
+    margin-top: 8px;
+    padding: 15px 44px;
+    font-size: 1rem;
+    border-radius: var(--radius);
+}
+
+.hero-text .micro-text {
+    font-size: 0.76rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+}
+
 .steps {
     background: var(--bg-gray);
     padding: 72px 48px;
 }
 
-.steps > h3 {
+.steps>h3 {
     text-align: center;
     font-size: 1.55rem;
     font-weight: 800;
@@ -180,7 +185,6 @@ a   { text-decoration: none; color: inherit; }
     margin-bottom: 52px;
 }
 
-/* Two-column layout: step list left, image right */
 .steps-body {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -207,8 +211,6 @@ a   { text-decoration: none; color: inherit; }
     height: 38px;
     object-fit: contain;
     flex-shrink: 0;
-    /* blue tint for monochrome icons */
-    filter: invert(30%) sepia(90%) saturate(1400%) hue-rotate(210deg) brightness(92%);
 }
 
 .step-card h4 {
@@ -230,16 +232,13 @@ a   { text-decoration: none; color: inherit; }
     max-height: 340px;
 }
 
-/* ============================================
-   AVANTAGES
-   ============================================ */
 .advantages {
     background: var(--bg-white);
     padding: 72px 48px;
     text-align: center;
 }
 
-.advantages > h3 {
+.advantages>h3 {
     font-size: 1.55rem;
     font-weight: 800;
     color: var(--text-dark);
@@ -267,16 +266,16 @@ a   { text-decoration: none; color: inherit; }
     box-shadow: var(--shadow);
     transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .adv-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
 }
 
 .adv-card .icon {
     width: 40px;
     height: 40px;
     object-fit: contain;
-    filter: invert(30%) sepia(90%) saturate(1400%) hue-rotate(210deg) brightness(92%);
 }
 
 .adv-card h4 {
@@ -293,46 +292,34 @@ a   { text-decoration: none; color: inherit; }
 
 .adv-btn {
     padding: 15px 60px;
-    border-radius: 10px;
+    border-radius: var(--radius);
     font-size: 1rem;
 }
 
-/* ============================================
-   BACK TO TOP
-   ============================================ */
 .back-to-top {
     position: fixed;
     bottom: 28px;
     right: 28px;
     width: 48px;
     height: 48px;
-    background: var(--blue);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 200;
-    box-shadow: 0 4px 14px rgba(37,99,235,0.4);
-    transition: transform 0.2s, box-shadow 0.2s;
     text-decoration: none;
 }
-.back-to-top:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37,99,235,0.45);
-}
-.back-to-top img {
-    width: 22px;
-    height: 22px;
-    filter: brightness(0) invert(1);
-}
 
-/* ============================================
-   FOOTER
-   ============================================ */
+.back-to-top:hover {
+    transform: translateY(-1px);
+}
+    
 .footer {
-    background: #0F172A;
-    color: #94A3B8;
+    margin-top: 48px;
+    background: #F3F4F6;
+    border-top: 1px solid #E5E7EB;
+    color: #1A1A1A;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -346,7 +333,7 @@ a   { text-decoration: none; color: inherit; }
     align-items: center;
     gap: 8px;
     font-weight: 600;
-    color: #fff;
+    color: #000000;
     font-size: 0.88rem;
 }
 
@@ -354,35 +341,38 @@ a   { text-decoration: none; color: inherit; }
     width: 22px;
     height: 22px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
 }
 
 .footer-links {
     display: flex;
+    justify-content: center;
     gap: 24px;
 }
 
 .footer-links a {
-    color: #94A3B8;
+    color: #1A1A1A;
     font-size: 0.82rem;
     transition: color 0.2s;
 }
-.footer-links a:hover { color: #fff; }
+
+.footer-links a:hover {
+    color: #787878;
+}
 
 .footer-right {
-    color: #64748B;
+    color: #4A4A4A;
     font-size: 0.78rem;
 }
 
-/* ============================================
-   RESPONSIVE — tablet / mobile
-   ============================================ */
 @media (max-width: 900px) {
     .steps-body {
         grid-template-columns: 1fr;
         gap: 40px;
     }
-    .steps-img { display: none; }
+
+    .steps-img {
+        display: none;
+    }
 
     .adv-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -390,11 +380,21 @@ a   { text-decoration: none; color: inherit; }
 }
 
 @media (max-width: 600px) {
-    .navbar  { padding: 0 20px; }
-    .steps   { padding: 52px 20px; }
-    .advantages { padding: 52px 20px; }
+    .navbar {
+        padding: 0 20px;
+    }
 
-    .hero-text h2 { font-size: 1.65rem; }
+    .steps {
+        padding: 52px 20px;
+    }
+
+    .advantages {
+        padding: 52px 20px;
+    }
+
+    .hero-text h2 {
+        font-size: 1.65rem;
+    }
 
     .adv-grid {
         grid-template-columns: 1fr;
