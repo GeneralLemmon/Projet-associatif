@@ -10,14 +10,19 @@ require_once __DIR__ . "/autoload.php";
 $controller = new TimeSlotController();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $location = $_POST['lieu']   ?? '';
-    $date     = $_POST['date']   ?? '';
-    $time     = $_POST['heure']  ?? '';
-    $level    = (int)($_POST['niveau'] ?? 1);
-    $duration = (int)($_POST['duree'] ?? 90);
-    
+    $location   = $_POST['lieu']   ?? '';
+    $date       = $_POST['date']   ?? '';
+    $time       = $_POST['heure']  ?? '';
+    $level      = (int)($_POST['niveau'] ?? 1);
+    $duration   = (int)($_POST['duree'] ?? 90);
+    $autoApply  = !empty($_POST['auto_apply']);
+
     if ($location && $date && $time) {
-        $controller->create($location, $date, $time, $level, $duration);
+        $slotId = $controller->create($location, $date, $time, $level, $duration);
+        $userId = (int)($_SESSION['user']['id'] ?? 0);
+        if ($autoApply && $userId > 0) {
+            $controller->join($userId, $slotId);
+        }
     }
     header("Location: manage.php");
     exit;
@@ -123,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <!-- Nouveau bouton recherche terrain -->
                     <button type="button" class="btn-search-terrain" id="btn-open-terrain">
-                        Rechercher un terrain
+                        Rechercher un créneau
                     </button>
 
                     <button type="submit" class="btn-primary">Créer le match</button>
@@ -144,12 +149,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="terrain-modal-body">
-
-                <div class="terrain-filters">
-                    <p class="terrain-info">
-                        Les créneaux sont affichés directement en fonction des informations déjà saisies.
-                    </p>
-                </div>
 
                 <div id="terrain-results-area">
                     <p class="terrain-info small">
@@ -211,6 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         hideSlotSummary();
         overlay.classList.add('open');
+        document.body.classList.add('modal-open');
         resultsArea.innerHTML = `
             <div class="terrain-loading">
                 <div class="spinner"></div>
@@ -222,12 +222,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         await fetchSlots(date, locationValue, durationValue, plageValue);
     });
 
-    [btnClose, btnCancel].forEach(b => b.addEventListener('click', () => {
+    function closeTerrainOverlay() {
         overlay.classList.remove('open');
-    }));
+        document.body.classList.remove('modal-open');
+    }
+
+    [btnClose, btnCancel].forEach(b => b.addEventListener('click', closeTerrainOverlay));
 
     overlay.addEventListener('click', e => {
-        if (e.target === overlay) overlay.classList.remove('open');
+        if (e.target === overlay) closeTerrainOverlay();
     });
 
     async function fetchSlots(date, locationValue, durationValue, plageValue) {
@@ -409,7 +412,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (opt.text.includes('Sportfield') && selectedSlot.club.includes('Sportfield')) lieuSelect.value = opt.value;
         });
 
-        overlay.classList.remove('open');
+        closeTerrainOverlay();
         updateSlotSummary();
     }
 

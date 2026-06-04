@@ -75,12 +75,13 @@ class TimeSlotController
     }
 
     // Créer un timeslot
-    public function create(string $location, string $date, string $time, int $level, int $duration = 90): void
+    public function create(string $location, string $date, string $time, int $level, int $duration = 90): int
     {
         $req = $this->db->prepare(
             "INSERT INTO timeslot (location, date, time, level, duration) VALUES (?, ?, ?, ?, ?)"
         );
         $req->execute([$location, $date, $time, $level, $duration]);
+        return (int)$this->db->lastInsertId();
     }
 
     // Modifier un timeslot

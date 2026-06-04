@@ -43,7 +43,7 @@ $slots = $controller->readAll();
     <main class="matchs-page">
         <?php if (empty($slots)): ?>
 
-            <div class="manage-header" style="justify-content: center;">
+            <div class="manage-header">
                 <h2 class="matchs-greeting" style="margin-bottom:0">Gérer les matchs</h2>
             </div>
 
@@ -89,10 +89,10 @@ $slots = $controller->readAll();
 
                         <form method="POST" style="display:flex; gap:8px; margin-top:8px">
                             <input type="hidden" name="id" value="<?= $slot->getId() ?>">
-                            <button name="action" value="modifier" class="btn-primary" style="flex:1; padding:10px">
+                            <button name="action" value="modifier" class="btn-primary btn-manage-action" style="flex:1;">
                                 Modifier
                             </button>
-                            <button name="action" value="supprimer" class="btn-secondary" style="flex:1; padding:10px"
+                            <button name="action" value="supprimer" class="btn-secondary btn-manage-action" style="flex:1;"
                                 onclick="return confirm('Supprimer ce match ?')">
                                 Supprimer
                             </button>
