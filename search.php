@@ -22,11 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_id'])) {
 
 $slots = $controller->getAvailable($userId);
 $allSlots = $controller->readAll();
-echo "<pre>Tous les matchs : " . count($allSlots) . "\n";
-foreach ($allSlots as $s) {
-    echo $s->getDate() . " " . $s->getTime() . " – joueurs: " . $s->getPlayerCount() . "\n";
-}
-echo "Matchs disponibles pour user $userId : " . count($slots) . "</pre>";
 [$msgType, $msgText] = $message ? explode(':', $message, 2) : ['', ''];
 ?>
 <!DOCTYPE html>

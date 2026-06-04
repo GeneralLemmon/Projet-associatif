@@ -1,4 +1,4 @@
-// Cloche notifications
+
 const bellBtn      = document.getElementById('notif-bell-btn');
 const notifOverlay = document.getElementById('notif-overlay');
 const notifClose   = document.getElementById('notif-close');
