@@ -6,7 +6,7 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
     exit;
 }
 
-spl_autoload_register(fn($c) => require "$c.php");
+require_once __DIR__ . "/autoload.php";
 $controller = new TimeSlotController();
 
 // Actions POST
@@ -41,16 +41,26 @@ $slots = $controller->readAll();
     <?php require "navbar.php"; ?>
 
     <main class="matchs-page">
-        <div class="manage-header">
-            <h2 class="matchs-greeting" style="margin-bottom:0">Gérer les matchs</h2>
-            <a href="create.php" class="btn-primary">+ Créer un match</a>
-        </div>
-
         <?php if (empty($slots)): ?>
-            <p style="text-align:center; color:var(--text-soft); margin-top:40px">
-                Aucun match créé pour l'instant.
-            </p>
+
+            <div class="manage-header" style="justify-content: center;">
+                <h2 class="matchs-greeting" style="margin-bottom:0">Gérer les matchs</h2>
+            </div>
+
+            <div class="empty-state-container">
+                <p class="empty-state-text">
+                    Aucun match créé pour l'instant.
+                </p>
+                <a href="create.php" class="btn-primary btn-centered">+ Créer un match</a>
+            </div>
+
         <?php else: ?>
+
+            <div class="manage-header">
+                <h2 class="matchs-greeting" style="margin-bottom:0">Gérer les matchs</h2>
+                <a href="create.php" class="btn-primary">+ Créer un match</a>
+            </div>
+
             <div class="matchs-container">
                 <?php foreach ($slots as $slot): ?>
                     <div class="match-card">
@@ -89,6 +99,7 @@ $slots = $controller->readAll();
                     </div>
                 <?php endforeach; ?>
             </div>
+
         <?php endif; ?>
     </main>
 

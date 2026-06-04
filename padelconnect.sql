@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:3306
--- Généré le : jeu. 04 juin 2026 à 12:30
+-- Généré le : jeu. 04 juin 2026 à 13:32
 -- Version du serveur : 5.7.24
 -- Version de PHP : 8.3.1
 
@@ -31,6 +31,30 @@ CREATE TABLE `is_registered` (
   `id_user` int(11) NOT NULL,
   `id_timeslot` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `notification`
+--
+
+CREATE TABLE `notification` (
+  `id_notification` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `level` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `notification_read`
+--
+
+CREATE TABLE `notification_read` (
+  `id_user` int(11) NOT NULL,
+  `id_notification` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -76,6 +100,18 @@ ALTER TABLE `is_registered`
   ADD KEY `id_timeslot` (`id_timeslot`);
 
 --
+-- Index pour la table `notification`
+--
+ALTER TABLE `notification`
+  ADD PRIMARY KEY (`id_notification`);
+
+--
+-- Index pour la table `notification_read`
+--
+ALTER TABLE `notification_read`
+  ADD PRIMARY KEY (`id_user`,`id_notification`);
+
+--
 -- Index pour la table `timeslot`
 --
 ALTER TABLE `timeslot`
@@ -93,16 +129,22 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT pour la table `notification`
+--
+ALTER TABLE `notification`
+  MODIFY `id_notification` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT pour la table `timeslot`
 --
 ALTER TABLE `timeslot`
-  MODIFY `id_timeslot` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_timeslot` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Contraintes pour les tables déchargées
