@@ -1,10 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
-    header("Location: index.php");
-    exit();
-}
-// Si le tableau des matchs n'existe pas encore en session, on crée les matchs par défaut
+
 if (!isset($_SESSION['matches'])) {
     $_SESSION['matches'] = [
         1 => [
@@ -31,8 +27,6 @@ if (!isset($_SESSION['matches'])) {
     ];
 }
 
-$messageSuppression = null;
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $itemId = $_POST['itemId'];
     $action = $_POST['action'];
@@ -49,7 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $messageSuppression = "L'élément n°" . $itemId . " a bien été supprimé.";
             }
             break;
-    }
+
+        default:
+            $messageSuppression = "Action non autorisée ou inconnue.";
+            break;
+    }   
 }
 ?>
 <!DOCTYPE html>
@@ -63,16 +61,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 </head>
 
 <body>
+    <img src="images/logoW.png" class="logo" alt="Logo PadelConnect" />
 
     <?php require "navbar.php"; ?>
 
     <h2>Gérer mes matchs</h2>
 
     <div style="text-align: center; margin-bottom: 20px;">
-        <a href="create.php" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">+ Créer un match</a>
+        <a href="create.php" class="btn-primary" style="text-decoration: none; padding: 10px 20px; display: inline-block;">+ Créer un match</a>
     </div>
 
-    <?php if ($messageSuppression): ?>
+    <?php if (isset($messageSuppression)): ?>
         <p style="color: green; font-weight: bold; text-align: center;"><?= htmlspecialchars($messageSuppression) ?></p>
     <?php endif; ?>
 
@@ -87,11 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     <img src="Images/lieu.png" alt="Lieu" width="50">
                     <p> <?= htmlspecialchars($match['venue']) ?></p>
                     <img src="Images/player.png" alt="Joueurs" width="50">
-                    <p> <?= htmlspecialchars($match['players']) ?></p>
+                    <p> <?= htmlspecialchars($match['players'] ?? '0/4 Joueurs') ?></p>
                     <img src="Images/level.png" alt="Niveau" width="50">
                     <p> Niveau : <?= htmlspecialchars($match['level']) ?></p>
 
-                    <form action="manage.php" method="POST">
+                    <form action="" method="POST">
                         <input type="hidden" name="itemId" value="<?= $id ?>">
                         <button type="submit" name="action" value="modifier" class="btn-primary">Modifier</button>
                         <button type="submit" name="action" value="supprimer" class="btn-secondary">Supprimer</button>
