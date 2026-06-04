@@ -15,7 +15,10 @@
 
     <main class="matchs-page">
 
-        <h2 class="matchs-greeting">Bonjour [Nom de l'utilisateur]</h2> <!-- Remplacer par le prénom de l'utilisateur avec PHP -->
+        <h2 class="matchs-greeting">
+
+            Bonjour <?= htmlspecialchars($_SESSION['user']['name']) ?>
+        </h2>
 
         <section class="matchs-section">
             <h3 class="matchs-title">Mes prochains matchs</h3>
