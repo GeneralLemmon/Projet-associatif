@@ -59,16 +59,16 @@ function initMatchDateValidation() {
 
     dateInput.setAttribute('min', formattedCurrentDate);
 }
-
+/*
 function initMatchFilter() {
     const container = document.querySelector('.matchs-container');
     if (!container) return;
 
     const filterInput = document.createElement('input');
     filterInput.type = 'text';
-    filterInput.placeholder = '🔍 Filtrer par lieu (ex: Puteaux, Forest Hill...)';
+    filterInput.placeholder = '🔍 Filtrer par lieu ';
     filterInput.style.cssText = 'display: block; margin: 10px auto 20px auto; padding: 10px; width: 80%; max-width: 400px; border: 1px solid #ccc; border-radius: 5px;';
-    
+
     container.parentNode.insertBefore(filterInput, container);
 
     filterInput.addEventListener('input', (event) => {
@@ -88,8 +88,8 @@ function initMatchFilter() {
             }
         });
     });
-}
-
+} 
+*/
 function initLoginValidation() {
     const loginForm = document.querySelector('form[method="POST"]');
     if (!loginForm) return;
