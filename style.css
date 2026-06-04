@@ -815,3 +815,22 @@ textarea {
 .btn-leave-active:hover {
     background: rgba(255,255,255,0.35);
 }
+
+
+.empty-state-container {
+    text-align: center;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+}
+
+.empty-state-text {
+    color: var(--text-soft);
+    margin: 0;
+}
+
+.btn-centered {
+    max-width: max-content;
+}
