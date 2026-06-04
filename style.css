@@ -941,3 +941,21 @@ textarea {
     padding: 12px 20px;
     border-top: 1px solid var(--border);
 }
+
+.empty-state-container {
+    text-align: center;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px; /* Pousse le bouton 48px plus bas que le texte */
+}
+
+.empty-state-text {
+    color: var(--text-soft);
+    margin: 0;
+}
+
+.btn-centered {
+    max-width: max-content;
+}
