@@ -14,3 +14,4 @@
         © 2026 PadelConnect – All rights reserved
     </div>
 </footer>
+<script src="script.js"></script>
