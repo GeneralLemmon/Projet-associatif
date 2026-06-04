@@ -7,6 +7,12 @@ spl_autoload_register(function ($class) {
 $userController = new UserController();
 $user = $userController->read($_SESSION['user']['id']);
 
+if (!$user) {
+  session_destroy();
+  header("Location: login.php");
+  exit;
+}
+
 $mode = $_GET['mode'] ?? 'view';
 
 function e($v)
@@ -147,7 +153,7 @@ if ($_POST) {
     </div>
   </main>
 
-  <?php require "footer.php"; ?> 
+  <?php require "footer.php"; ?>
 </body>
 
 </html>

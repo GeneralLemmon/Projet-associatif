@@ -21,13 +21,15 @@ class UserController
     }
 
     // Récupérer un utilisateur par son ID
-    public function read(int $id): User
+    public function read(int $id): ?User
     {
         $req = $this->getDb()->prepare("SELECT * FROM `user` WHERE id_user = ?");
         $req->execute([$id]);
-        $data = $req->fetch();
+        $data = $req->fetch(PDO::FETCH_ASSOC);
+        if (!$data) return null;
         return new User($data);
     }
+
 
     // Récupérer tous les utilisateurs
     public function readAll(): array
@@ -99,5 +101,4 @@ class UserController
         }
         return null;
     }
-
 }

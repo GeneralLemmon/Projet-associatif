@@ -2,9 +2,12 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 $isConnected = isset($_SESSION['user']);
-$isAdmin = $isConnected && $_SESSION['user']['isAdmin'];
+$isAdmin = $isConnected && !empty($_SESSION['user']['is_admin']);
+
 ?>
+
 
 
 <header class="navbar">

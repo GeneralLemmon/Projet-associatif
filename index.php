@@ -14,7 +14,6 @@
 <body>
 
     <?php
-    session_start();
     require "navbar.php"; ?>
 
     <?php if (!isset($_SESSION['user'])): ?>

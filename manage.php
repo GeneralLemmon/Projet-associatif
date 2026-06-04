@@ -1,6 +1,9 @@
 <?php
 session_start();
-
+if (!isset($_SESSION['user']) || empty($_SESSION['user']['isAdmin'])) {
+    header("Location: index.php");
+    exit();
+}
 // Si le tableau des matchs n'existe pas encore en session, on crée les matchs par défaut
 if (!isset($_SESSION['matches'])) {
     $_SESSION['matches'] = [
@@ -46,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $messageSuppression = "L'élément n°" . $itemId . " a bien été supprimé.";
             }
             break;
-    }   
+    }
 }
 ?>
 <!DOCTYPE html>
