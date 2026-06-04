@@ -6,15 +6,7 @@ class UserController
 
     public function __construct()
     {
-        $dbName = "padelconnect";
-        $port = 3306;
-        $username = "root";
-        $password = "root";
-        try {
-            $this->setDb(new PDO("mysql:host=localhost;dbname=$dbName;port=$port;charset=utf8mb4", $username, $password));
-        } catch (PDOException $error) {
-            echo "<p style='color: red'>{$error->getMessage()}</p>";
-        }
+        $this->db = Database::getInstance()->getConnection();
     }
 
     public function getDb(): PDO
@@ -107,5 +99,5 @@ class UserController
         }
         return null;
     }
-    
+
 }
