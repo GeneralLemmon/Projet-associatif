@@ -1,11 +1,32 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+session_start();
 
+// Sécurité si jamais la session n'est pas encore initialisée
+if (!isset($_SESSION['matches'])) {
+    $_SESSION['matches'] = [];
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newDate  = isset($_POST['date']) ? $_POST['date'] : '';
     $newTime  = isset($_POST['heure']) ? $_POST['heure'] : '';
     $newLevel = isset($_POST['niveau']) ? $_POST['niveau'] : '';
     $newVenue = isset($_POST['lieu']) ? $_POST['lieu'] : '';
 
+    if (!empty($newDate) && !empty($newTime)) {
+        // Trouve le plus grand ID existant pour créer le suivant (ex: 4)
+        $newId = empty($_SESSION['matches']) ? 1 : max(array_keys($_SESSION['matches'])) + 1;
+
+        // On ajoute le nouveau match dans la session
+        $_SESSION['matches'][$newId] = [
+            'date' => $newDate,
+            'time' => $newTime,
+            'venue' => $newVenue,
+            'players' => '1/4 Joueurs', // Valeur fictive par défaut
+            'level' => $newLevel
+        ];
+    }
+
+    // Une fois ajouté, on retourne instantanément à l'écran d'accueil
     header("Location: manage.php");
     exit();
 }

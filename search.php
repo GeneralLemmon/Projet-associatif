@@ -13,18 +13,38 @@
 
     <?php require "navbar.php"; ?>
 
-    <main>
-        <h2>Chercher un match</h2>
+    <main class="matchs-page">
 
-        <div class="match-results">
-            <div class="match-card">
-                <h3>Match 1</h3>
-                <p>Lieu : Club de Padel XYZ</p>
-                <p>Date : 15 juin 2024</p>
-                <p>Heure : 18h00</p>
-                <button class="join-btn">Rejoindre</button>
+        <h2 class="matchs-greeting">Chercher un match</h2>
+
+        <section class="matchs-section">
+            <h3 class="matchs-title">Prochain Matchs</h3>
+
+            <div class="matchs-container">
+
+                <div class="match-card">
+                    <p class="match-date">15 juin 2024 - 18h00</p>
+
+                    <div class="match-info">
+                        <img src="Images/lieu.png" alt="Lieu">
+                        <span>Club de Padel XYZ</span>
+                    </div>
+
+                    <div class="match-info">
+                        <img src="Images/player.png" alt="Joueurs">
+                        <span>2/4 Joueurs</span>
+                    </div>
+
+                    <div class="match-info">
+                        <img src="Images/level.png" alt="Niveau">
+                        <span>Niveau moyen : 3</span>
+                    </div>
+
+                    <button class="join-btn">Rejoindre</button>
+                </div>
+
             </div>
-        </div>
+        </section>
     </main>
 
     <?php require "footer.php"; ?>
