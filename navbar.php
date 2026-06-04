@@ -1,5 +1,7 @@
 <?php
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 $isConnected = isset($_SESSION['user']);
 $isAdmin = $isConnected && $_SESSION['user']['isAdmin'];
 ?>

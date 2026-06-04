@@ -134,23 +134,28 @@ a {
     margin-left: auto;
 }
 
-.nav-right img {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
+.nav-right .profile-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .nav-right a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: #fff;
-    font-size: 0.88rem;
+    font-size: 0.95rem;
     font-weight: 500;
-    opacity: 0.92;
-    transition: opacity 0.2s;
+    text-decoration: none;
 }
 
 .nav-right a:hover {
-    opacity: 1;
+    opacity: 0.8;
+    transition: 0.2s ease;
 }
+
 
 
 .hero {

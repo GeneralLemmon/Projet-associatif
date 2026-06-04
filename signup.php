@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 spl_autoload_register(function (string $class) {
     require "$class.php";
@@ -13,19 +14,32 @@ if ($_POST) {
     $newUser = new User([
         'last_name'  => htmlspecialchars($_POST['last_name']),
         'first_name' => htmlspecialchars($_POST['first_name']),
-        'level'     => htmlspecialchars($_POST['level']),
-        'email'     => htmlspecialchars($_POST['email']),
-        'password'  => $passwordHashed,
+        'level'      => htmlspecialchars($_POST['level']),
+        'email'      => htmlspecialchars($_POST['email']),
+        'password'   => $passwordHashed,
     ]);
 
     $existing = $userController->readByEmail($newUser->getEmail());
     if ($existing) {
         $message = "Cet email est déjà utilisé.";
     } else {
+
         $userController->create($newUser);
-        echo "<script>window.location.href='index.php'</script>";
+        $user = $userController->readByEmail($newUser->getEmail());
+
+        $_SESSION['user'] = [
+            "id"        => $user->getId(),
+            "firstName" => $user->getFirstName(),
+            "lastName"  => $user->getLastName(),
+            "name"      => $user->getFullName(),
+            "isAdmin"   => $user->getIsAdmin()
+        ];
+        header("Location: index.php");
+        exit;
     }
 }
+?>
+
 ?>
 
 <!DOCTYPE html>
