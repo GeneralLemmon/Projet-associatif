@@ -7,14 +7,15 @@ class Database
 
     private function __construct()
     {
-        $dbName = "padelconnect";
+        $host = "sql207.infinityfree.com";
+        $dbName = "if0_42094984_padelconnect";
+        $username = "if0_42094984";
+        $password = "OZ8ZUMPjIKAC";
         $port = 3306;
-        $username = "root";
-        $password = "root";
 
         try {
             $this->connection = new PDO(
-                "mysql:host=localhost;dbname=$dbName;port=$port;charset=utf8mb4",
+                "mysql:host=$host;dbname=$dbName;port=$port;charset=utf8mb4",
                 $username,
                 $password
             );
