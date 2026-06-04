@@ -102,6 +102,29 @@ a {
     background: #e5e7eb;
 }
 
+.btn-block {
+    width: 100%;
+}
+
+.login-error {
+    color: #DC2626;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.login-signup-text {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.login-signup-link {
+    color: var(--blue);
+    font-weight: 700;
+}
+
 /* ===========================
    NAVBAR
 =========================== */
@@ -544,6 +567,7 @@ a {
     gap: 24px;
     box-shadow: var(--shadow);
     transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
 }
 
 .match-card:hover {
@@ -740,6 +764,59 @@ textarea {
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
+}
+
+#card-action-modal .modal-content {
+    max-width: 420px;
+    padding: 28px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.16);
+    border-radius: 22px;
+}
+
+#card-action-modal .modal-close {
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.05);
+    color: #374151;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+#card-action-modal h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    margin-bottom: 18px;
+}
+
+#card-action-modal .modal-actions {
+    display: grid;
+    gap: 12px;
+}
+
+@media (min-width: 520px) {
+    #card-action-modal .modal-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+#card-action-modal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+#card-action-modal .btn-primary,
+#card-action-modal .btn-secondary {
+    width: 100%;
+}
+
+#card-action-modal.open {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
 }
 
 /* ===========================

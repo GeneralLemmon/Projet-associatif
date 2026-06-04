@@ -18,6 +18,7 @@ if ($_POST) {
             "lastName"  => $user->getLastName(),
             "name"      => $user->getFullName(),
             "level"     => $user->getLevel(),
+            "minLevel"  => $user->getMinLevel(),
             "is_admin"  => $user->getIsAdmin()
         ];
         echo "<script>window.location.href='index.php'</script>";
@@ -46,7 +47,7 @@ if ($_POST) {
         <h2 class="matchs-greeting">Connexion</h2>
 
         <?php if (!empty($message)): ?>
-            <p style="color:var(--blue); text-align:center; margin-bottom:20px;">
+            <p class="login-error">
                 <?= $message ?>
             </p>
         <?php endif; ?>
@@ -66,15 +67,15 @@ if ($_POST) {
                     <input type="password" id="password" name="password" required>
                 </div>
 
-                <div class="form-group full" style="margin-top:20px;">
-                    <button type="submit" class="btn-primary" style="width:100%;">Se connecter</button>
+                <div class="form-group full form-group-spaced">
+                    <button type="submit" class="btn-primary btn-block">Se connecter</button>
                 </div>
 
             </form>
 
-            <p class="micro-text" style="margin-top:20px; text-align:center;">
+            <p class="micro-text login-signup-text">
                 Pas encore de compte ?
-                <a href="signup.php" style="color:var(--blue)">Créer un compte</a>
+                <a href="signup.php" class="login-signup-link">Créer un compte</a>
             </p>
         </div>
 

@@ -6,6 +6,7 @@ class User
     private string $last_name;
     private string $first_name;
     private string $level;
+    private int $min_level = 1;
     private string $email;
     private string $password;
     private bool $is_admin;
@@ -59,7 +60,7 @@ public function getLastName(): string
         $this->first_name = $first_name;
         return $this;
     }
-    
+
     public function getFullName(): string
     {
         return $this->first_name . " " . $this->last_name;
@@ -73,6 +74,17 @@ public function getLastName(): string
     public function setLevel(string $level): self
     {
         $this->level = $level;
+        return $this;
+    }
+
+    public function getMinLevel(): int
+    {
+        return $this->min_level;
+    }
+
+    public function setMin_level($min_level): self
+    {
+        $this->min_level = (int)$min_level;
         return $this;
     }
 

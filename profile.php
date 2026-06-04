@@ -5,6 +5,7 @@ spl_autoload_register(function ($class) {
 });
 
 $userController = new UserController();
+/** @var User $user */
 $user = $userController->read($_SESSION['user']['id']);
 
 if (!$user) {
@@ -14,11 +15,29 @@ if (!$user) {
 }
 
 $mode = $_GET['mode'] ?? 'view';
+$message = "";
 
 function e($v)
 {
-  return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+  return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
 }
+
+function levelToNumber(string $level): int
+{
+  $mapping = [
+      'Débutant' => 1,
+      'Perfectionnement' => 2,
+      'Élémentaire' => 3,
+      'Intermédiaire' => 4,
+      'Confirmé' => 5,
+      'Avancé' => 6,
+      'Expert' => 7,
+      'Élite' => 8,
+  ];
+
+  return is_numeric($level) ? (int)$level : ($mapping[$level] ?? 0);
+}
+
 $levels = [
   "Débutant"        => ["num" => 1, "label" => "Débutant"],
   "Perfectionnement" => ["num" => 2, "label" => "Perfectionnement"],
@@ -34,25 +53,36 @@ if ($_POST) {
   $user->setFirst_name($_POST['prenom']);
   $user->setLast_name($_POST['nom']);
   $user->setEmail($_POST['email']);
-  $user->setLevel($_POST['level']);
+  $selectedLevel = $_POST['level'];
+  $user->setLevel($selectedLevel);
+  $minLevel = (int)($_POST['min_level'] ?? 1);
+  $levelNumber = levelToNumber($selectedLevel);
 
-  if (!empty($_POST['password'])) {
-    if ($_POST['password'] === $_POST['password_confirm']) {
-      $user->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT));
-    } else {
-      $message = "Les mots de passe ne correspondent pas.";
+  if ($minLevel > $levelNumber) {
+    $message = "Le niveau minimum doit être inférieur ou égal à votre niveau.";
+  } else {
+    if (!empty($_POST['password'])) {
+      if ($_POST['password'] === $_POST['password_confirm']) {
+        $user->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT));
+      } else {
+        $message = "Les mots de passe ne correspondent pas.";
+      }
+    }
+
+    if (empty($message)) {
+      $user->setMin_level($minLevel);
+      $userController->update($user);
+
+      $_SESSION['user']['firstName'] = $user->getFirstName();
+      $_SESSION['user']['lastName']  = $user->getLastName();
+      $_SESSION['user']['name']      = $user->getFullName();
+      $_SESSION['user']['level']     = $user->getLevel();
+      $_SESSION['user']['minLevel']  = $user->getMinLevel();
+
+      header("Location: profile.php");
+      exit;
     }
   }
-
-  $userController->update($user);
-
-  $_SESSION['user']['firstName'] = $user->getFirstName();
-  $_SESSION['user']['lastName']  = $user->getLastName();
-  $_SESSION['user']['name']      = $user->getFullName();
-  $_SESSION['user']['level']     = $user->getLevel();
-
-  header("Location: profile.php");
-  exit;
 }
 
 ?>
@@ -74,6 +104,12 @@ if ($_POST) {
 
     <div class="card">
       <p class="card-title">Informations personnelles</p>
+
+      <?php if (!empty($message)): ?>
+        <p style="color:#DC2626; text-align:center; margin-bottom:20px; font-weight:700;">
+          <?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?>
+        </p>
+      <?php endif; ?>
 
       <?php if ($mode === "edit") : ?>
 
@@ -102,14 +138,39 @@ if ($_POST) {
                 <img src="./Images/help.png" alt="Aide" id="btn-level-help" class="help-icon">
               </div>
 
+              <?php
+                $selectedLevel = $user->getLevel();
+                if (is_numeric($selectedLevel)) {
+                    foreach ($levels as $text => $info) {
+                        if ((string)$info['num'] === (string)$selectedLevel) {
+                            $selectedLevel = $text;
+                            break;
+                        }
+                    }
+                }
+              ?>
+
               <select id="level" name="level">
                 <?php foreach ($levels as $text => $info): ?>
-                  <option value="<?= $text ?>" <?= $user->getLevel() == $text ? 'selected' : '' ?>>
-                    Niveau <?= $info["num"] ?> – <?= $info["label"] ?>
+                  <option value="<?= e($text) ?>" <?= $selectedLevel === $text ? 'selected' : '' ?> >
+                    Niveau <?= $info['num'] ?> – <?= e($info['label']) ?>
                   </option>
                 <?php endforeach; ?>
               </select>
             </div>
+
+            <div class="form-group full">
+              <label for="min_level">Niveau minimum souhaité</label>
+              <select id="min_level" name="min_level">
+                <?php $currentMin = $user->getMinLevel(); ?>
+                <?php for ($i = 1; $i <= 8; $i++): ?>
+                  <option value="<?= $i ?>" <?= (int)$currentMin === $i ? 'selected' : '' ?>>
+                    <?= $i ?> – <?= $levels[array_keys($levels)[$i - 1]]['label'] ?>
+                  </option>
+                <?php endfor; ?>
+              </select>
+            </div>
+
             <div class="form-group full">
               <label for="password">Nouveau mot de passe</label>
               <input type="password" id="password" name="password" class="input-large">
@@ -152,9 +213,32 @@ if ($_POST) {
               <label>Niveau</label>
               <img src="./Images/help.png" alt="Aide" id="btn-level-help" class="help-icon">
             </div>
+            <?php
+              $storedLevel = $user->getLevel();
+              $levelInfo = null;
+              if (isset($levels[$storedLevel])) {
+                  $levelInfo = $levels[$storedLevel];
+              } elseif (is_numeric($storedLevel)) {
+                  foreach ($levels as $info) {
+                      if ((string)$info['num'] === (string)$storedLevel) {
+                          $levelInfo = $info;
+                          break;
+                      }
+                  }
+              }
+            ?>
             <p class="profile-value">
-              Niveau <?= e($levels[$user->getLevel()]["num"]) ?> – <?= e($levels[$user->getLevel()]["label"]) ?>
+              <?php if ($levelInfo): ?>
+                Niveau <?= e($levelInfo['num']) ?> – <?= e($levelInfo['label']) ?>
+              <?php else: ?>
+                Niveau inconnu
+              <?php endif; ?>
             </p>
+          </div>
+
+          <div class="form-group full">
+            <label>Niveau minimum souhaité</label>
+            <p class="profile-value">Niveau <?= e($user->getMinLevel()) ?></p>
           </div>
         </div>
         <div class="save-bar">

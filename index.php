@@ -17,6 +17,27 @@
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
+
+    function normalizeLevel($level): int
+    {
+        if (is_numeric($level)) {
+            return (int) $level;
+        }
+
+        $mapping = [
+            'Débutant' => 1,
+            'Perfectionnement' => 2,
+            'Élémentaire' => 3,
+            'Intermédiaire' => 4,
+            'Confirmé' => 5,
+            'Avancé' => 6,
+            'Expert' => 7,
+            'Élite' => 8,
+        ];
+
+        return $mapping[$level] ?? 0;
+    }
+
     require "navbar.php"; ?>
 
     <?php if (!isset($_SESSION['user'])): ?>
@@ -184,6 +205,14 @@
 
                 <?php
                 $available = $controller->getAvailable($_SESSION['user']['id']);
+                if (empty($_SESSION['user']['is_admin'])) {
+                    $userLevel = normalizeLevel($_SESSION['user']['level'] ?? '');
+                    $minMatchLevel = isset($_SESSION['user']['minLevel']) ? (int)$_SESSION['user']['minLevel'] : 1;
+                    $available = array_filter($available, function ($slot) use ($userLevel, $minMatchLevel) {
+                        $slotLevel = normalizeLevel($slot->getLevel());
+                        return $slotLevel <= $userLevel && $slotLevel >= $minMatchLevel;
+                    });
+                }
                 ?>
 
                 <?php if (empty($available)): ?>

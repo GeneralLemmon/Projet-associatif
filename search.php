@@ -7,6 +7,27 @@ if (!isset($_SESSION['user'])) {
 }
 
 require_once __DIR__ . "/autoload.php";
+
+function normalizeLevel($level): int
+{
+    if (is_numeric($level)) {
+        return (int) $level;
+    }
+
+    $mapping = [
+        'Débutant' => 1,
+        'Perfectionnement' => 2,
+        'Élémentaire' => 3,
+        'Intermédiaire' => 4,
+        'Confirmé' => 5,
+        'Avancé' => 6,
+        'Expert' => 7,
+        'Élite' => 8,
+    ];
+
+    return $mapping[$level] ?? 0;
+}
+
 $controller = new TimeSlotController();
 $userId     = $_SESSION['user']['id'];
 $message    = '';
@@ -21,6 +42,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_id'])) {
 }
 
 $slots = $controller->getAvailable($userId);
+
+if (empty($_SESSION['user']['is_admin'])) {
+    $userLevel = normalizeLevel($_SESSION['user']['level'] ?? '');
+    $minMatchLevel = isset($_SESSION['user']['minLevel']) ? (int)$_SESSION['user']['minLevel'] : 1;
+    $slots = array_filter($slots, function ($slot) use ($userLevel, $minMatchLevel) {
+        $slotLevel = normalizeLevel($slot->getLevel());
+        return $slotLevel <= $userLevel && $slotLevel >= $minMatchLevel;
+    });
+}
+
 $dateFilter = $_GET['date'] ?? null;
 
 if ($dateFilter) {
@@ -73,7 +104,7 @@ $allSlots = $controller->readAll();
             <?php else: ?>
                 <div class="matchs-container">
                     <?php foreach ($slots as $slot): ?>
-                        <div class="match-card">
+                        <div class="match-card" data-timeslot="<?= $slot->getId() ?>" data-location="<?= htmlspecialchars($slot->getLocation(), ENT_QUOTES) ?>">
                             <p class="match-date">
                                 <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
                             </p>
@@ -112,6 +143,66 @@ $allSlots = $controller->readAll();
     </main>
 
     <?php require "footer.php"; ?>
+
+    <div class="modal-overlay" id="card-action-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">×</button>
+            <h3>Détails du match</h3>
+            <div class="modal-actions">
+                <button type="button" class="btn-primary" id="modal-players-button">Voir les joueurs</button>
+                <button type="button" class="btn-secondary" id="modal-map-button">Voir le lieu</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="modal-cancel">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const cardModal = document.getElementById('card-action-modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalCancel = document.getElementById('modal-cancel');
+    const modalPlayersButton = document.getElementById('modal-players-button');
+    const modalMapButton = document.getElementById('modal-map-button');
+
+    document.querySelectorAll('.match-card').forEach(card => {
+        card.addEventListener('click', event => {
+            if (event.target.closest('form') || event.target.closest('a') || event.target.closest('button')) {
+                return;
+            }
+            const timeslotId = card.dataset.timeslot;
+            const location = card.dataset.location || 'Lieu inconnu';
+            modalPlayersButton.dataset.timeslot = timeslotId;
+            modalMapButton.dataset.location = location;
+            cardModal.classList.add('open');
+        });
+    });
+
+    function closeCardModal() {
+        cardModal.classList.remove('open');
+    }
+
+    [modalClose, modalCancel].forEach(button => button.addEventListener('click', closeCardModal));
+
+    cardModal.addEventListener('click', event => {
+        if (event.target === cardModal) closeCardModal();
+    });
+
+    modalPlayersButton.addEventListener('click', () => {
+        const id = modalPlayersButton.dataset.timeslot;
+        if (id) {
+            window.location.href = `players.php?id=${encodeURIComponent(id)}`;
+        }
+    });
+
+    modalMapButton.addEventListener('click', () => {
+        const location = modalMapButton.dataset.location;
+        if (location) {
+            const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+            window.open(url, '_blank');
+        }
+    });
+    </script>
 </body>
 
 </html>

@@ -63,7 +63,7 @@ $slots = $controller->readAll();
 
             <div class="matchs-container">
                 <?php foreach ($slots as $slot): ?>
-                    <div class="match-card">
+                    <div class="match-card" data-timeslot="<?= $slot->getId() ?>" data-location="<?= htmlspecialchars($slot->getLocation(), ENT_QUOTES) ?>">
                         <p class="match-date">
                             <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
                         </p>
@@ -104,7 +104,67 @@ $slots = $controller->readAll();
         <?php endif; ?>
     </main>
 
+    <div class="modal-overlay" id="card-action-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">×</button>
+            <h3>Que voulez-vous faire ?</h3>
+            <div class="modal-actions">
+                <button type="button" class="btn-primary" id="modal-players-button">Voir les joueurs</button>
+                <button type="button" class="btn-secondary" id="modal-map-button">Voir le lieu</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="modal-cancel">Fermer</button>
+            </div>
+        </div>
+    </div>
+
     <?php require "footer.php"; ?>
+
+    <script>
+    const cardModal = document.getElementById('card-action-modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalCancel = document.getElementById('modal-cancel');
+    const modalPlayersButton = document.getElementById('modal-players-button');
+    const modalMapButton = document.getElementById('modal-map-button');
+
+    document.querySelectorAll('.match-card').forEach(card => {
+        card.addEventListener('click', event => {
+            if (event.target.closest('form') || event.target.closest('a') || event.target.closest('button')) {
+                return;
+            }
+            const timeslotId = card.dataset.timeslot;
+            const location = card.dataset.location || 'Lieu inconnu';
+            modalPlayersButton.dataset.timeslot = timeslotId;
+            modalMapButton.dataset.location = location;
+            cardModal.classList.add('open');
+        });
+    });
+
+    function closeCardModal() {
+        cardModal.classList.remove('open');
+    }
+
+    [modalClose, modalCancel].forEach(button => button.addEventListener('click', closeCardModal));
+
+    cardModal.addEventListener('click', event => {
+        if (event.target === cardModal) closeCardModal();
+    });
+
+    modalPlayersButton.addEventListener('click', () => {
+        const id = modalPlayersButton.dataset.timeslot;
+        if (id) {
+            window.location.href = `players.php?id=${encodeURIComponent(id)}`;
+        }
+    });
+
+    modalMapButton.addEventListener('click', () => {
+        const location = modalMapButton.dataset.location;
+        if (location) {
+            const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+            window.open(url, '_blank');
+        }
+    });
+    </script>
 </body>
 
 </html>

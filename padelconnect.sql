@@ -83,6 +83,7 @@ CREATE TABLE `user` (
   `last_name` varchar(50) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `level` varchar(30) DEFAULT NULL,
+  `min_level` int(11) NOT NULL DEFAULT '1',
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `is_admin` tinyint(1) DEFAULT '0'

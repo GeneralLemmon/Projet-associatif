@@ -59,12 +59,13 @@ class UserController
     public function create(User $user): void
     {
         $req = $this->getDb()->prepare(
-            "INSERT INTO `user` (last_name, first_name, level, email, password) VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO `user` (last_name, first_name, level, min_level, email, password) VALUES (?, ?, ?, ?, ?, ?)"
         );
         $req->execute([
             $user->getLastName(),
             $user->getFirstName(),
             $user->getLevel(),
+            $user->getMinLevel(),
             $user->getEmail(),
             $user->getPassword()
         ]);
@@ -74,12 +75,13 @@ class UserController
     public function update(User $user): void
 {
     $req = $this->getDb()->prepare(
-        "UPDATE `user` SET last_name = ?, first_name = ?, level = ?, email = ?, password = ? WHERE id_user = ?"
+        "UPDATE `user` SET last_name = ?, first_name = ?, level = ?, min_level = ?, email = ?, password = ? WHERE id_user = ?"
     );
     $req->execute([
         $user->getLastName(),
         $user->getFirstName(),
         $user->getLevel(),
+        $user->getMinLevel(),
         $user->getEmail(),
         $user->getPassword(),
         $user->getId()

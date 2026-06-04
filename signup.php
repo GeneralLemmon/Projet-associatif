@@ -2,16 +2,39 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . "/autoload.php";
 
+function levelToNumber(string $level): int
+{
+    $mapping = [
+        'Débutant' => 1,
+        'Perfectionnement' => 2,
+        'Élémentaire' => 3,
+        'Intermédiaire' => 4,
+        'Confirmé' => 5,
+        'Avancé' => 6,
+        'Expert' => 7,
+        'Élite' => 8,
+    ];
+
+    return is_numeric($level) ? (int)$level : ($mapping[$level] ?? 0);
+}
+
 $userController = new UserController();
 $message = "";
 
 if ($_POST) {
     $passwordHashed = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    $level = htmlspecialchars($_POST['level']);
+    $minLevel = (int)($_POST['min_level'] ?? 1);
+    $levelNumber = levelToNumber($level);
 
-    $newUser = new User([
+    if ($minLevel > $levelNumber) {
+        $message = "Le niveau minimum doit être inférieur ou égal à votre niveau.";
+    } else {
+        $newUser = new User([
         'last_name'  => htmlspecialchars($_POST['last_name']),
         'first_name' => htmlspecialchars($_POST['first_name']),
         'level'      => htmlspecialchars($_POST['level']),
+        'min_level'  => (int)($_POST['min_level'] ?? 1),
         'email'      => htmlspecialchars($_POST['email']),
         'password'   => $passwordHashed,
     ]);
@@ -29,6 +52,7 @@ if ($_POST) {
             "lastName"  => $user->getLastName(),
             "name"      => $user->getFullName(),
             "level"     => $user->getLevel(),
+            "minLevel"  => $user->getMinLevel(),
             "is_admin"  => $user->getIsAdmin()
         ];
 
@@ -91,6 +115,20 @@ if ($_POST) {
                         <option value="Avancé">6 – Avancé</option>
                         <option value="Expert">7 – Expert</option>
                         <option value="Élite">8 – Élite</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label for="min_level">Niveau minimum souhaité</label>
+                    <select id="min_level" name="min_level">
+                        <option value="1">1 – Débutant</option>
+                        <option value="2">2 – Perfectionnement</option>
+                        <option value="3">3 – Élémentaire</option>
+                        <option value="4">4 – Intermédiaire</option>
+                        <option value="5">5 – Confirmé</option>
+                        <option value="6">6 – Avancé</option>
+                        <option value="7">7 – Expert</option>
+                        <option value="8">8 – Élite</option>
                     </select>
                 </div>
 
