@@ -7,10 +7,10 @@ class Database
 
     private function __construct()
     {
-        $host = "sql207.infinityfree.com";
-        $dbName = "if0_42094984_padelconnect";
-        $username = "if0_42094984";
-        $password = "OZ8ZUMPjIKAC";
+        $host = "sql306.infinityfree.com";
+        $dbName = "if0_42095412_padelconnect";
+        $username = "if0_42095412";
+        $password = "hy5E5DOp9zSN";
         $port = 3306;
 
         try {
