@@ -70,23 +70,22 @@ a {
 }
 
 .btn-secondary {
-    padding: 10px 20px;
+    display: inline-block;
     background: #f3f4f6;
-    /* gris clair */
     color: var(--text-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 14px 40px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    font-size: 0.95rem;
-    font-weight: 600;
     cursor: pointer;
     transition: 0.2s ease;
     text-decoration: none;
-    display: inline-block;
+    text-align: center;
 }
 
 .btn-secondary:hover {
     background: #e5e7eb;
-    /* gris un peu plus foncé */
 }
 
 .btn-secondary:active {
@@ -460,6 +459,10 @@ a {
     color: var(--text-dark);
 }
 
+.profil-page h2 {
+    margin-bottom: 10px;
+}
+
 /* CARD */
 .card {
     background: #fff;
@@ -538,7 +541,8 @@ textarea {
 .save-bar {
     margin-top: 32px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     gap: 16px;
 }
 
