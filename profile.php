@@ -20,14 +20,14 @@ function e($v)
   return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
 $levels = [
-  "1" => ["num" => 1, "label" => "Débutant"],
-  "2" => ["num" => 2, "label" => "Perfectionnement"],
-  "3" => ["num" => 3, "label" => "Élémentaire"],
-  "4" => ["num" => 4, "label" => "Intermédiaire"],
-  "5" => ["num" => 5, "label" => "Confirmé"],
-  "6" => ["num" => 6, "label" => "Avancé"],
-  "7" => ["num" => 7, "label" => "Expert"],
-  "8" => ["num" => 8, "label" => "Élite"]
+  "Débutant"        => ["num" => 1, "label" => "Débutant"],
+  "Perfectionnement" => ["num" => 2, "label" => "Perfectionnement"],
+  "Élémentaire"     => ["num" => 3, "label" => "Élémentaire"],
+  "Intermédiaire"   => ["num" => 4, "label" => "Intermédiaire"],
+  "Confirmé"        => ["num" => 5, "label" => "Confirmé"],
+  "Avancé"          => ["num" => 6, "label" => "Avancé"],
+  "Expert"          => ["num" => 7, "label" => "Expert"],
+  "Élite"           => ["num" => 8, "label" => "Élite"]
 ];
 
 if ($_POST) {

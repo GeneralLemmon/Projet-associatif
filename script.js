@@ -1,114 +1,128 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     initNotifications();
     initBackToTop();
     initDeleteConfirmation();
     initMatchDateValidation();
     initLoginValidation();
     initAlertAutoDismiss();
+    initThemeToggle();
 });
 
-// Cloche notifications
+/* ===========================
+   NOTIFICATIONS
+=========================== */
 function initNotifications() {
-    const bellBtn      = document.getElementById('notif-bell-btn');
+    const bellBtn = document.getElementById('notif-bell-btn');
     const notifOverlay = document.getElementById('notif-overlay');
-    const notifClose   = document.getElementById('notif-close');
+    const notifClose = document.getElementById('notif-close');
 
-    if (bellBtn && notifOverlay) {
-        bellBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            notifOverlay.classList.toggle('open');
-        });
+    if (!bellBtn || !notifOverlay) return;
 
-        notifClose?.addEventListener('click', () => {
+    bellBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notifOverlay.classList.toggle('open');
+    });
+
+    notifClose?.addEventListener('click', () => {
+        notifOverlay.classList.remove('open');
+    });
+
+    notifOverlay.addEventListener('click', (e) => {
+        if (!e.target.closest('.notif-panel')) {
             notifOverlay.classList.remove('open');
-        });
-
-        // Fermer en cliquant en dehors du panel
-        notifOverlay.addEventListener('click', (e) => {
-            if (!e.target.closest('.notif-panel')) {
-                notifOverlay.classList.remove('open');
-            }
-        });
-    }
+        }
+    });
 }
 
+/* ===========================
+   BACK TO TOP + THEME BUTTON
+=========================== */
 function initBackToTop() {
     const backToTopBtn = document.querySelector('.back-to-top');
-    
-    if (!backToTopBtn) return;
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const footer = document.querySelector('footer');
+
+    if (!backToTopBtn || !themeBtn || !footer) return;
 
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            backToTopBtn.classList.add('is-visible');
-            backToTopBtn.style.display = 'block'; 
-        } else {
-            backToTopBtn.classList.remove('is-visible');
-            backToTopBtn.style.display = 'none';
-        }
+
+        const visible = window.scrollY > 300;
+
+        backToTopBtn.classList.toggle('is-visible', visible);
+        themeBtn.classList.toggle('is-visible', visible);
+
+        const footerTop = footer.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+
+        let arrowBottom = 28;
+        if (footerTop < windowHeight) arrowBottom = 80;
+
+        backToTopBtn.style.bottom = arrowBottom + 'px';
+        themeBtn.style.bottom = (arrowBottom + 60) + 'px';
     });
 
     backToTopBtn.addEventListener('click', (event) => {
         event.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 }
 
+/* ===========================
+   CONFIRMATION SUPPRESSION
+=========================== */
 function initDeleteConfirmation() {
     const deleteButtons = document.querySelectorAll('button[value="supprimer"]');
 
     deleteButtons.forEach(button => {
         button.addEventListener('click', (event) => {
-            const isConfirmed = confirm("Êtes-vous sûr de vouloir supprimer ce match ? Cette action est définitive.");
-            
-            if (!isConfirmed) {
+            if (!confirm("Êtes-vous sûr de vouloir supprimer ce match ? Cette action est définitive.")) {
                 event.preventDefault();
             }
         });
     });
 }
 
+/* ===========================
+   VALIDATION DATE MATCH
+=========================== */
 function initMatchDateValidation() {
     const dateInput = document.getElementById('date');
-
     if (!dateInput) return;
 
     const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    const formatted = today.toISOString().split("T")[0];
 
-    const formattedCurrentDate = `${year}-${month}-${day}`;
-
-    dateInput.setAttribute('min', formattedCurrentDate);
+    dateInput.setAttribute('min', formatted);
 }
 
+/* ===========================
+   VALIDATION MOT DE PASSE
+=========================== */
 function initLoginValidation() {
     const loginForm = document.querySelector('form[method="POST"]');
-    if (!loginForm) return;
-
     const passwordInput = document.getElementById('password');
-    if (!passwordInput) return;
+
+    if (!loginForm || !passwordInput) return;
 
     const messageContainer = document.createElement('p');
     messageContainer.style.textAlign = 'center';
-    passwordInput.parentNode.insertBefore(messageContainer, passwordInput.nextSibling);
+    passwordInput.insertAdjacentElement("afterend", messageContainer);
 
     passwordInput.addEventListener('input', (event) => {
-        const passwordLength = event.target.value.length;
-        if (passwordLength > 0 && passwordLength < 4) {
-            messageContainer.textContent = '⚠️ Le mot de passe semble très court.';
-            messageContainer.style.color = 'orange';
-        } else {
-            messageContainer.textContent = '';
-        }
+        const len = event.target.value.length;
+        messageContainer.textContent = (len > 0 && len < 4)
+            ? '⚠️ Le mot de passe semble très court.'
+            : '';
+        messageContainer.style.color = 'orange';
     });
 }
 
+/* ===========================
+   AUTO-DISMISS MESSAGES
+=========================== */
 function initAlertAutoDismiss() {
     const paragraphs = document.querySelectorAll('p');
+
     paragraphs.forEach(p => {
         if (p.style.color === 'green' || p.textContent.includes('supprimé')) {
             setTimeout(() => {
@@ -120,10 +134,26 @@ function initAlertAutoDismiss() {
     });
 }
 
-function darkMode() {
-    const body = document.body;
-    const toggleButton = document.getElementById('dark-mode-toggle');
-    toggleButton.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
+/* ===========================
+   DARK / LIGHT MODE
+=========================== */
+function initThemeToggle() {
+    const toggleBtn = document.getElementById("theme-toggle-btn");
+    const icon = document.getElementById("theme-icon");
+
+    if (!toggleBtn || !icon) return;
+
+    const lightIcon = "./Images/sun.png";
+    const darkIcon = "./Images/moon.png";
+
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+        icon.src = lightIcon;
+    }
+
+    toggleBtn.addEventListener("click", () => {
+        const isDark = document.body.classList.toggle("dark-mode");
+        icon.src = isDark ? lightIcon : darkIcon;
+        localStorage.setItem("theme", isDark ? "dark" : "light");
     });
 }
