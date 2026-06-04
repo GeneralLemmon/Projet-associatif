@@ -1116,3 +1116,263 @@ textarea {
 .btn-centered {
     max-width: max-content;
 }
+
+/* ===========================
+   CRÉATION DE MATCH / RECHERCHE TERRAIN
+=========================== */
+.plage-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.plage-btn {
+    flex: 1;
+    min-width: 90px;
+    padding: 10px 8px;
+    border: 2px solid var(--border, #dde3ec);
+    border-radius: 10px;
+    background: var(--card-bg, #fff);
+    color: var(--text, #1a1a2e);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s ease;
+}
+.plage-btn:hover {
+    border-color: var(--blue, #2563eb);
+    color: var(--blue, #2563eb);
+}
+.plage-btn.active {
+    background: var(--blue, #2563eb);
+    border-color: var(--blue, #2563eb);
+    color: #fff;
+}
+.plage-btn .plage-icon { display: block; font-size: 1.4rem; margin-bottom: 4px; }
+.plage-btn .plage-label { display: block; }
+.plage-btn .plage-hours { display: block; font-size: 0.75rem; opacity: .75; font-weight: 400; }
+
+.btn-search-terrain {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    background: #f0f7ff;
+    border: 2px solid var(--blue, #2563eb);
+    color: var(--blue, #2563eb);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all .2s;
+}
+.btn-search-terrain:hover {
+    background: var(--blue, #2563eb);
+    color: #fff;
+}
+
+.terrain-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+.terrain-overlay.open {
+    display: flex;
+}
+
+.terrain-modal {
+    background: var(--card-bg, #fff);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+    overflow: hidden;
+}
+.terrain-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border, #dde3ec);
+}
+.terrain-modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+.terrain-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-dark, #111827);
+}
+.terrain-modal-body {
+    padding: 20px 24px;
+}
+.terrain-filters p {
+    margin: 0;
+    color: var(--text-soft, #888);
+}
+.terrain-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px 20px;
+    border-top: 1px solid var(--border, #dde3ec);
+    background: var(--bg-white, #fff);
+}
+.terrain-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px 0;
+    color: var(--text-mid, #4a4a4a);
+    text-align: center;
+}
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(37, 99, 235, 0.25);
+    border-top-color: var(--blue, #2563eb);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.terrain-results {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+.club-section {
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+}
+.club-section h4 {
+    margin: 0 0 4px;
+    font-size: 1rem;
+    color: var(--blue, #2563eb);
+    display: block;
+    width: 100%;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+}
+.club-venue {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: var(--text-mid, #4a4a4a);
+    font-weight: 400;
+    font-style: italic;
+}
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 150px));
+    gap: 10px;
+    justify-content: start;
+}
+.slot-chip {
+    padding: 10px 10px;
+    min-width: 130px;
+    max-width: 150px;
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s, border-color .15s, background .15s;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: #f8fbff;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.06);
+}
+.slot-chip:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue, #2563eb);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.12);
+}
+.slot-chip.selected {
+    background: rgba(37, 99, 235, 0.08);
+    border-color: var(--blue, #2563eb);
+}
+.chip-heure {
+    font-weight: 700;
+    color: var(--text-dark, #111827);
+    letter-spacing: 0.01em;
+}
+.chip-duree,
+.chip-prix {
+    font-size: .84rem;
+    color: var(--text-mid, #4a4a4a);
+}
+.chip-prix {
+    font-weight: 500;
+    color: var(--text-mid, #4a4a4a);
+}
+.slot-chip:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue, #2563eb);
+    box-shadow: 0 16px 30px rgba(37, 99, 235, 0.16);
+    background: #eaf4ff;
+}
+.slot-chip.selected {
+    background: rgba(37, 99, 235, 0.14);
+    border-color: var(--blue, #2563eb);
+}
+.no-slots {
+    margin: 0;
+    color: var(--text-soft, #888);
+    font-size: .95rem;
+}
+
+.slot-summary {
+    display: none;
+    margin: 20px 0 8px;
+    padding: 12px 14px;
+    border: 1px solid #cde0ff;
+    border-radius: 12px;
+    background: #eff7ff;
+    color: #102a4a;
+}
+.slot-summary-text {
+    margin-top: 8px;
+}
+#slot-auto-apply {
+    display: none;
+    margin-bottom: 16px;
+}
+#slot-auto-apply label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #102a4a;
+}
+#slot-auto-apply input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+
+.terrain-info.small {
+    font-size: .9rem;
+}
+.terrain-error {
+    color: red;
+}
