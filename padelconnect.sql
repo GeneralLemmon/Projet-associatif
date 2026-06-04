@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:3306
--- Généré le : mer. 03 juin 2026 à 10:19
+-- Généré le : jeu. 04 juin 2026 à 12:30
 -- Version du serveur : 5.7.24
 -- Version de PHP : 8.3.1
 
@@ -29,8 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `is_registered` (
   `id_user` int(11) NOT NULL,
-  `id_timeslot` int(11) NOT NULL,
-  `max_players` int(11) NOT NULL
+  `id_timeslot` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -45,7 +44,8 @@ CREATE TABLE `timeslot` (
   `date` date NOT NULL,
   `time` time NOT NULL,
   `duration` int(11) DEFAULT NULL COMMENT 'Duration in minutes',
-  `price` decimal(5,2) DEFAULT NULL
+  `price` decimal(5,2) DEFAULT NULL,
+  `level` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
