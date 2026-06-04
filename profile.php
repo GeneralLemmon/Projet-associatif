@@ -145,6 +145,7 @@ if ($_POST) {
           </div>
         </div>
         <div class="save-bar">
+          <a href="logout.php" class="btn-secondary">Se déconnecter</a>
           <a href="profile.php?mode=edit" class="btn-primary">Modifier mon profil</a>
         </div>
 
