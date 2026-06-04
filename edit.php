@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updatedLevel = isset($_POST['niveau']) ? $_POST['niveau'] : '';
     $updatedVenue = isset($_POST['lieu']) ? $_POST['lieu'] : '';
 
-    // Mise à jour des valeurs dans la session globale
+    // Modification directe dans la session
     $_SESSION['matches'][$itemId]['date'] = $updatedDate;
     $_SESSION['matches'][$itemId]['time'] = $updatedTime;
     $_SESSION['matches'][$itemId]['level'] = $updatedLevel;
@@ -44,14 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <h2>Modifier le match n°<?= htmlspecialchars($itemId) ?></h2>
 
-    <form action="edit.php?id=<?php echo htmlspecialchars($itemId); ?>" method="POST">
+    <form action="edit.php?id=<?= htmlspecialchars($itemId); ?>" method="POST">
 
         <label for="date">Date </label>
-        <input type="date" id="date" name="date" value="<?php echo htmlspecialchars($currentDate); ?>">
+        <input type="date" id="date" name="date" value="<?= htmlspecialchars($currentDate); ?>" required>
         <br><br>
 
         <label for="heure">Heure </label>
-        <input type="time" id="heure" name="heure" value="<?php echo htmlspecialchars($currentTime); ?>">
+        <input type="time" id="heure" name="heure" value="<?= htmlspecialchars($currentTime); ?>" required>
         <br><br>
 
         <label for="niveau">Niveau :</label>
