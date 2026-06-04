@@ -1,21 +1,8 @@
 <?php
-<<<<<<< Updated upstream
 session_start();
 spl_autoload_register(function ($class) {
   require $class . ".php";
 });
-=======
-
-$user = [
-    'prenom'       => 'Jean',
-    'nom'          => 'Dupont',
-    'email'        => 'jean.dupont@acensi.fr',
-    'telephone'    => '+33 6 12 34 56 78',
-    'niveau'       => 4,
-    'presentation' => ''
-];
-?>
->>>>>>> Stashed changes
 
 $userController = new UserController();
 $user = $userController->read($_SESSION['user']['id']);
