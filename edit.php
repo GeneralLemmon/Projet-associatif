@@ -1,33 +1,32 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-$itemId = isset($_GET['id']) ? $_GET['id'] : null;
-
-if (!$itemId || !isset($_SESSION['matches'][$itemId])) {
-    header("Location: manage.php");
-    exit();
+if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
+    header("Location: index.php");
+    exit;
 }
 
-$currentMatch = $_SESSION['matches'][$itemId];
-$currentDate  = $currentMatch['date']; 
-$currentTime  = $currentMatch['time']; 
-$currentLevel = $currentMatch['level']; 
-$currentVenue = $currentMatch['venue']; 
+spl_autoload_register(fn($c) => require "$c.php");
+$controller = new TimeSlotController();
+
+$id = (int)($_GET['id'] ?? 0);
+$slot = $controller->read($id);
+
+if (!$slot) {
+    header("Location: manage.php");
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $updatedDate  = isset($_POST['date']) ? $_POST['date'] : '';
-    $updatedTime  = isset($_POST['heure']) ? $_POST['heure'] : '';
-    $updatedLevel = isset($_POST['niveau']) ? $_POST['niveau'] : '';
-    $updatedVenue = isset($_POST['lieu']) ? $_POST['lieu'] : '';
-
-    // Modification directe dans la session
-    $_SESSION['matches'][$itemId]['date'] = $updatedDate;
-    $_SESSION['matches'][$itemId]['time'] = $updatedTime;
-    $_SESSION['matches'][$itemId]['level'] = $updatedLevel;
-    $_SESSION['matches'][$itemId]['venue'] = $updatedVenue;
-
+    $location = $_POST['lieu']   ?? '';
+    $date     = $_POST['date']   ?? '';
+    $time     = $_POST['heure']  ?? '';
+    $level    = (int)($_POST['niveau'] ?? 1);
+    $duration = (int)($_POST['duree'] ?? 90);
+    
+    $controller->update($id, $location, $date, $time, $level, $duration);
     header("Location: manage.php");
-    exit();
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -35,48 +34,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <meta charset="UTF-8">
-    <title>Modifier le match</title>
+    <title>Modifier le match – PadelConnect</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <?php require "navbar.php"; ?>
 
-    <h2>Modifier le match n°<?= htmlspecialchars($itemId) ?></h2>
+    <main class="profil-page">
+        <h2 class="profil-title">Modifier le match n°<?= $id ?></h2>
 
-    <form action="edit.php?id=<?= htmlspecialchars($itemId); ?>" method="POST">
+        <div class="card">
+            <form action="edit.php?id=<?= $id ?>" method="POST">
+                <div class="form-grid">
 
-        <label for="date">Date </label>
-        <input type="date" id="date" name="date" value="<?= htmlspecialchars($currentDate); ?>" required>
-        <br><br>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date"
+                            value="<?= htmlspecialchars($slot->getDate()) ?>" required>
+                    </div>
 
-        <label for="heure">Heure </label>
-        <input type="time" id="heure" name="heure" value="<?= htmlspecialchars($currentTime); ?>" required>
-        <br><br>
+                    <div class="form-group">
+                        <label for="heure">Heure</label>
+                        <input type="time" id="heure" name="heure"
+                            value="<?= htmlspecialchars($slot->getTime()) ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duree">Durée</label>
+                        <select id="duree" name="duree">
+                            <option value="60" <?= $slot->getDuration() === 60  ? 'selected' : '' ?>>1h</option>
+                            <option value="90" <?= $slot->getDuration() === 90  ? 'selected' : '' ?>>1h30</option>
+                            <option value="120" <?= $slot->getDuration() === 120 ? 'selected' : '' ?>>2h</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label for="lieu">Lieu</label>
+                        <select id="lieu" name="lieu">
+                            <?php foreach (['Puteaux Île', 'Forest Hill la Défense', 'Sportfield la Défense'] as $lieu): ?>
+                                <option value="<?= $lieu ?>" <?= $slot->getLocation() === $lieu ? 'selected' : '' ?>>
+                                    <?= $lieu ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-        <label for="niveau">Niveau :</label>
-        <select id="niveau" name="niveau">
-            <option value="1" <?= $currentLevel == '1' ? 'selected' : '' ?>>1 - Débutant</option>
-            <option value="2" <?= $currentLevel == '2' ? 'selected' : '' ?>>2 - Perfectionnement</option>
-            <option value="3" <?= $currentLevel == '3' ? 'selected' : '' ?>>3 - Élémentaire</option>
-            <option value="4" <?= $currentLevel == '4' ? 'selected' : '' ?>>4 - Intermédiaire</option>
-            <option value="5" <?= $currentLevel == '5' ? 'selected' : '' ?>>5 - Confirmé</option>
-            <option value="6" <?= $currentLevel == '6' ? 'selected' : '' ?>>6 - Avancé</option>
-            <option value="7" <?= $currentLevel == '7' ? 'selected' : '' ?>>7 - Expert</option>
-            <option value="8" <?= $currentLevel == '8' ? 'selected' : '' ?>>8 - Professionnel</option>
-        </select>
-        <br><br>
+                    <div class="form-group full">
+                        <label for="niveau">Niveau requis</label>
+                        <select id="niveau" name="niveau">
+                            <?php for ($i = 1; $i <= 8; $i++): ?>
+                                <option value="<?= $i ?>" <?= $slot->getLevel() === $i ? 'selected' : '' ?>>
+                                    <?= $i ?> – Niveau <?= $i ?>
+                                </option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
 
-        <label for="lieu">Lieu :</label>
-        <select id="lieu" name="lieu">
-            <option value="Puteaux Île" <?= $currentVenue == 'Puteaux Île' ? 'selected' : '' ?>>Puteaux Île</option>
-            <option value="Forest Hill la Défense" <?= $currentVenue == 'Forest Hill la Défense' ? 'selected' : '' ?>>Forest Hill la Défense</option>
-            <option value="Sportfield la Défense" <?= $currentVenue == 'Sportfield la Défense' ? 'selected' : '' ?>>Sportfield la Défense</option>
-        </select>
-        <br><br>
+                </div>
 
-        <button type="submit" class="btn-primary">Enregistrer les modifications</button>
-    </form>
+                <div class="save-bar">
+                    <a href="manage.php" class="btn-secondary">Annuler</a>
+                    <button type="submit" class="btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </main>
 
     <?php require "footer.php"; ?>
 </body>

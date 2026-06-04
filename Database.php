@@ -7,19 +7,19 @@ class Database
 
     private function __construct()
     {
-        $host = "sql306.infinityfree.com";
-        $dbName = "if0_42095412_padelconnect";
-        $username = "if0_42095412";
-        $password = "hy5E5DOp9zSN";
+        $dbName = "padelconnect";
         $port = 3306;
+        $username = "root";
+        $password = "root";
 
         try {
             $this->connection = new PDO(
-                "mysql:host=$host;dbname=$dbName;port=$port;charset=utf8mb4",
+                "mysql:host=localhost;dbname=$dbName;port=$port;charset=utf8mb4",
                 $username,
                 $password
             );
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
         } catch (PDOException $error) {
             die("<p style='color:red'>Erreur de connexion : {$error->getMessage()}</p>");
         }

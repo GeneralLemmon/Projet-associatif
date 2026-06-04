@@ -1,34 +1,26 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Sécurité si jamais la session n'est pas encore initialisée
-if (!isset($_SESSION['matches'])) {
-    $_SESSION['matches'] = [];
+if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
+    header("Location: index.php");
+    exit;
 }
 
+spl_autoload_register(fn($c) => require "$c.php");
+$controller = new TimeSlotController();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $newDate  = isset($_POST['date']) ? $_POST['date'] : '';
-    $newTime  = isset($_POST['heure']) ? $_POST['heure'] : '';
-    $newLevel = isset($_POST['niveau']) ? $_POST['niveau'] : '';
-    $newVenue = isset($_POST['lieu']) ? $_POST['lieu'] : '';
-
-    if (!empty($newDate) && !empty($newTime)) {
-        // Trouve le plus grand ID existant pour créer le suivant (ex: 4)
-        $newId = empty($_SESSION['matches']) ? 1 : max(array_keys($_SESSION['matches'])) + 1;
-
-        // On ajoute le nouveau match dans la session
-        $_SESSION['matches'][$newId] = [
-            'date' => $newDate,
-            'time' => $newTime,
-            'venue' => $newVenue,
-            'players' => '1/4 Joueurs', // Valeur fictive par défaut
-            'level' => $newLevel
-        ];
+    $location = $_POST['lieu']   ?? '';
+    $date     = $_POST['date']   ?? '';
+    $time     = $_POST['heure']  ?? '';
+    $level    = (int)($_POST['niveau'] ?? 1);
+    $duration = (int)($_POST['duree'] ?? 90);
+    
+    if ($location && $date && $time) {
+        $controller->create($location, $date, $time, $level, $duration);
     }
-
-    // Une fois ajouté, on retourne instantanément à l'écran d'accueil
     header("Location: manage.php");
-    exit();
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -36,48 +28,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <meta charset="UTF-8">
-    <title>Créer un match</title>
+    <title>Créer un match – PadelConnect</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <?php require "navbar.php"; ?>
 
-    <h2>Créer un nouveau match</h2>
+    <main class="profil-page">
+        <h2 class="profil-title">Créer un nouveau match</h2>
 
-    <form action="create.php" method="POST">
+        <div class="card">
+            <form action="create.php" method="POST">
+                <div class="form-grid">
 
-        <label for="date">Date </label>
-        <input type="date" id="date" name="date" required>
-        <br><br>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
 
-        <label for="heure">Heure </label>
-        <input type="time" id="heure" name="heure" required>
-        <br><br>
+                    <div class="form-group">
+                        <label for="heure">Heure</label>
+                        <input type="time" id="heure" name="heure" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duree">Durée</label>
+                        <select id="duree" name="duree">
+                            <option value="60">1h</option>
+                            <option value="90" selected>1h30</option>
+                            <option value="120">2h</option>
+                        </select>
+                    </div>
 
-        <label for="niveau">Niveau :</label>
-        <select id="niveau" name="niveau">
-            <option value="1">1 - Débutant</option>
-            <option value="2">2 - Perfectionnement</option>
-            <option value="3">3 - Élémentaire</option>
-            <option value="4">4 - Intermédiaire</option>
-            <option value="5">5 - Confirmé</option>
-            <option value="6">6 - Avancé</option>
-            <option value="7">7 - Expert</option>
-            <option value="8">8 - Professionnel</option>
-        </select>
-        <br><br>
+                    <div class="form-group full">
+                        <label for="lieu">Lieu</label>
+                        <select id="lieu" name="lieu">
+                            <option value="Puteaux Île">Puteaux Île</option>
+                            <option value="Forest Hill la Défense">Forest Hill la Défense</option>
+                            <option value="Sportfield la Défense">Sportfield la Défense</option>
+                        </select>
+                    </div>
 
-        <label for="lieu">Lieu :</label>
-        <select id="lieu" name="lieu">
-            <option value="Puteaux Île">Puteaux Île</option>
-            <option value="Forest Hill la Défense">Forest Hill la Défense</option>
-            <option value="Sportfield la Défense">Sportfield la Défense</option>
-        </select>
-        <br><br>
+                    <div class="form-group full">
+                        <label for="niveau">Niveau requis</label>
+                        <select id="niveau" name="niveau">
+                            <option value="1">1 – Débutant</option>
+                            <option value="2">2 – Perfectionnement</option>
+                            <option value="3">3 – Élémentaire</option>
+                            <option value="4">4 – Intermédiaire</option>
+                            <option value="5">5 – Confirmé</option>
+                            <option value="6">6 – Avancé</option>
+                            <option value="7">7 – Expert</option>
+                            <option value="8">8 – Élite</option>
+                        </select>
+                    </div>
 
-        <button type="submit" class="btn-primary">Créer le match</button>
-    </form>
+                </div>
+
+                <div class="save-bar">
+                    <a href="manage.php" class="btn-secondary">Annuler</a>
+                    <button type="submit" class="btn-primary">Créer le match</button>
+                </div>
+            </form>
+        </div>
+    </main>
 
     <?php require "footer.php"; ?>
 </body>

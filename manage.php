@@ -1,56 +1,31 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
+
 if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
     header("Location: index.php");
-    exit();
-}
-// Si le tableau des matchs n'existe pas encore en session, on crée les matchs par défaut
-if (!isset($_SESSION['matches'])) {
-    $_SESSION['matches'] = [
-        1 => [
-            'date' => '2026-06-14',
-            'time' => '18:00',
-            'venue' => 'Puteaux Île',
-            'players' => '2/4 Joueurs',
-            'level' => '3'
-        ],
-        2 => [
-            'date' => '2026-07-08',
-            'time' => '13:00',
-            'venue' => 'Forest Hill la Défense',
-            'players' => '4/4 Joueurs',
-            'level' => '3'
-        ],
-        3 => [
-            'date' => '2026-06-14',
-            'time' => '18:00',
-            'venue' => 'Sportfield la Défense',
-            'players' => '1/4 Joueurs',
-            'level' => '4'
-        ]
-    ];
+    exit;
 }
 
-$messageSuppression = null;
+spl_autoload_register(fn($c) => require "$c.php");
+$controller = new TimeSlotController();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    $itemId = $_POST['itemId'];
-    $action = $_POST['action'];
+// Actions POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id     = (int)($_POST['id'] ?? 0);
+    $action = $_POST['action'] ?? '';
 
-    switch ($action) {
-        case 'modifier':
-            header("Location: edit.php?id=" . $itemId);
-            exit();
-            break;
-
-        case 'supprimer':
-            if (isset($_SESSION['matches'][$itemId])) {
-                unset($_SESSION['matches'][$itemId]);
-                $messageSuppression = "L'élément n°" . $itemId . " a bien été supprimé.";
-            }
-            break;
+    if ($action === 'supprimer' && $id) {
+        $controller->delete($id);
     }
+    if ($action === 'modifier' && $id) {
+        header("Location: edit.php?id=$id");
+        exit;
+    }
+    header("Location: manage.php");
+    exit;
 }
+
+$slots = $controller->readAll();
 ?>
 <!DOCTYPE html>
 <html lang="fr-FR">
@@ -58,52 +33,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PadelConnect</title>
+    <title>Gérer les matchs – PadelConnect</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
     <?php require "navbar.php"; ?>
 
-    <h2>Gérer mes matchs</h2>
+    <main class="matchs-page">
+        <div class="manage-header">
+            <h2 class="matchs-greeting" style="margin-bottom:0">Gérer les matchs</h2>
+            <a href="create.php" class="btn-primary">+ Créer un match</a>
+        </div>
 
-    <div style="text-align: center; margin-bottom: 20px;">
-        <a href="create.php" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">+ Créer un match</a>
-    </div>
-
-    <?php if ($messageSuppression): ?>
-        <p style="color: green; font-weight: bold; text-align: center;"><?= htmlspecialchars($messageSuppression) ?></p>
-    <?php endif; ?>
-
-    <div class="matchs-container">
-
-        <?php if (empty($_SESSION['matches'])): ?>
-            <p style="text-align: center;">Aucun match disponible.</p>
+        <?php if (empty($slots)): ?>
+            <p style="text-align:center; color:var(--text-soft); margin-top:40px">
+                Aucun match créé pour l'instant.
+            </p>
         <?php else: ?>
-            <?php foreach ($_SESSION['matches'] as $id => $match): ?>
-                <div class="match-card">
-                    <p><?= htmlspecialchars($match['date']) ?> - <?= htmlspecialchars($match['time']) ?></p>
-                    <img src="Images/lieu.png" alt="Lieu" width="50">
-                    <p> <?= htmlspecialchars($match['venue']) ?></p>
-                    <img src="Images/player.png" alt="Joueurs" width="50">
-                    <p> <?= htmlspecialchars($match['players']) ?></p>
-                    <img src="Images/level.png" alt="Niveau" width="50">
-                    <p> Niveau : <?= htmlspecialchars($match['level']) ?></p>
+            <div class="matchs-container">
+                <?php foreach ($slots as $slot): ?>
+                    <div class="match-card">
+                        <p class="match-date">
+                            <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
+                        </p>
+                        <div class="match-info">
+                            <img src="Images/level.png" alt="Durée">
+                            <span>Durée : <?= $slot->getFormattedDuration() ?></span>
+                        </div>
+                        <div class="match-info">
+                            <img src="Images/lieu.png" alt="Lieu">
+                            <span><?= htmlspecialchars($slot->getLocation()) ?></span>
+                        </div>
 
-                    <form action="manage.php" method="POST">
-                        <input type="hidden" name="itemId" value="<?= $id ?>">
-                        <button type="submit" name="action" value="modifier" class="btn-primary">Modifier</button>
-                        <button type="submit" name="action" value="supprimer" class="btn-secondary">Supprimer</button>
-                    </form>
-                </div>
-            <?php endforeach; ?>
+                        <div class="match-info">
+                            <img src="Images/player.png" alt="Joueurs">
+                            <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
+                        </div>
+
+                        <div class="match-info">
+                            <img src="Images/level.png" alt="Niveau">
+                            <span>Niveau : <?= $slot->getLevel() ?></span>
+                        </div>
+
+                        <form method="POST" style="display:flex; gap:8px; margin-top:8px">
+                            <input type="hidden" name="id" value="<?= $slot->getId() ?>">
+                            <button name="action" value="modifier" class="btn-primary" style="flex:1; padding:10px">
+                                Modifier
+                            </button>
+                            <button name="action" value="supprimer" class="btn-secondary" style="flex:1; padding:10px"
+                                onclick="return confirm('Supprimer ce match ?')">
+                                Supprimer
+                            </button>
+                        </form>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         <?php endif; ?>
-
-    </div>
+    </main>
 
     <?php require "footer.php"; ?>
-    <script src="script.js"></script>
 </body>
 
 </html>
