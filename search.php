@@ -43,12 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_id'])) {
 
 $slots = $controller->getAvailable($userId);
 
+$minMatchLevel = isset($_SESSION['user']['minLevel']) ? (int)$_SESSION['user']['minLevel'] : 1;
+
 if (empty($_SESSION['user']['is_admin'])) {
     $userLevel = normalizeLevel($_SESSION['user']['level'] ?? '');
-    $minMatchLevel = isset($_SESSION['user']['minLevel']) ? (int)$_SESSION['user']['minLevel'] : 1;
     $slots = array_filter($slots, function ($slot) use ($userLevel, $minMatchLevel) {
         $slotLevel = normalizeLevel($slot->getLevel());
         return $slotLevel <= $userLevel && $slotLevel >= $minMatchLevel;
+    });
+} else {
+    $slots = array_filter($slots, function ($slot) use ($minMatchLevel) {
+        return normalizeLevel($slot->getLevel()) >= $minMatchLevel;
     });
 }
 
@@ -74,14 +79,14 @@ $allSlots = $controller->readAll();
 <body>
     <?php require "navbar.php"; ?>
 
+    <?php if ($msgText): ?>
+        <div class="form-message form-message--<?= $msgType ?>" id="toast-message">
+            <?= htmlspecialchars($msgText) ?>
+        </div>
+    <?php endif; ?>
+
     <main class="matchs-page">
         <h2 class="matchs-greeting">Chercher un match</h2>
-
-        <?php if ($msgText): ?>
-            <p class="form-message form-message--<?= $msgType ?>">
-                <?= htmlspecialchars($msgText) ?>
-            </p>
-        <?php endif; ?>
 
         <section class="matchs-section">
             <h3 class="matchs-title">Matchs disponibles</h3>
@@ -128,7 +133,7 @@ $allSlots = $controller->readAll();
                                 <span>Niveau : <?= $slot->getLevel() ?></span>
                             </div>
 
-                            <form method="POST" style="margin-top:8px">
+                            <form method="POST" class="join-form" style="margin-top:8px">
 
                                 <input type="hidden" name="join_id" value="<?= $slot->getId() ?>">
                                 <button type="submit" class="btn-primary join-btn">
@@ -202,6 +207,24 @@ $allSlots = $controller->readAll();
             window.open(url, '_blank');
         }
     });
+
+    document.querySelectorAll('form.join-form').forEach(form => {
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const confirmed = window.confirm('Confirmer votre participation à ce match ?');
+            if (confirmed) {
+                form.submit();
+            }
+        });
+    });
+
+    const toast = document.getElementById('toast-message');
+    if (toast) {
+        setTimeout(() => {
+            toast.classList.add('toast-hide');
+            setTimeout(() => toast.remove(), 500);
+        }, 4200);
+    }
     </script>
 </body>
 

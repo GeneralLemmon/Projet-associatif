@@ -15,6 +15,16 @@ if (!$slot) {
     exit;
 }
 
+$flashMessage = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_SESSION['user']['is_admin']) && isset($_POST['remove_user_id'])) {
+    $removeUserId = (int)$_POST['remove_user_id'];
+    if ($removeUserId > 0) {
+        $controller->leave($removeUserId, $slot->getId());
+        $flashMessage = 'Joueur supprimé du match.';
+    }
+}
+
 $players = $controller->getPlayers($slot->getId());
 ?>
 
@@ -32,10 +42,16 @@ $players = $controller->getPlayers($slot->getId());
 
     <?php include "navbar.php"; ?>
 
+    <?php if ($flashMessage): ?>
+        <div class="form-message form-message--success" id="toast-message">
+            <?= htmlspecialchars($flashMessage) ?>
+        </div>
+    <?php endif; ?>
+
     <main class="matchs-page">
 
         <h2 class="matchs-greeting">
-            Joueurs du match du <?= $slot->getFormattedDate() ?>
+            Joueurs du match du <?= $slot->getFormattedDate() ?> à <?= $slot->getFormattedTime() ?>
         </h2>
 
         <div class="card card-auth">
@@ -51,12 +67,19 @@ $players = $controller->getPlayers($slot->getId());
             <?php else: ?>
                 <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:14px;">
                     <?php foreach ($players as $p): ?>
-                        <li style="padding:12px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-white);">
-                            <strong><?= htmlspecialchars($p->getFullName()) ?></strong><br>
-                            Niveau : <?= $p->getLevel() ?><br>
-                            <span style="color:var(--text-soft); font-size:0.85rem;">
-                                <?= htmlspecialchars($p->getEmail()) ?>
-                            </span>
+                        <li style="padding:12px 16px; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-white); display:flex; justify-content:space-between; align-items:center; gap:12px;">
+                            <div>
+                                <strong><?= htmlspecialchars($p->getFullName()) ?></strong><br>
+                                Niveau : <?= htmlspecialchars($p->getLevel()) ?>
+                            </div>
+                            <?php if (!empty($_SESSION['user']['is_admin'])): ?>
+                                <form method="POST" style="margin:0;">
+                                    <input type="hidden" name="remove_user_id" value="<?= $p->getId() ?>">
+                                    <button type="submit" class="btn-secondary" style="padding: 8px 12px; font-size:0.9rem;">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -69,6 +92,28 @@ $players = $controller->getPlayers($slot->getId());
 
     <?php include "footer.php"; ?>
 
+    <script>
+        document.querySelectorAll('form').forEach(form => {
+            const removeField = form.querySelector('input[name="remove_user_id"]');
+            if (!removeField) return;
+
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                const confirmed = window.confirm('Êtes-vous sûr de vouloir supprimer ce joueur du match ?');
+                if (confirmed) {
+                    form.submit();
+                }
+            });
+        });
+
+        const toast = document.getElementById('toast-message');
+        if (toast) {
+            setTimeout(() => {
+                toast.classList.add('toast-hide');
+                setTimeout(() => toast.remove(), 500);
+            }, 4200);
+        }
+    </script>
 </body>
 
 </html>

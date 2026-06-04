@@ -60,6 +60,8 @@ if ($_POST) {
         exit;
     }
 }
+
+}
 ?>
 
 <!DOCTYPE html>
