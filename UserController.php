@@ -72,18 +72,19 @@ class UserController
 
     // Modifier un utilisateur
     public function update(User $user): void
-    {
-        $req = $this->getDb()->prepare(
-            "UPDATE `user` SET last_name = ?, first_name = ?, level = ?, email = ? WHERE id_user = ?"
-        );
-        $req->execute([
-            $user->getLastName(),
-            $user->getFirstName(),
-            $user->getLevel(),
-            $user->getEmail(),
-            $user->getId()
-        ]);
-    }
+{
+    $req = $this->getDb()->prepare(
+        "UPDATE `user` SET last_name = ?, first_name = ?, level = ?, email = ?, password = ? WHERE id_user = ?"
+    );
+    $req->execute([
+        $user->getLastName(),
+        $user->getFirstName(),
+        $user->getLevel(),
+        $user->getEmail(),
+        $user->getPassword(),
+        $user->getId()
+    ]);
+}
 
     // Supprimer un utilisateur
     public function delete(int $id): void

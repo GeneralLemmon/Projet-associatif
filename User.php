@@ -38,7 +38,7 @@ class User
         return $this;
     }
 
-    public function getLastName(): string
+public function getLastName(): string
     {
         return $this->last_name;
     }
@@ -59,7 +59,7 @@ class User
         $this->first_name = $first_name;
         return $this;
     }
-
+    
     public function getFullName(): string
     {
         return $this->first_name . " " . $this->last_name;

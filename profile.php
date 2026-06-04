@@ -20,26 +20,39 @@ function e($v)
   return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 }
 $levels = [
-  "Débutant"        => ["num" => 1, "label" => "Débutant"],
-  "Perfectionnement" => ["num" => 2, "label" => "Perfectionnement"],
-  "Élémentaire"     => ["num" => 3, "label" => "Élémentaire"],
-  "Intermédiaire"   => ["num" => 4, "label" => "Intermédiaire"],
-  "Confirmé"        => ["num" => 5, "label" => "Confirmé"],
-  "Avancé"          => ["num" => 6, "label" => "Avancé"],
-  "Expert"          => ["num" => 7, "label" => "Expert"],
-  "Élite"           => ["num" => 8, "label" => "Élite"]
+  "1" => ["num" => 1, "label" => "Débutant"],
+  "2" => ["num" => 2, "label" => "Perfectionnement"],
+  "3" => ["num" => 3, "label" => "Élémentaire"],
+  "4" => ["num" => 4, "label" => "Intermédiaire"],
+  "5" => ["num" => 5, "label" => "Confirmé"],
+  "6" => ["num" => 6, "label" => "Avancé"],
+  "7" => ["num" => 7, "label" => "Expert"],
+  "8" => ["num" => 8, "label" => "Élite"]
 ];
 
 if ($_POST) {
-  $user->setFirst_name($_POST['prenom']);
-  $user->setLast_name($_POST['nom']);
-  $user->setEmail($_POST['email']);
-  $user->setLevel($_POST['niveau']);
+    $user->setFirst_name($_POST['prenom']);
+    $user->setLast_name($_POST['nom']);
+    $user->setEmail($_POST['email']);
+    $user->setLevel($_POST['level']);
 
-  $userController->update($user);
+    if (!empty($_POST['password'])) {
+        if ($_POST['password'] === $_POST['password_confirm']) {
+            $user->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT));
+        } else {
+            $message = "Les mots de passe ne correspondent pas.";
+        }
+    }
+    
+    $userController->update($user);
+    
+    $_SESSION['user']['firstName'] = $user->getFirstName();
+    $_SESSION['user']['lastName']  = $user->getLastName();
+    $_SESSION['user']['name']      = $user->getFullName();
+    $_SESSION['user']['level']     = $user->getLevel();
 
-  header("Location: profile.php");
-  exit;
+    header("Location: profile.php");
+    exit;
 }
 
 ?>
@@ -55,9 +68,6 @@ if ($_POST) {
 <body>
 
   <?php require "navbar.php"; ?>
-
-
-
 
   <main class="profil-page">
     <h2>Mon profil</h2>
