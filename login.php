@@ -2,9 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-spl_autoload_register(function (string $class) {
-    require "$class.php";
-});
+require_once __DIR__ . "/autoload.php";
 
 
 $userController = new UserController();
@@ -23,6 +21,7 @@ if ($_POST) {
             "firstName" => $user->getFirstName(),
             "lastName"  => $user->getLastName(),
             "name"      => $user->getFullName(),
+            "level"     => $user->getLevel(),
             "is_admin" => $user->getIsAdmin()
         ];
         echo "<pre>";

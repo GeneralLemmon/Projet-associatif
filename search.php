@@ -6,7 +6,7 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-spl_autoload_register(fn($c) => require "$c.php");
+require_once __DIR__ . "/autoload.php";
 $controller = new TimeSlotController();
 $userId     = $_SESSION['user']['id'];
 $message    = '';

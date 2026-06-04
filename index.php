@@ -111,13 +111,14 @@
         </a>
 
     <?php else: ?>
-
-        <!-- ===========================
-         VERSION CONNECTÉE
-    ============================ -->
+        <!-- =========================== VERSION CONNECTÉE ============================ -->
+        <?php
+        spl_autoload_register(fn($c) => require "$c.php");
+        $controller = new TimeSlotController();
+        $mySlots = $controller->getMyMatches($_SESSION['user']['id']);
+        ?>
 
         <main class="matchs-page">
-
             <h2 class="matchs-greeting">
                 Bonjour <?= htmlspecialchars($_SESSION['user']['name']) ?>
             </h2>
@@ -125,49 +126,97 @@
             <section class="matchs-section">
                 <h3 class="matchs-title">Mes prochains matchs</h3>
 
-                <div class="matchs-container">
+                <?php if (empty($mySlots)): ?>
+                    <p style="color:var(--text-soft); text-align:center">
+                        Vous n'êtes inscrit à aucun match.
+                        <a href="search.php" style="color:var(--blue)">Chercher un match →</a>
+                    </p>
+                <?php else: ?>
+                    <div class="matchs-container">
+                        <?php foreach ($mySlots as $i => $slot): ?>
+                            <div class="match-card <?= $i === 0 ? 'match-card--active' : '' ?>">
+                                <p class="match-date">
+                                    <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
+                                </p>
 
-                    <!-- Exemple de cartes -->
-                    <div class="match-card match-card--active">
-                        <p class="match-date">14 juin 2026 - 18h</p>
-                        <div class="match-info">
-                            <img src="Images/lieu.png" alt="Lieu">
-                            <span>Puteaux Île</span>
-                        </div>
-                        <div class="match-info">
-                            <img src="Images/player.png" alt="Joueurs">
-                            <span>4/4 Joueurs</span>
-                        </div>
-                        <div class="match-info">
-                            <img src="Images/level.png" alt="Niveau">
-                            <span>Niveau moyen : 3</span>
-                        </div>
+                                <div class="match-info">
+                                    <img src="Images/lieu.png" alt="Lieu">
+                                    <span><?= htmlspecialchars($slot->getLocation()) ?></span>
+                                </div>
+
+                                <div class="match-info">
+                                    <img src="Images/player.png" alt="Joueurs">
+                                    <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
+                                </div>
+
+                                <div class="match-info">
+                                    <img src="Images/level.png" alt="Niveau">
+                                    <span>Niveau : <?= $slot->getLevel() ?></span>
+                                </div>
+
+                                <div class="match-info">
+                                    <img src="Images/level.png" alt="Durée">
+                                    <span>Durée : <?= $slot->getFormattedDuration() ?></span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
+                <?php endif; ?>
+            </section>
 
-                    <div class="match-card">
-                        <p class="match-date">18 juillet 2026 - 8h</p>
-                        <div class="match-info">
-                            <img src="Images/lieu.png" alt="Lieu">
-                            <span>Forest Hill la Défense</span>
-                        </div>
-                        <div class="match-info">
-                            <img src="Images/player.png" alt="Joueurs">
-                            <span>3/4 Joueurs</span>
-                        </div>
-                        <div class="match-info">
-                            <img src="Images/level.png" alt="Niveau">
-                            <span>Niveau moyen : 3</span>
-                        </div>
+            <section class="matchs-section" style="margin-top: 48px">
+                <h3 class="matchs-title">Matchs disponibles</h3>
+
+                <?php
+                $available = $controller->getAvailable($_SESSION['user']['id']);
+                ?>
+
+                <?php if (empty($available)): ?>
+                    <p style="color:var(--text-soft); text-align:center">
+                        Aucun match disponible pour le moment.
+                    </p>
+                <?php else: ?>
+                    <div class="matchs-container">
+                        <?php foreach ($available as $slot): ?>
+                            <div class="match-card">
+                                <p class="match-date">
+                                    <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
+                                </p>
+
+                                <div class="match-info">
+                                    <img src="Images/lieu.png" alt="Lieu">
+                                    <span><?= htmlspecialchars($slot->getLocation()) ?></span>
+                                </div>
+
+                                <div class="match-info">
+                                    <img src="Images/player.png" alt="Joueurs">
+                                    <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
+                                </div>
+
+                                <div class="match-info">
+                                    <img src="Images/level.png" alt="Niveau">
+                                    <span>Niveau : <?= $slot->getLevel() ?></span>
+                                </div>
+
+                                <div class="match-info">
+                                    <img src="Images/level.png" alt="Durée">
+                                    <span>Durée : <?= $slot->getFormattedDuration() ?></span>
+                                </div>
+
+                                <form method="POST" action="search.php" style="margin-top:8px">
+                                    <input type="hidden" name="join_id" value="<?= $slot->getId() ?>">
+                                    <button type="submit" class="btn-primary join-btn">Rejoindre</button>
+                                </form>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-
-                </div>
+                <?php endif; ?>
             </section>
         </main>
 
     <?php endif; ?>
 
     <?php require "footer.php"; ?>
-
 </body>
 
 </html>

@@ -87,11 +87,6 @@ $slots = $controller->getMyMatches($userId);
             <?php endif; ?>
         </section>
     </main>
-
-    <a href="#" class="notif-btn" aria-label="Notifications">
-        <img src="Images/notification.png" alt="Notifications">
-    </a>
-
     <?php require "footer.php"; ?>
 </body>
 
