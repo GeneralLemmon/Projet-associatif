@@ -56,6 +56,9 @@ if ($_POST) {
 
   <?php require "navbar.php"; ?>
 
+
+
+
   <main class="profil-page">
     <h2>Mon profil</h2>
 
@@ -154,6 +157,17 @@ if ($_POST) {
 
     </div>
   </main>
+
+  <div class="DarkModeToggle">
+    <button id="dark-mode-toggle">Thème</button>
+    <?php
+      if (isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] === true) {
+          echo '<script>document.body.classList.add("dark-mode");</script>';
+      }
+      
+    
+    ?>
+  </div>
 
   <?php require "footer.php"; ?>
 </body>
