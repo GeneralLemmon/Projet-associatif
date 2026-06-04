@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initLoginValidation();
     initAlertAutoDismiss();
     initThemeToggle();
+    initLevelHelp();
 });
 
 /* ===========================
@@ -30,6 +31,33 @@ function initNotifications() {
     notifOverlay.addEventListener('click', (e) => {
         if (!e.target.closest('.notif-panel')) {
             notifOverlay.classList.remove('open');
+        }
+    });
+}
+
+function initLevelHelp() {
+    const overlay = document.getElementById('level-overlay');
+    const closeBtn = document.getElementById('level-close');
+
+    if (!overlay) return;
+
+    document.addEventListener('click', (e) => {
+        // Ouvrir si clic sur n'importe quelle .help-icon hors de l'overlay
+        if (e.target.classList.contains('help-icon') && !e.target.closest('#level-overlay')) {
+            e.stopPropagation();
+            overlay.classList.add('open');
+            return;
+        }
+    });
+
+    closeBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        overlay.classList.remove('open');
+    });
+
+    overlay.addEventListener('click', (e) => {
+        if (!e.target.closest('.notif-panel')) {
+            overlay.classList.remove('open');
         }
     });
 }

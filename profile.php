@@ -31,28 +31,28 @@ $levels = [
 ];
 
 if ($_POST) {
-    $user->setFirst_name($_POST['prenom']);
-    $user->setLast_name($_POST['nom']);
-    $user->setEmail($_POST['email']);
-    $user->setLevel($_POST['level']);
+  $user->setFirst_name($_POST['prenom']);
+  $user->setLast_name($_POST['nom']);
+  $user->setEmail($_POST['email']);
+  $user->setLevel($_POST['level']);
 
-    if (!empty($_POST['password'])) {
-        if ($_POST['password'] === $_POST['password_confirm']) {
-            $user->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT));
-        } else {
-            $message = "Les mots de passe ne correspondent pas.";
-        }
+  if (!empty($_POST['password'])) {
+    if ($_POST['password'] === $_POST['password_confirm']) {
+      $user->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT));
+    } else {
+      $message = "Les mots de passe ne correspondent pas.";
     }
-    
-    $userController->update($user);
-    
-    $_SESSION['user']['firstName'] = $user->getFirstName();
-    $_SESSION['user']['lastName']  = $user->getLastName();
-    $_SESSION['user']['name']      = $user->getFullName();
-    $_SESSION['user']['level']     = $user->getLevel();
+  }
 
-    header("Location: profile.php");
-    exit;
+  $userController->update($user);
+
+  $_SESSION['user']['firstName'] = $user->getFirstName();
+  $_SESSION['user']['lastName']  = $user->getLastName();
+  $_SESSION['user']['name']      = $user->getFullName();
+  $_SESSION['user']['level']     = $user->getLevel();
+
+  header("Location: profile.php");
+  exit;
 }
 
 ?>
@@ -150,7 +150,7 @@ if ($_POST) {
           <div class="form-group full">
             <div class="level-label-row">
               <label>Niveau</label>
-              <img src="./Images/help.png" alt="Aide" class="help-icon">
+              <img src="./Images/help.png" alt="Aide" id="btn-level-help" class="help-icon">
             </div>
             <p class="profile-value">
               Niveau <?= e($levels[$user->getLevel()]["num"]) ?> – <?= e($levels[$user->getLevel()]["label"]) ?>
@@ -170,12 +170,32 @@ if ($_POST) {
   <div class="DarkModeToggle">
     <button id="dark-mode-toggle">Thème</button>
     <?php
-      if (isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] === true) {
-          echo '<script>document.body.classList.add("dark-mode");</script>';
-      }
-      
-    
+    if (isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] === true) {
+      echo '<script>document.body.classList.add("dark-mode");</script>';
+    }
+
+
     ?>
+  </div>
+
+  <div id="level-overlay" class="level-overlay-wrapper">
+    <div class="notif-panel">
+      <div class="notif-panel-header">
+        <h4>Niveaux de jeu</h4>
+        <button id="level-close" style="background: none;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        color: var(--text-soft);
+        line-height: 1;
+        padding: 0 4px;
+        ">✕</button>
+      </div>
+
+      <div class="notif-panel-body">
+        <img src="./Images/niveau-padel-Padel-Speak.jpg" alt="Niveaux">
+      </div>
+    </div>
   </div>
 
   <?php require "footer.php"; ?>

@@ -76,10 +76,11 @@ $slots = $controller->readAll();
                             <span><?= htmlspecialchars($slot->getLocation()) ?></span>
                         </div>
 
-                        <div class="match-info">
+                        <a href="players.php?id=<?= $slot->getId() ?>" class="match-info" style="text-decoration:none;">
                             <img src="Images/player.png" alt="Joueurs">
                             <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
-                        </div>
+                        </a>
+
 
                         <div class="match-info">
                             <img src="Images/level.png" alt="Niveau">

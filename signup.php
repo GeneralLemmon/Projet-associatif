@@ -1,7 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . "/autoload.php";
 
 $userController = new UserController();
@@ -22,7 +20,6 @@ if ($_POST) {
     if ($existing) {
         $message = "Cet email est déjà utilisé.";
     } else {
-
         $userController->create($newUser);
         $user = $userController->readByEmail($newUser->getEmail());
 
@@ -32,8 +29,9 @@ if ($_POST) {
             "lastName"  => $user->getLastName(),
             "name"      => $user->getFullName(),
             "level"     => $user->getLevel(),
-            "is_admin" => $user->getIsAdmin()
+            "is_admin"  => $user->getIsAdmin()
         ];
+
         header("Location: index.php");
         exit;
     }
@@ -46,7 +44,7 @@ if ($_POST) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PadelConnect - Inscription</title>
+    <title>PadelConnect – Inscription</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -54,45 +52,92 @@ if ($_POST) {
 
     <?php include('navbar.php'); ?>
 
-    <?php if (!empty($message)): ?>
-        <p style="color: red; text-align: center;"><?= $message ?></p>
-    <?php endif; ?>
+    <main class="matchs-page">
 
-    <main>
-        <h2>Formulaire d'inscription</h2>
+        <h2 class="matchs-greeting">Créer un compte</h2>
 
-        <form method="POST">
-            <label for="last_name">Nom :</label>
-            <input type="text" class="form-control" id="last_name" name="last_name" required><br><br>
+        <?php if (!empty($message)): ?>
+            <p style="color:var(--blue); text-align:center; margin-bottom:20px;">
+                <?= $message ?>
+            </p>
+        <?php endif; ?>
 
-            <label for="first_name">Prénom :</label>
-            <input type="text" class="form-control" id="first_name" name="first_name" required><br><br>
+        <div class="card">
+            <h3 class="card-title">Informations personnelles</h3>
 
-            <label for="level">Niveau :</label>
-            <select class="form-control" id="level" name="level">
-                <option value="Débutant">1. Débutant</option>
-                <option value="Perfectionnement">2. Perfectionnement</option>
-                <option value="Élémentaire">3. Élémentaire</option>
-                <option value="Intermédiaire">4. Intermédiaire</option>
-                <option value="Confirmé">5. Confirmé</option>
-                <option value="Avancé">6. Avancé</option>
-                <option value="Expert">7. Expert</option>
-                <option value="Élite">8. Élite</option>
-            </select><br><br>
+            <form method="POST" class="form-grid">
 
-            <label for="email">Email :</label>
-            <input type="email" class="form-control" id="email" name="email" required><br><br>
+                <div class="form-group">
+                    <label for="last_name">Nom</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                </div>
 
-            <label for="password">Mot de passe :</label>
-            <input type="password" class="form-control" id="password" name="password" required><br><br>
+                <div class="form-group">
+                    <label for="first_name">Prénom</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
 
-            <input type="submit" class="btn btn-success mt-3" value="S'inscrire">
-        </form>
+                <div class="form-group full">
+                    <div class="level-label-row">
+                        <label for="level">Niveau</label>
+                        <img src="./Images/help.png" alt="Aide" class="help-icon">
+                    </div>
+                    <select id="level" name="level">
+                        <option value="Débutant">1 – Débutant</option>
+                        <option value="Perfectionnement">2 – Perfectionnement</option>
+                        <option value="Élémentaire">3 – Élémentaire</option>
+                        <option value="Intermédiaire">4 – Intermédiaire</option>
+                        <option value="Confirmé">5 – Confirmé</option>
+                        <option value="Avancé">6 – Avancé</option>
+                        <option value="Expert">7 – Expert</option>
+                        <option value="Élite">8 – Élite</option>
+                    </select>
+                </div>
 
-        <p>Déjà un compte ? <a href="./login.php">Se connecter</a></p>
+                <div class="form-group full">
+                    <label for="email">Adresse email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group full">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-group full" style="margin-top:20px;">
+                    <button type="submit" class="btn-primary" style="width:100%;">Créer mon compte</button>
+                </div>
+
+            </form>
+
+            <p class="micro-text" style="margin-top:20px; text-align:center;">
+                Déjà un compte ? <a href="login.php" style="color:var(--blue)">Se connecter</a>
+            </p>
+        </div>
+
     </main>
 
-    <?php require "footer.php" ?>
+    <div id="level-overlay" class="level-overlay-wrapper">
+        <div class="notif-panel">
+            <div class="notif-panel-header">
+                <h4>Niveaux de jeu</h4>
+                <button id="level-close" style="
+                background: none;
+                border: none;
+                font-size: 1.4rem;
+                cursor: pointer;
+                color: var(--text-soft);
+                line-height: 1;
+                padding: 0 4px;
+            ">✕</button>
+            </div>
+            <div class="notif-panel-body">
+                <img src="./Images/niveau-padel-Padel-Speak.jpg" alt="Niveaux">
+            </div>
+        </div>
+    </div>
+
+    <?php include('footer.php'); ?>
 
 </body>
 

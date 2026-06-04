@@ -125,6 +125,18 @@
             <h2 class="matchs-greeting">
                 Bonjour <?= htmlspecialchars($_SESSION['user']['name']) ?>
             </h2>
+            <div class="modalites-box">
+                <h3>Modalités</h3>
+                <ul>
+                    <li>Chaque match se joue exclusivement à 4 joueurs</li>
+                    <li>Une fois le match complet (4/4), aucune nouvelle inscription n’est possible</li>
+                    <li>Les niveaux affichés permettent d’assurer des matchs équilibrés et cohérents</li>
+                    <li>Les créneaux restent disponibles pendant 72 heures, après quoi ils sont automatiquement supprimés</li>
+                    <li>L’administration envoie des notifications lorsque qu’un match est sur le point d’être complet</li>
+                    <li>Le paiement est réparti de manière équitable entre les joueurs de chaque équipe</li>
+                    <li>Pour savoir quelle personne se sont inscrite, consultez la liste des joueurs en cliquer sur "Joueurs"</li>
+                </ul>
+            </div>
 
             <section class="matchs-section">
                 <h3 class="matchs-title">Mes prochains matchs</h3>
@@ -137,30 +149,30 @@
                 <?php else: ?>
                     <div class="matchs-container">
                         <?php foreach ($mySlots as $i => $slot): ?>
-                            <div class="match-card <?= $i === 0 ? 'match-card--active' : '' ?>">
+                            <div class="match-card <?= $slot->getPlayerCount() == 4 ? 'match-card--active' : '' ?>">
                                 <p class="match-date">
                                     <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
                                 </p>
+                                <div class="match-info">
+                                    <img src="Images/time.png" alt="Durée">
+                                    <span>Durée : <?= $slot->getFormattedDuration() ?></span>
+                                </div>
 
                                 <div class="match-info">
                                     <img src="Images/lieu.png" alt="Lieu">
                                     <span><?= htmlspecialchars($slot->getLocation()) ?></span>
                                 </div>
 
-                                <div class="match-info">
+                                <a href="players.php?id=<?= $slot->getId() ?>" class="match-info" style="text-decoration:none;">
                                     <img src="Images/player.png" alt="Joueurs">
                                     <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
-                                </div>
+                                </a>
 
                                 <div class="match-info">
                                     <img src="Images/level.png" alt="Niveau">
                                     <span>Niveau : <?= $slot->getLevel() ?></span>
                                 </div>
 
-                                <div class="match-info">
-                                    <img src="Images/level.png" alt="Durée">
-                                    <span>Durée : <?= $slot->getFormattedDuration() ?></span>
-                                </div>
                             </div>
                         <?php endforeach; ?>
                     </div>

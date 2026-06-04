@@ -125,4 +125,19 @@ class TimeSlotController
         );
         $req->execute([$userId, $timeslotId]);
     }
+
+    public function getPlayers(int $timeslotId): array
+    {
+        $req = $this->db->prepare("
+        SELECT u.*
+        FROM user u
+        JOIN is_registered r ON u.id_user = r.id_user
+        WHERE r.id_timeslot = ?
+    ");
+        $req->execute([$timeslotId]);
+
+        $rows = $req->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(fn($row) => new User($row), $rows);
+    }
 }

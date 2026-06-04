@@ -466,6 +466,44 @@ a {
     margin-bottom: 52px;
 }
 
+.modalites-box {
+    background: var(--bg-gray);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 24px auto 48px;
+    max-width: 900px;
+    box-shadow: var(--shadow);
+}
+
+.modalites-box h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--text-dark);
+}
+
+.modalites-box ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modalites-box li {
+    font-size: 0.95rem;
+    color: var(--text-mid);
+    padding-left: 18px;
+    position: relative;
+}
+
+.modalites-box li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--blue);
+    font-size: 1.2rem;
+}
+
 .matchs-title {
     font-size: 1.6rem;
     font-weight: 600;
@@ -490,7 +528,6 @@ a {
     gap: 24px;
     box-shadow: var(--shadow);
     transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
 }
 
 .match-card:hover {
@@ -633,6 +670,19 @@ textarea {
     align-items: center;
 }
 
+.card-auth {
+    max-width: 900px;
+    width: 100%;
+    min-width: 528px;
+    margin: 0 auto;
+}
+
+.level-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 /* ===========================
    MODAL
 =========================== */
@@ -771,6 +821,56 @@ textarea {
     padding: 24px;
 }
 
+/* ============================================
+   OVERLAY NIVEAUX
+   ============================================ */
+.level-overlay-wrapper {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(0, 0, 0, 0.55);
+    align-items: center;
+    justify-content: center;
+}
+
+.level-overlay-wrapper.open {
+    display: flex;
+}
+
+.level-overlay-wrapper .notif-panel {
+    position: static;
+    width: 95%;
+    max-width: 1000px;
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: var(--radius);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+}
+
+.level-overlay-wrapper .notif-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+}
+
+.level-overlay-wrapper .notif-panel-body {
+    padding: 24px;
+}
+
+.level-overlay-wrapper .notif-panel-body img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
 /* ===========================
    DARK MODE — VARIABLES
 =========================== */
@@ -860,6 +960,23 @@ textarea {
     border: none;
     color: #F1F5F9;
     box-shadow: none;
+}
+
+.dark-mode .modalites-box {
+    background: #1E293B;
+    box-shadow: none;
+}
+
+.dark-mode .modalites-box h3 {
+    color: #F1F5F9;
+}
+
+.dark-mode .modalites-box li {
+    color: #CBD5E1;
+}
+
+.dark-mode .modalites-box li::before {
+    color: #3B82F6;
 }
 
 .dark-mode .match-card:hover,

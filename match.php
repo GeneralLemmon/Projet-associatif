@@ -34,13 +34,8 @@ $slots = $controller->getMyMatches($userId);
     <?php require "navbar.php"; ?>
 
     <main class="matchs-page">
-
-        <h2 class="matchs-greeting">
-            Bonjour <?= htmlspecialchars($_SESSION['user']['firstName']) ?>
-        </h2>
-
         <section class="matchs-section">
-            <h3 class="matchs-title">Mes prochains matchs</h3>
+            <h2 class="matchs-greeting">Mes prochains matchs</h2>
 
             <?php if (empty($slots)): ?>
                 <p style="color:var(--text-soft)">
@@ -50,12 +45,12 @@ $slots = $controller->getMyMatches($userId);
             <?php else: ?>
                 <div class="matchs-container">
                     <?php foreach ($slots as $i => $slot): ?>
-                        <div class="match-card <?= $i === 0 ? 'match-card--active' : '' ?>">
+                        <div class="match-card <?= $slot->getPlayerCount() == 4 ? 'match-card--active' : '' ?>">
                             <p class="match-date">
                                 <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
                             </p>
                             <div class="match-info">
-                                <img src="Images/level.png" alt="Durée">
+                                <img src="Images/time.png" alt="Durée">
                                 <span>Durée : <?= $slot->getFormattedDuration() ?></span>
                             </div>
                             <div class="match-info">
@@ -63,10 +58,11 @@ $slots = $controller->getMyMatches($userId);
                                 <span><?= htmlspecialchars($slot->getLocation()) ?></span>
                             </div>
 
-                            <div class="match-info">
+                            <a href="players.php?id=<?= $slot->getId() ?>" class="match-info" style="text-decoration:none;">
                                 <img src="Images/player.png" alt="Joueurs">
                                 <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
-                            </div>
+                            </a>
+
 
                             <div class="match-info">
                                 <img src="Images/level.png" alt="Niveau">
@@ -75,7 +71,8 @@ $slots = $controller->getMyMatches($userId);
 
                             <form method="POST" style="margin-top:8px">
                                 <input type="hidden" name="leave_id" value="<?= $slot->getId() ?>">
-                                <button type="submit" class="<?= $i === 0 ? 'btn-leave-active' : 'btn-secondary' ?>"
+                                <button type="submit"
+                                    class="<?= $slot->getPlayerCount() == 4 ? 'btn-secondary' : 'btn-primary' ?>"
                                     onclick="return confirm('Quitter ce match ?')"
                                     style="width:100%; padding:10px">
                                     Quitter
