@@ -1,6 +1,7 @@
 <?php
-session_start();
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 spl_autoload_register(function (string $class) {
     require "$class.php";
 });
@@ -32,7 +33,7 @@ if ($_POST) {
             "firstName" => $user->getFirstName(),
             "lastName"  => $user->getLastName(),
             "name"      => $user->getFullName(),
-            "isAdmin"   => $user->getIsAdmin()
+            "is_admin" => $user->getIsAdmin()
         ];
         header("Location: index.php");
         exit;

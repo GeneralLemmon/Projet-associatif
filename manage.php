@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || empty($_SESSION['user']['isAdmin'])) {
+if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
     header("Location: index.php");
     exit();
 }
