@@ -18,7 +18,7 @@ $isAdmin = $isConnected && $_SESSION['user']['isAdmin'];
     <?php if ($isConnected): ?>
         <div class="nav-center">
             <a href="search.php">Chercher un match</a>
-            <a href="matchs.php">Mes matchs</a>
+            <a href="match.php">Mes matchs</a>
             <?php if ($isAdmin): ?>
                 <a href="manage.php">Gérer</a>
             <?php endif; ?>

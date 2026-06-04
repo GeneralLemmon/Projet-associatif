@@ -69,6 +69,30 @@ a {
     transform: translateY(-1px);
 }
 
+.btn-secondary {
+    padding: 10px 20px;
+    background: #f3f4f6;
+    /* gris clair */
+    color: var(--text-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+    /* gris un peu plus foncé */
+}
+
+.btn-secondary:active {
+    background: #d1d5db;
+}
+
 .navbar {
     background: var(--blue);
     display: flex;
@@ -155,8 +179,6 @@ a {
     opacity: 0.8;
     transition: 0.2s ease;
 }
-
-
 
 .hero {
     background: var(--bg-white);
@@ -422,7 +444,7 @@ a {
 }
 
 /* ============================
-   PAGE PROFIL
+   PROFILE PAGE
 ============================ */
 
 .profil-page {
@@ -473,10 +495,11 @@ a {
     display: block;
 }
 
-.profil-value {
+.profile-value {
     font-size: 1rem;
     font-weight: 500;
     color: var(--text-dark);
+    margin-top: 4px;
 }
 
 /* INPUTS */
@@ -491,6 +514,26 @@ textarea {
     background: #fff;
 }
 
+.input-large {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* LEVEL LABEL + HELP ICON */
+.level-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.help-icon {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    object-fit: contain;
+}
+
 /* SAVE BAR */
 .save-bar {
     margin-top: 32px;
@@ -499,7 +542,7 @@ textarea {
     gap: 16px;
 }
 
-/* MODALE */
+/* MODAL */
 .modal-overlay {
     position: fixed;
     inset: 0;
