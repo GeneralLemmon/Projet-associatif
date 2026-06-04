@@ -981,3 +981,21 @@ textarea {
         gap: 14px;
     }
 }
+
+.empty-state-container {
+    text-align: center;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+}
+
+.empty-state-text {
+    color: var(--text-soft);
+    margin: 0;
+}
+
+.btn-centered {
+    max-width: max-content;
+}
