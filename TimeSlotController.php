@@ -75,22 +75,22 @@ class TimeSlotController
     }
 
     // Créer un timeslot
-    public function create(string $location, string $date, string $time, int $level, int $duration = 90): int
+    public function create(string $location, string $date, string $time, int $level, int $duration = 90, float $price = 0.0): int
     {
         $req = $this->db->prepare(
-            "INSERT INTO timeslot (location, date, time, level, duration) VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO timeslot (location, date, time, level, duration, price) VALUES (?, ?, ?, ?, ?, ?)"
         );
-        $req->execute([$location, $date, $time, $level, $duration]);
+        $req->execute([$location, $date, $time, $level, $duration, $price]);
         return (int)$this->db->lastInsertId();
     }
 
     // Modifier un timeslot
-    public function update(int $id, string $location, string $date, string $time, int $level, int $duration = 90): void
+    public function update(int $id, string $location, string $date, string $time, int $level, int $duration = 90, float $price = 0.0): void
     {
         $req = $this->db->prepare(
-            "UPDATE timeslot SET location = ?, date = ?, time = ?, level = ?, duration = ? WHERE id_timeslot = ?"
+            "UPDATE timeslot SET location = ?, date = ?, time = ?, level = ?, duration = ?, price = ? WHERE id_timeslot = ?"
         );
-        $req->execute([$location, $date, $time, $level, $duration, $id]);
+        $req->execute([$location, $date, $time, $level, $duration, $price, $id]);
     }
 
     // Supprimer un timeslot

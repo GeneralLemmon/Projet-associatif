@@ -16,10 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $exactTime = $_POST['exact_time']  ?? '';
     $level      = (int)($_POST['niveau'] ?? 1);
     $duration   = (int)($_POST['duree'] ?? 90);
+    $price      = (float)str_replace(',', '.', $_POST['prix'] ?? '0');
     $autoApply  = !empty($_POST['auto_apply']);
 
     if ($location && $date && $time) {
-        $slotId = $controller->create($location, $date, $time, $level, $duration);
+        $slotId = $controller->create($location, $date, $time, $level, $duration, $price);
         $userId = (int)($_SESSION['user']['id'] ?? 0);
         if ($autoApply && $userId > 0) {
             $controller->join($userId, $slotId);
@@ -91,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <option value="21:00">21h</option>
                             <option value="22:00">22h</option>
                         </select>
-                        
+
                     </div>
 
                     <!-- Durée -->
@@ -128,6 +129,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <option value="7">7 – Expert</option>
                             <option value="8">8 – Élite</option>
                         </select>
+                    </div>
+
+                    <!-- Prix (rempli automatiquement ou manuellement) -->
+                    <div class="form-group full">
+                        <label for="prix">Prix total du terrain (€)</label>
+                        <input type="number" id="prix" name="prix" min="0" step="0.01"
+                            placeholder="Ex : 24.00" value="0">
                     </div>
 
                 </div>
@@ -330,8 +338,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if (selectedDuration !== null && slotDuration !== selectedDuration) return false;
                         if (!isTimeInRange(slotTime, plageRange.min, plageRange.max)) return false;
                         return true;
-                    }) :
-                    [];
+                    }) : [];
 
                 const venueType = nomClub.includes('Forest') ? 'intérieur' : nomClub.includes('Sportfield') ? 'extérieur' : '';
                 html += `<div class="club-section"><h4>${nomClub}</h4>`;
@@ -451,6 +458,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (opt.text.includes('Forest') && selectedSlot.club.includes('Forest')) lieuSelect.value = opt.value;
                 if (opt.text.includes('Sportfield') && selectedSlot.club.includes('Sportfield')) lieuSelect.value = opt.value;
             });
+
+            // Remplir le champ prix
+            const prixInput = document.getElementById('prix');
+            if (prixInput && selectedSlot.prix) prixInput.value = selectedSlot.prix;
 
             closeTerrainOverlay();
             updateSlotSummary();

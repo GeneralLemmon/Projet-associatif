@@ -139,4 +139,20 @@ class TimeSlot
         $min = $this->duration % 60;
         return $min > 0 ? "{$h}h{$min}" : "{$h}h";
     }
+
+    public function getFormattedPrice(): string
+    {
+        if ($this->price <= 0) return 'Gratuit';
+        return number_format($this->price, 2, ',', ' ') . ' €';
+    }
+    public function getPricePerPlayer(): float
+    {
+        return $this->price / 4;
+    }
+
+    public function getFormattedPricePerPlayer(): string
+    {
+        if ($this->price <= 0) return 'Gratuit';
+        return number_format($this->price / 4, 2, ',', ' ') . ' €';
+    }
 }

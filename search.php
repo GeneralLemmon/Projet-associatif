@@ -126,7 +126,10 @@ $allSlots = $controller->readAll();
                                 <img src="Images/player.png" alt="Joueurs">
                                 <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
                             </a>
-
+                            <div class="match-info">
+                                <img src="Images/price.png" alt="Prix">
+                                <span>Votre part : <?= $slot->getFormattedPricePerPlayer() ?></span>
+                            </div>
 
                             <div class="match-info">
                                 <img src="Images/level.png" alt="Niveau">

@@ -23,12 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // On priorise l'heure précise si elle est définie et différente de 'any'
     $exactTime = $_POST['exact_time'] ?? 'any';
     $time      = ($exactTime !== 'any') ? $exactTime : ($_POST['heure'] ?? '');
-    
+
     $level     = (int)($_POST['niveau'] ?? 1);
     $duration  = (int)($_POST['duree'] ?? 90);
+    $price     = (float)str_replace(',', '.', $_POST['prix'] ?? '0');
     $autoApply = !empty($_POST['auto_apply']);
-    
-    $controller->update($id, $location, $date, $time, $level, $duration);
+
+    $controller->update($id, $location, $date, $time, $level, $duration, $price);
     if ($autoApply && isset($_SESSION['user']['id'])) {
         $controller->join($_SESSION['user']['id'], $id);
     }
@@ -62,16 +63,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <?php
-                        $slotTime = $slot->getTime(); // ex: "18:30" ou "08:00"
-                        $currentHour = (int)substr($slotTime, 0, 2);
-                        $activePlage = ($currentHour >= 7 && $currentHour < 9)
-                            ? 'matin'
-                            : (($currentHour >= 12 && $currentHour < 14) ? 'midi' : 'soir');
-                        
-                        // Liste des heures précises pour le select
-                        $hoursList = ["07:00", "08:00", "09:00", "12:00", "13:00", "14:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
-                        // Si l'heure actuelle correspond pile à une option, on la sélectionne, sinon "any"
-                        $isExactMatch = in_array($slotTime, $hoursList);
+                    $slotTime = $slot->getTime(); // ex: "18:30" ou "08:00"
+                    $currentHour = (int)substr($slotTime, 0, 2);
+                    $activePlage = ($currentHour >= 7 && $currentHour < 9)
+                        ? 'matin'
+                        : (($currentHour >= 12 && $currentHour < 14) ? 'midi' : 'soir');
+
+                    // Liste des heures précises pour le select
+                    $hoursList = ["07:00", "08:00", "09:00", "12:00", "13:00", "14:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
+                    // Si l'heure actuelle correspond pile à une option, on la sélectionne, sinon "any"
+                    $isExactMatch = in_array($slotTime, $hoursList);
                     ?>
 
                     <div class="form-group">
@@ -118,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="lieu">Lieu</label>
                         <select id="lieu" name="lieu">
                             <?php foreach (['Puteaux Île', 'Forest Hill la Défense', 'Sportfield la Défense'] as $lieu): ?>
-                                <option value="<?= $lieu ?>" <?= $slot->getLocation() === $lieu ? 'selected' : '' ?> >
+                                <option value="<?= $lieu ?>" <?= $slot->getLocation() === $lieu ? 'selected' : '' ?>>
                                     <?= $lieu ?>
                                 </option>
                             <?php endforeach; ?>
@@ -128,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full">
                         <label for="niveau">Niveau requis</label>
                         <select id="niveau" name="niveau">
-                            <?php 
+                            <?php
                             $niveauxLabels = [
                                 1 => "1 – Débutant",
                                 2 => "2 – Perfectionnement",
@@ -140,11 +141,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 8 => "8 – Élite"
                             ];
                             foreach ($niveauxLabels as $key => $label): ?>
-                                <option value="<?= $key ?>" <?= (int)$slot->getLevel() === $key ? 'selected' : '' ?> >
+                                <option value="<?= $key ?>" <?= (int)$slot->getLevel() === $key ? 'selected' : '' ?>>
                                     <?= $label ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                    </div>
+
+                    <!-- Prix -->
+                    <div class="form-group full">
+                        <label for="prix">Prix total du terrain (€)</label>
+                        <input type="number" id="prix" name="prix" min="0" step="0.01"
+                            value="<?= number_format($slot->getPrice(), 2, '.', '') ?>">
                     </div>
 
                 </div>
@@ -198,150 +206,161 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php require "footer.php"; ?>
 
     <script>
-    document.querySelectorAll('.plage-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.plage-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('heure').value = btn.dataset.heure;
+        document.querySelectorAll('.plage-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.plage-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('heure').value = btn.dataset.heure;
+            });
         });
-    });
 
-    const overlay     = document.getElementById('terrain-overlay');
-    const btnOpen     = document.getElementById('btn-open-terrain');
-    const btnClose    = document.getElementById('terrain-close');
-    const btnCancel   = document.getElementById('terrain-cancel');
-    const btnUseSlot  = document.getElementById('btn-use-slot');
-    const resultsArea = document.getElementById('terrain-results-area');
+        const overlay = document.getElementById('terrain-overlay');
+        const btnOpen = document.getElementById('btn-open-terrain');
+        const btnClose = document.getElementById('terrain-close');
+        const btnCancel = document.getElementById('terrain-cancel');
+        const btnUseSlot = document.getElementById('btn-use-slot');
+        const resultsArea = document.getElementById('terrain-results-area');
 
-    let selectedSlot = null;
+        let selectedSlot = null;
 
-    btnOpen.addEventListener('click', async () => {
-        const dateInput = document.getElementById('date');
-        const locationSelect = document.getElementById('lieu');
-        const durationSelect = document.getElementById('duree');
-        const heureInput = document.getElementById('heure');
-        const exactTimeSelect = document.getElementById('exact_time');
+        btnOpen.addEventListener('click', async () => {
+            const dateInput = document.getElementById('date');
+            const locationSelect = document.getElementById('lieu');
+            const durationSelect = document.getElementById('duree');
+            const heureInput = document.getElementById('heure');
+            const exactTimeSelect = document.getElementById('exact_time');
 
-        const date = dateInput.value;
-        const locationValue = locationSelect.value;
-        const durationValue = durationSelect.value;
-        
-        const plageValue = (exactTimeSelect && exactTimeSelect.value !== 'any') ? exactTimeSelect.value : heureInput.value;
+            const date = dateInput.value;
+            const locationValue = locationSelect.value;
+            const durationValue = durationSelect.value;
 
-        if (!date) {
-            alert('Sélectionne une date d\'abord.');
-            return;
-        }
+            const plageValue = (exactTimeSelect && exactTimeSelect.value !== 'any') ? exactTimeSelect.value : heureInput.value;
 
-        hideSlotSummary();
-        overlay.classList.add('open');
-        document.body.classList.add('modal-open');
-        resultsArea.innerHTML = `
+            if (!date) {
+                alert('Sélectionne une date d\'abord.');
+                return;
+            }
+
+            hideSlotSummary();
+            overlay.classList.add('open');
+            document.body.classList.add('modal-open');
+            resultsArea.innerHTML = `
             <div class="terrain-loading">
                 <div class="spinner"></div>
                 <p>Recherche des créneaux en cours…</p>
             </div>`;
-        btnUseSlot.disabled = true;
-        selectedSlot = null;
+            btnUseSlot.disabled = true;
+            selectedSlot = null;
 
-        await fetchSlots(date, locationValue, durationValue, plageValue);
-    });
+            await fetchSlots(date, locationValue, durationValue, plageValue);
+        });
 
-    function closeTerrainOverlay() {
-        overlay.classList.remove('open');
-        document.body.classList.remove('modal-open');
-    }
+        function closeTerrainOverlay() {
+            overlay.classList.remove('open');
+            document.body.classList.remove('modal-open');
+        }
 
-    [btnClose, btnCancel].forEach(b => b.addEventListener('click', closeTerrainOverlay));
+        [btnClose, btnCancel].forEach(b => b.addEventListener('click', closeTerrainOverlay));
 
-    overlay.addEventListener('click', e => {
-        if (e.target === overlay) closeTerrainOverlay();
-    });
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) closeTerrainOverlay();
+        });
 
-    async function fetchSlots(date, locationValue, durationValue, plageValue) {
-        try {
-            const res  = await fetch(`http://localhost:8000/?date=${date}`);
-            const data = await res.json();
-            renderResults(data, date, locationValue, durationValue, plageValue);
-        } catch (e) {
-            resultsArea.innerHTML = `
+        async function fetchSlots(date, locationValue, durationValue, plageValue) {
+            try {
+                const res = await fetch(`http://localhost:8000/?date=${date}`);
+                const data = await res.json();
+                renderResults(data, date, locationValue, durationValue, plageValue);
+            } catch (e) {
+                resultsArea.innerHTML = `
                 <p class="terrain-error">
                     ❌ Impossible de contacter le serveur local (port 8000).<br>
                     <small>Vérifie que <code>server.py</code> est bien lancé.</small>
                 </p>`;
-        }
-    }
-
-    function parseDuration(value) {
-        if (!value || value === 'any') return null;
-        if (!Number.isNaN(Number(value))) return Number(value);
-        const trimmed = value.toString().trim();
-        const match = trimmed.match(/^(\d+)(?:h(?:(\d+))?)?$/);
-        if (match) {
-            const hours = Number(match[1]) || 0;
-            const minutes = Number(match[2] || 0) || 0;
-            return hours * 60 + minutes;
-        }
-        return null;
-    }
-
-    function getPlageRange(plageValue) {
-        if (plageValue.includes(':') && plageValue !== '08:00' && plageValue !== '12:00' && plageValue !== '18:00') {
-            return { min: plageValue, max: plageValue };
-        }
-        if (plageValue === '08:00') return { min: '07:00', max: '09:59' };
-        if (plageValue === '12:00') return { min: '12:00', max: '14:59' };
-        return { min: '18:00', max: '22:59' };
-    }
-
-    function isTimeInRange(time, min, max) {
-        return time >= min && time <= max;
-    }
-
-    function renderResults(data, date, locationValue, durationValue, plageValue) {
-        const locationMap = {
-            'Forest Hill la Défense': 'forest-hill-nanterre-la-defense',
-            'Sportfield la Défense': 'sportfield-courbevoie-la-defense',
-            'Peu importe': 'both'
-        };
-
-        const filterSlug = locationMap[locationValue] || 'both';
-        const selectedDuration = parseDuration(durationValue);
-        const plageRange = getPlageRange(plageValue);
-
-        let html = '<div class="terrain-results">';
-        let totalSlots = 0;
-
-        for (const [nomClub, slots] of Object.entries(data)) {
-            if (filterSlug !== 'both') {
-                const isForest = filterSlug === 'forest-hill-nanterre-la-defense' && nomClub.includes('Forest');
-                const isSport  = filterSlug === 'sportfield-courbevoie-la-defense' && nomClub.includes('Sportfield');
-                if (!isForest && !isSport) continue;
             }
+        }
 
-            const availableSlots = Array.isArray(slots)
-                ? slots.filter(slot => {
-                    const slotDuration = parseDuration(slot.duree);
-                    const slotTime = slot.heure || '';
-                    if (selectedDuration !== null && slotDuration !== selectedDuration) return false;
-                    if (!isTimeInRange(slotTime, plageRange.min, plageRange.max)) return false;
-                    return true;
-                })
-                : [];
-
-            const venueType = nomClub.includes('Forest') ? 'intérieur' : nomClub.includes('Sportfield') ? 'extérieur' : '';
-            html += `<div class="club-section"><h4>${nomClub}</h4>`;
-            if (venueType) {
-                html += `<span class="club-venue">Terrains ${venueType}</span>`;
+        function parseDuration(value) {
+            if (!value || value === 'any') return null;
+            if (!Number.isNaN(Number(value))) return Number(value);
+            const trimmed = value.toString().trim();
+            const match = trimmed.match(/^(\d+)(?:h(?:(\d+))?)?$/);
+            if (match) {
+                const hours = Number(match[1]) || 0;
+                const minutes = Number(match[2] || 0) || 0;
+                return hours * 60 + minutes;
             }
+            return null;
+        }
 
-            if (availableSlots.length === 0) {
-                html += `<p class="no-slots">Aucun créneau disponible pour cette plage ou cette durée.</p>`;
-            } else {
-                html += `<div class="slots-grid">`;
-                availableSlots.forEach(slot => {
-                    const key = `${nomClub}||${slot.heure}||${slot.duree}||${slot.prix}`;
-                    html += `
+        function getPlageRange(plageValue) {
+            if (plageValue.includes(':') && plageValue !== '08:00' && plageValue !== '12:00' && plageValue !== '18:00') {
+                return {
+                    min: plageValue,
+                    max: plageValue
+                };
+            }
+            if (plageValue === '08:00') return {
+                min: '07:00',
+                max: '09:59'
+            };
+            if (plageValue === '12:00') return {
+                min: '12:00',
+                max: '14:59'
+            };
+            return {
+                min: '18:00',
+                max: '22:59'
+            };
+        }
+
+        function isTimeInRange(time, min, max) {
+            return time >= min && time <= max;
+        }
+
+        function renderResults(data, date, locationValue, durationValue, plageValue) {
+            const locationMap = {
+                'Forest Hill la Défense': 'forest-hill-nanterre-la-defense',
+                'Sportfield la Défense': 'sportfield-courbevoie-la-defense',
+                'Peu importe': 'both'
+            };
+
+            const filterSlug = locationMap[locationValue] || 'both';
+            const selectedDuration = parseDuration(durationValue);
+            const plageRange = getPlageRange(plageValue);
+
+            let html = '<div class="terrain-results">';
+            let totalSlots = 0;
+
+            for (const [nomClub, slots] of Object.entries(data)) {
+                if (filterSlug !== 'both') {
+                    const isForest = filterSlug === 'forest-hill-nanterre-la-defense' && nomClub.includes('Forest');
+                    const isSport = filterSlug === 'sportfield-courbevoie-la-defense' && nomClub.includes('Sportfield');
+                    if (!isForest && !isSport) continue;
+                }
+
+                const availableSlots = Array.isArray(slots) ?
+                    slots.filter(slot => {
+                        const slotDuration = parseDuration(slot.duree);
+                        const slotTime = slot.heure || '';
+                        if (selectedDuration !== null && slotDuration !== selectedDuration) return false;
+                        if (!isTimeInRange(slotTime, plageRange.min, plageRange.max)) return false;
+                        return true;
+                    }) : [];
+
+                const venueType = nomClub.includes('Forest') ? 'intérieur' : nomClub.includes('Sportfield') ? 'extérieur' : '';
+                html += `<div class="club-section"><h4>${nomClub}</h4>`;
+                if (venueType) {
+                    html += `<span class="club-venue">Terrains ${venueType}</span>`;
+                }
+
+                if (availableSlots.length === 0) {
+                    html += `<p class="no-slots">Aucun créneau disponible pour cette plage ou cette durée.</p>`;
+                } else {
+                    html += `<div class="slots-grid">`;
+                    availableSlots.forEach(slot => {
+                        const key = `${nomClub}||${slot.heure}||${slot.duree}||${slot.prix}`;
+                        html += `
                         <div class="slot-chip"
                              data-key="${encodeURIComponent(key)}"
                              data-club="${encodeURIComponent(nomClub)}"
@@ -353,104 +372,116 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <span class="chip-duree">${slot.duree}</span>
                             <span class="chip-prix">${slot.prix}€</span>
                         </div>`;
-                    totalSlots++;
-                });
+                        totalSlots++;
+                    });
+                    html += `</div>`;
+                }
                 html += `</div>`;
             }
-            html += `</div>`;
-        }
 
-        if (totalSlots === 0) {
-            html = `<p class="no-slots">Aucun créneau disponible pour cette date, cette plage horaire ou cette durée.</p>`;
-        }
+            if (totalSlots === 0) {
+                html = `<p class="no-slots">Aucun créneau disponible pour cette date, cette plage horaire ou cette durée.</p>`;
+            }
 
-        html += '</div>';
-        resultsArea.innerHTML = html;
+            html += '</div>';
+            resultsArea.innerHTML = html;
 
-        resultsArea.querySelectorAll('.slot-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                resultsArea.querySelectorAll('.slot-chip').forEach(c => c.classList.remove('selected'));
-                chip.classList.add('selected');
-                selectedSlot = {
-                    heure : chip.dataset.heure,
-                    duree : chip.dataset.duree,
-                    prix  : chip.dataset.prix,
-                    club  : decodeURIComponent(chip.dataset.club),
-                    date  : chip.dataset.date
-                };
-                btnUseSlot.disabled = false;
+            resultsArea.querySelectorAll('.slot-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    resultsArea.querySelectorAll('.slot-chip').forEach(c => c.classList.remove('selected'));
+                    chip.classList.add('selected');
+                    selectedSlot = {
+                        heure: chip.dataset.heure,
+                        duree: chip.dataset.duree,
+                        prix: chip.dataset.prix,
+                        club: decodeURIComponent(chip.dataset.club),
+                        date: chip.dataset.date
+                    };
+                    btnUseSlot.disabled = false;
+                });
             });
-        });
-    }
+        }
 
-    function updateSlotSummary() {
-        const summary = document.getElementById('slot-summary');
-        const summaryText = document.getElementById('slot-summary-text');
-        const autoApplyContainer = document.getElementById('slot-auto-apply');
-        if (!selectedSlot || !summary || !summaryText || !autoApplyContainer) return;
+        function updateSlotSummary() {
+            const summary = document.getElementById('slot-summary');
+            const summaryText = document.getElementById('slot-summary-text');
+            const autoApplyContainer = document.getElementById('slot-auto-apply');
+            if (!selectedSlot || !summary || !summaryText || !autoApplyContainer) return;
 
-        summary.style.display = 'block';
-        autoApplyContainer.style.display = 'block';
-        summaryText.innerHTML = `
+            summary.style.display = 'block';
+            autoApplyContainer.style.display = 'block';
+            summaryText.innerHTML = `
             Date : <strong>${selectedSlot.date}</strong><br>
             Heure : <strong>${selectedSlot.heure}</strong><br>
             Durée : <strong>${selectedSlot.duree}</strong><br>
             Club : <strong>${selectedSlot.club}</strong><br>
             Prix : <strong>${selectedSlot.prix}€</strong>`;
-    }
-
-    function hideSlotSummary() {
-        const summary = document.getElementById('slot-summary');
-        const summaryText = document.getElementById('slot-summary-text');
-        const autoApplyContainer = document.getElementById('slot-auto-apply');
-        const autoApplyCheckbox = document.getElementById('auto-apply-checkbox');
-        if (!summary || !summaryText || !autoApplyContainer || !autoApplyCheckbox) return;
-        summary.style.display = 'none';
-        summaryText.innerHTML = '';
-        autoApplyCheckbox.checked = false;
-        autoApplyContainer.style.display = 'none';
-    }
-
-    function applySelectedSlot() {
-        if (!selectedSlot) return;
-
-        const dateInput = document.getElementById('date');
-        dateInput.value = selectedSlot.date;
-
-        document.getElementById('heure').value = selectedSlot.heure;
-        
-        const exactTimeSelect = document.getElementById('exact_time');
-        if (exactTimeSelect) {
-            const optionExists = [...exactTimeSelect.options].some(opt => opt.value === selectedSlot.heure);
-            exactTimeSelect.value = optionExists ? selectedSlot.heure : 'any';
         }
 
-        const [h] = selectedSlot.heure.split(':').map(Number);
-        let plage = 'soir';
-        if (h >= 7  && h < 9)  { plage = 'matin'; }
-        if (h >= 12 && h < 14) { plage = 'midi';  }
+        function hideSlotSummary() {
+            const summary = document.getElementById('slot-summary');
+            const summaryText = document.getElementById('slot-summary-text');
+            const autoApplyContainer = document.getElementById('slot-auto-apply');
+            const autoApplyCheckbox = document.getElementById('auto-apply-checkbox');
+            if (!summary || !summaryText || !autoApplyContainer || !autoApplyCheckbox) return;
+            summary.style.display = 'none';
+            summaryText.innerHTML = '';
+            autoApplyCheckbox.checked = false;
+            autoApplyContainer.style.display = 'none';
+        }
 
-        document.querySelectorAll('.plage-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.plage === plage);
+        function applySelectedSlot() {
+            if (!selectedSlot) return;
+
+            const dateInput = document.getElementById('date');
+            dateInput.value = selectedSlot.date;
+
+            document.getElementById('heure').value = selectedSlot.heure;
+
+            const exactTimeSelect = document.getElementById('exact_time');
+            if (exactTimeSelect) {
+                const optionExists = [...exactTimeSelect.options].some(opt => opt.value === selectedSlot.heure);
+                exactTimeSelect.value = optionExists ? selectedSlot.heure : 'any';
+            }
+
+            const [h] = selectedSlot.heure.split(':').map(Number);
+            let plage = 'soir';
+            if (h >= 7 && h < 9) {
+                plage = 'matin';
+            }
+            if (h >= 12 && h < 14) {
+                plage = 'midi';
+            }
+
+            document.querySelectorAll('.plage-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.plage === plage);
+            });
+
+            const dureeMap = {
+                '1h': '60',
+                '1h30': '90',
+                '2h': '120'
+            };
+            const dureeSelect = document.getElementById('duree');
+            if (dureeMap[selectedSlot.duree]) dureeSelect.value = dureeMap[selectedSlot.duree];
+
+            const lieuSelect = document.getElementById('lieu');
+            [...lieuSelect.options].forEach(opt => {
+                if (opt.text.includes('Forest') && selectedSlot.club.includes('Forest')) lieuSelect.value = opt.value;
+                if (opt.text.includes('Sportfield') && selectedSlot.club.includes('Sportfield')) lieuSelect.value = opt.value;
+            });
+
+            // Remplir le champ prix
+            const prixInput = document.getElementById('prix');
+            if (prixInput && selectedSlot.prix) prixInput.value = selectedSlot.prix;
+
+            closeTerrainOverlay();
+            updateSlotSummary();
+        }
+
+        btnUseSlot.addEventListener('click', () => {
+            applySelectedSlot();
         });
-
-        const dureeMap = { '1h': '60', '1h30': '90', '2h': '120' };
-        const dureeSelect = document.getElementById('duree');
-        if (dureeMap[selectedSlot.duree]) dureeSelect.value = dureeMap[selectedSlot.duree];
-
-        const lieuSelect = document.getElementById('lieu');
-        [...lieuSelect.options].forEach(opt => {
-            if (opt.text.includes('Forest') && selectedSlot.club.includes('Forest')) lieuSelect.value = opt.value;
-            if (opt.text.includes('Sportfield') && selectedSlot.club.includes('Sportfield')) lieuSelect.value = opt.value;
-        });
-
-        closeTerrainOverlay();
-        updateSlotSummary();
-    }
-
-    btnUseSlot.addEventListener('click', () => {
-        applySelectedSlot();
-    });
     </script>
 </body>
 

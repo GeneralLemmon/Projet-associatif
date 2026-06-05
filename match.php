@@ -62,7 +62,10 @@ $slots = $controller->getMyMatches($userId);
                                 <img src="Images/player.png" alt="Joueurs">
                                 <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
                             </a>
-
+                            <div class="match-info">
+                                <img src="Images/price.png" alt="Prix">
+                                <span>Votre part : <?= $slot->getFormattedPricePerPlayer() ?></span>
+                            </div>
 
                             <div class="match-info">
                                 <img src="Images/level.png" alt="Niveau">
@@ -101,49 +104,49 @@ $slots = $controller->getMyMatches($userId);
     </div>
 
     <script>
-    const cardModal = document.getElementById('card-action-modal');
-    const modalClose = document.getElementById('modal-close');
-    const modalCancel = document.getElementById('modal-cancel');
-    const modalPlayersButton = document.getElementById('modal-players-button');
-    const modalMapButton = document.getElementById('modal-map-button');
+        const cardModal = document.getElementById('card-action-modal');
+        const modalClose = document.getElementById('modal-close');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalPlayersButton = document.getElementById('modal-players-button');
+        const modalMapButton = document.getElementById('modal-map-button');
 
-    document.querySelectorAll('.match-card').forEach(card => {
-        card.addEventListener('click', event => {
-            if (event.target.closest('form') || event.target.closest('a') || event.target.closest('button')) {
-                return;
-            }
-            const timeslotId = card.dataset.timeslot;
-            const location = card.dataset.location || 'Lieu inconnu';
-            modalPlayersButton.dataset.timeslot = timeslotId;
-            modalMapButton.dataset.location = location;
-            cardModal.classList.add('open');
+        document.querySelectorAll('.match-card').forEach(card => {
+            card.addEventListener('click', event => {
+                if (event.target.closest('form') || event.target.closest('a') || event.target.closest('button')) {
+                    return;
+                }
+                const timeslotId = card.dataset.timeslot;
+                const location = card.dataset.location || 'Lieu inconnu';
+                modalPlayersButton.dataset.timeslot = timeslotId;
+                modalMapButton.dataset.location = location;
+                cardModal.classList.add('open');
+            });
         });
-    });
 
-    function closeCardModal() {
-        cardModal.classList.remove('open');
-    }
-
-    [modalClose, modalCancel].forEach(button => button.addEventListener('click', closeCardModal));
-
-    cardModal.addEventListener('click', event => {
-        if (event.target === cardModal) closeCardModal();
-    });
-
-    modalPlayersButton.addEventListener('click', () => {
-        const id = modalPlayersButton.dataset.timeslot;
-        if (id) {
-            window.location.href = `players.php?id=${encodeURIComponent(id)}`;
+        function closeCardModal() {
+            cardModal.classList.remove('open');
         }
-    });
 
-    modalMapButton.addEventListener('click', () => {
-        const location = modalMapButton.dataset.location;
-        if (location) {
-            const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
-            window.open(url, '_blank');
-        }
-    });
+        [modalClose, modalCancel].forEach(button => button.addEventListener('click', closeCardModal));
+
+        cardModal.addEventListener('click', event => {
+            if (event.target === cardModal) closeCardModal();
+        });
+
+        modalPlayersButton.addEventListener('click', () => {
+            const id = modalPlayersButton.dataset.timeslot;
+            if (id) {
+                window.location.href = `players.php?id=${encodeURIComponent(id)}`;
+            }
+        });
+
+        modalMapButton.addEventListener('click', () => {
+            const location = modalMapButton.dataset.location;
+            if (location) {
+                const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+                window.open(url, '_blank');
+            }
+        });
     </script>
 </body>
 
