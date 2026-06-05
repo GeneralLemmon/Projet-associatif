@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Date -->
                     <div class="form-group">
                         <label for="date">Date</label>
-                        <input type="date" id="date" name="date" required>
+                        <input type="date" id="date" name="date" class="date-input" required>
                     </div>
 
                     <!-- Plage horaire -->
@@ -119,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full">
                         <label for="niveau">Niveau requis</label>
                         <select id="niveau" name="niveau">
+                            <option value="">Tous les niveaux</option>
                             <option value="1">1 – Débutant</option>
                             <option value="2">2 – Perfectionnement</option>
                             <option value="3">3 – Élémentaire</option>

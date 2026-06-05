@@ -20,8 +20,11 @@ if (!$slot) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $location  = $_POST['lieu']   ?? '';
     $date      = $_POST['date']   ?? '';
-    $time      = $_POST['heure']  ?? '';
-    $level     = (int)($_POST['niveau'] ?? 1);
+    // On priorise l'heure précise si elle est définie et différente de 'any'
+    $exactTime = $_POST['exact_time'] ?? 'any';
+    $time      = ($exactTime !== 'any') ? $exactTime : ($_POST['heure'] ?? '');
+    
+    $level     = (int)($_POST['niveau'] ?? 0);
     $duration  = (int)($_POST['duree'] ?? 90);
     $autoApply = !empty($_POST['auto_apply']);
     
@@ -54,15 +57,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-group">
                         <label for="date">Date</label>
-                        <input type="date" id="date" name="date"
+                        <input type="date" id="date" name="date" class="date-input"
                             value="<?= htmlspecialchars($slot->getDate()) ?>" required>
                     </div>
 
                     <?php
-                        $currentHour = (int)substr($slot->getTime(), 0, 2);
+                        $slotTime = $slot->getTime(); // ex: "18:30" ou "08:00"
+                        $currentHour = (int)substr($slotTime, 0, 2);
                         $activePlage = ($currentHour >= 7 && $currentHour < 9)
                             ? 'matin'
                             : (($currentHour >= 12 && $currentHour < 14) ? 'midi' : 'soir');
+                        
+                        // Liste des heures précises pour le select
+                        $hoursList = ["07:00", "08:00", "09:00", "12:00", "13:00", "14:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
+                        // Si l'heure actuelle correspond pile à une option, on la sélectionne, sinon "any"
+                        $isExactMatch = in_array($slotTime, $hoursList);
                     ?>
 
                     <div class="form-group">
@@ -81,7 +90,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <span class="plage-hours">18h – 22h</span>
                             </button>
                         </div>
-                        <input type="hidden" id="heure" name="heure" value="<?= htmlspecialchars($slot->getTime()) ?>">
+                        <input type="hidden" id="heure" name="heure" value="<?= htmlspecialchars($slotTime) ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exact_time">Heure Précise</label>
+                        <select id="exact_time" name="exact_time">
+                            <option value="any" <?= !$isExactMatch ? 'selected' : '' ?>>Peu importe</option>
+                            <?php foreach ($hoursList as $h): ?>
+                                <option value="<?= $h ?>" <?= ($isExactMatch && $slotTime === $h) ? 'selected' : '' ?>>
+                                    <?= substr($h, 0, 2) ?>h
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -92,6 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <option value="120" <?= $slot->getDuration() === 120 ? 'selected' : '' ?>>2h</option>
                         </select>
                     </div>
+
                     <div class="form-group full">
                         <label for="lieu">Lieu</label>
                         <select id="lieu" name="lieu">
@@ -106,11 +128,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full">
                         <label for="niveau">Niveau requis</label>
                         <select id="niveau" name="niveau">
-                            <?php for ($i = 1; $i <= 8; $i++): ?>
-                                <option value="<?= $i ?>" <?= $slot->getLevel() === $i ? 'selected' : '' ?> >
-                                    <?= $i ?> – Niveau <?= $i ?>
+                            <option value="0" <?= (int)$slot->getLevel() === 0 ? 'selected' : '' ?>>Tous les niveaux</option>
+                            <?php 
+                            $niveauxLabels = [
+                                1 => "1 – Débutant",
+                                2 => "2 – Perfectionnement",
+                                3 => "3 – Élémentaire",
+                                4 => "4 – Intermédiaire",
+                                5 => "5 – Confirmé",
+                                6 => "6 – Avancé",
+                                7 => "7 – Expert",
+                                8 => "8 – Élite"
+                            ];
+                            foreach ($niveauxLabels as $key => $label): ?>
+                                <option value="<?= $key ?>" <?= (int)$slot->getLevel() === $key ? 'selected' : '' ?> >
+                                    <?= $label ?>
                                 </option>
-                            <?php endfor; ?>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
@@ -187,11 +221,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const locationSelect = document.getElementById('lieu');
         const durationSelect = document.getElementById('duree');
         const heureInput = document.getElementById('heure');
+        const exactTimeSelect = document.getElementById('exact_time');
 
         const date = dateInput.value;
         const locationValue = locationSelect.value;
         const durationValue = durationSelect.value;
-        const plageValue = heureInput.value;
+        
+        const plageValue = (exactTimeSelect && exactTimeSelect.value !== 'any') ? exactTimeSelect.value : heureInput.value;
 
         if (!date) {
             alert('Sélectionne une date d\'abord.');
@@ -251,6 +287,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     function getPlageRange(plageValue) {
+        if (plageValue.includes(':') && plageValue !== '08:00' && plageValue !== '12:00' && plageValue !== '18:00') {
+            return { min: plageValue, max: plageValue };
+        }
         if (plageValue === '08:00') return { min: '07:00', max: '09:59' };
         if (plageValue === '12:00') return { min: '12:00', max: '14:59' };
         return { min: '18:00', max: '22:59' };
@@ -379,15 +418,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const dateInput = document.getElementById('date');
         dateInput.value = selectedSlot.date;
 
+        document.getElementById('heure').value = selectedSlot.heure;
+        
+        const exactTimeSelect = document.getElementById('exact_time');
+        if (exactTimeSelect) {
+            const optionExists = [...exactTimeSelect.options].some(opt => opt.value === selectedSlot.heure);
+            exactTimeSelect.value = optionExists ? selectedSlot.heure : 'any';
+        }
+
         const [h] = selectedSlot.heure.split(':').map(Number);
-        let plage = 'soir', heureValue = '18:00';
-        if (h >= 7  && h < 9)  { plage = 'matin'; heureValue = '07:00'; }
-        if (h >= 12 && h < 14) { plage = 'midi';  heureValue = '12:00'; }
+        let plage = 'soir';
+        if (h >= 7  && h < 9)  { plage = 'matin'; }
+        if (h >= 12 && h < 14) { plage = 'midi';  }
 
         document.querySelectorAll('.plage-btn').forEach(b => {
             b.classList.toggle('active', b.dataset.plage === plage);
         });
-        document.getElementById('heure').value = selectedSlot.heure;
 
         const dureeMap = { '1h': '60', '1h30': '90', '2h': '120' };
         const dureeSelect = document.getElementById('duree');
