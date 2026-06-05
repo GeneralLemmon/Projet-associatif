@@ -100,7 +100,7 @@ $slots = $controller->readAll();
                             <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
                         </p>
                         <div class="match-info">
-                            <img src="Images/level.png" alt="Durée">
+                            <img src="Images/time.png" alt="Durée">
                             <span>Durée : <?= $slot->getFormattedDuration() ?></span>
                         </div>
                         <div class="match-info">
