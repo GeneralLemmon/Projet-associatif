@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full">
                         <label for="lieu">Lieu</label>
                         <select id="lieu" name="lieu">
-                            <?php foreach (['Puteaux Île', 'Forest Hill la Défense', 'Sportfield la Défense'] as $lieu): ?>
+                            <?php foreach (['Forest Hill la Défense', 'Sportfield la Défense'] as $lieu): ?>
                                 <option value="<?= $lieu ?>" <?= $slot->getLocation() === $lieu ? 'selected' : '' ?>>
                                     <?= $lieu ?>
                                 </option>

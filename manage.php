@@ -65,6 +65,26 @@ if (isset($_GET['success']) && $_GET['success'] === '1') {
 }
 
 $slots = $controller->readAll();
+
+$venueBookingUrls = [
+    'Forest Hill la Défense' => 'https://reservation.forest-hill.fr/club/forest-hill-nanterre-la-defense/reservation/padel',
+    'Sportfield la Défense' => 'https://www.anybuddyapp.com/fr/club/sportfield-courbevoie-la-defense',
+];
+
+function buildReservationLink($slot, $venueBookingUrls)
+{
+    $date = $slot->getDate();
+    $location = $slot->getLocation();
+    $venueWebsite = $slot->getVenueWebsite();
+
+    $baseUrl = $venueWebsite ?: ($venueBookingUrls[$location] ?? null);
+    if (!$baseUrl) {
+        return null;
+    }
+
+    $separator = strpos($baseUrl, '?') === false ? '?' : '&';
+    return $baseUrl . $separator . 'date=' . rawurlencode($date);
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr-FR">
@@ -150,6 +170,16 @@ $slots = $controller->readAll();
                                 Supprimer
                             </button>
                         </form>
+
+                        <?php if ($slot->getPlayerCount() === 4 && ($reservationLink = buildReservationLink($slot, $venueBookingUrls))): ?>
+                            <a href="<?= htmlspecialchars($reservationLink, ENT_QUOTES) ?>"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn-secondary"
+                               style="display:block; width:100%; padding:10px; text-align:center; text-decoration:none; margin-top:8px">
+                                Réserver sur le site du lieu
+                            </a>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>

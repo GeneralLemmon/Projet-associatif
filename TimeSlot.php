@@ -9,6 +9,7 @@ class TimeSlot
     private int $duration;
     private float $price;
     private int    $level;
+    private ?string $venue_website = null;
 
     private int $player_count = 0;
 
@@ -51,6 +52,10 @@ class TimeSlot
     public function getPlayerCount(): int
     {
         return $this->player_count;
+    }
+    public function getVenueWebsite(): ?string
+    {
+        return $this->venue_website;
     }
 
     public function getFormattedDate(): string
@@ -125,6 +130,11 @@ class TimeSlot
     public function setLevel(int $v): self
     {
         $this->level = $v;
+        return $this;
+    }
+    public function setVenue_website(?string $v): self
+    {
+        $this->venue_website = $v;
         return $this;
     }
     public function setPlayer_count(int $v): self
