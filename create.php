@@ -263,14 +263,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         async function fetchSlots(date, locationValue, durationValue, plageValue) {
             try {
-                const res = await fetch(`http://localhost:8000/?date=${date}`);
+                const res = await fetch(`terrain_api.php?date=${encodeURIComponent(date)}`);
+                if (!res.ok) {
+                    throw new Error('API réponse incorrecte');
+                }
                 const data = await res.json();
                 renderResults(data, date, locationValue, durationValue, plageValue);
             } catch (e) {
                 resultsArea.innerHTML = `
                 <p class="terrain-error">
-                    ❌ Impossible de contacter le serveur local (port 8000).<br>
-                    <small>Vérifie que <code>server.py</code> est bien lancé.</small>
+                    ❌ Impossible de contacter le service de recherche de terrains.<br>
+                    <small>Réessaie plus tard ou vérifie ta connexion réseau.</small>
                 </p>`;
             }
         }
