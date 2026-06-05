@@ -124,8 +124,7 @@ $slots = $controller->readAll();
                             <button name="action" value="modifier" class="btn-primary btn-manage-action" style="flex:1;">
                                 Modifier
                             </button>
-                            <button name="action" value="supprimer" class="btn-secondary btn-manage-action" style="flex:1;"
-                                onclick="return confirm('Supprimer ce match ?')">
+                            <button name="action" value="supprimer" class="btn-secondary btn-manage-action" style="flex:1;">
                                 Supprimer
                             </button>
                         </form>
