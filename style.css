@@ -1239,9 +1239,18 @@ html.dark-mode .slot-chip {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
 }
 
-html.dark-mode .slot-chip.selected{
+html.dark-mode .slot-chip.selected {
     background: #273449;
     border-color: #3B82F6;
+}
+
+html.dark-mode #slot-auto-apply label {
+    color: #F1F5F9;
+}
+
+.dark-mode .modal-content {
+    background: #1E293B;
+    color: #F1F5F9;
 }
 
 /* ===========================
