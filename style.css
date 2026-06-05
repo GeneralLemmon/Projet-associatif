@@ -298,6 +298,22 @@ a {
     height: 32px;
 }
 
+.theme-btn-inline {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.theme-btn-inline img {
+    width: 22px;
+    height: 22px;
+}
+
 /* ===========================
    PAGE ACCUEIL — HERO
 =========================== */
@@ -630,6 +646,13 @@ a {
     font-size: 0.9rem;
 }
 
+
+.dark-mode .date-input {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+
 /* ===========================
    PAGE PROFIL
 =========================== */
@@ -637,6 +660,12 @@ a {
     max-width: 900px;
     margin: 60px auto;
     padding: 0 24px;
+}
+.profil-page h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 32px;
+    color: var(--text-dark);
 }
 
 .profil-title {
@@ -1031,6 +1060,10 @@ textarea {
     color: #F1F5F9;
 }
 
+.dark-mode .btn-secondary {
+    color: #000000;
+}
+
 /* ===========================
    DARK MODE — NAVBAR
 =========================== */
@@ -1061,8 +1094,11 @@ textarea {
     color: #94A3B8;
 }
 
-.dark-mode .footer-left .logo {
+.dark-mode .footer-left {
     filter: brightness(0) invert(1);
+}
+.dark-mode .footer-right{
+    color: #9CA3AF;
 }
 
 /* ===========================
@@ -1258,6 +1294,7 @@ textarea {
     gap: 10px;
     flex-wrap: wrap;
 }
+
 .plage-btn {
     flex: 1;
     min-width: 90px;
@@ -1272,18 +1309,34 @@ textarea {
     text-align: center;
     transition: all .2s ease;
 }
+
 .plage-btn:hover {
     border-color: var(--blue, #2563eb);
     color: var(--blue, #2563eb);
 }
+
 .plage-btn.active {
     background: var(--blue, #2563eb);
     border-color: var(--blue, #2563eb);
     color: #fff;
 }
-.plage-btn .plage-icon { display: block; font-size: 1.4rem; margin-bottom: 4px; }
-.plage-btn .plage-label { display: block; }
-.plage-btn .plage-hours { display: block; font-size: 0.75rem; opacity: .75; font-weight: 400; }
+
+.plage-btn .plage-icon {
+    display: block;
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+}
+
+.plage-btn .plage-label {
+    display: block;
+}
+
+.plage-btn .plage-hours {
+    display: block;
+    font-size: 0.75rem;
+    opacity: .75;
+    font-weight: 400;
+}
 
 .btn-search-terrain {
     gap: 8px;
@@ -1293,6 +1346,7 @@ textarea {
     border-radius: 12px;
     transition: all .2s;
 }
+
 .btn-search-terrain:hover {
     background: var(--blue, #2563eb);
     color: #fff;
@@ -1308,6 +1362,7 @@ textarea {
     justify-content: center;
     padding: 16px;
 }
+
 .terrain-overlay.open {
     display: flex;
     overscroll-behavior: contain;
@@ -1328,6 +1383,7 @@ textarea {
     box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
     overflow: hidden;
 }
+
 .terrain-modal-header {
     display: flex;
     align-items: center;
@@ -1335,10 +1391,12 @@ textarea {
     padding: 20px 24px 16px;
     border-bottom: 1px solid var(--border, #dde3ec);
 }
+
 .terrain-modal-header h3 {
     margin: 0;
     font-size: 1.1rem;
 }
+
 .terrain-modal-close {
     background: none;
     border: none;
@@ -1347,16 +1405,19 @@ textarea {
     cursor: pointer;
     color: var(--text-dark, #111827);
 }
+
 .terrain-modal-body {
     padding: 20px 24px;
     overflow-y: auto;
     overflow-x: hidden;
     max-height: calc(85vh - 120px);
 }
+
 .terrain-filters p {
     margin: 0;
     color: var(--text-soft, #888);
 }
+
 .terrain-modal-footer {
     display: flex;
     justify-content: flex-end;
@@ -1365,6 +1426,7 @@ textarea {
     border-top: 1px solid var(--border, #dde3ec);
     background: var(--bg-white, #fff);
 }
+
 .terrain-loading {
     display: flex;
     flex-direction: column;
@@ -1375,6 +1437,7 @@ textarea {
     color: var(--text-mid, #4a4a4a);
     text-align: center;
 }
+
 .spinner {
     width: 40px;
     height: 40px;
@@ -1383,6 +1446,7 @@ textarea {
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
@@ -1394,12 +1458,14 @@ textarea {
     flex-direction: column;
     gap: 22px;
 }
+
 .club-section {
     padding: 0;
     border-radius: 0;
     background: transparent;
     border: none;
 }
+
 .club-section h4 {
     margin: 0 0 4px;
     font-size: 1rem;
@@ -1410,6 +1476,7 @@ textarea {
     text-underline-offset: 4px;
     text-decoration-thickness: 2px;
 }
+
 .club-venue {
     display: block;
     margin-bottom: 10px;
@@ -1418,12 +1485,14 @@ textarea {
     font-weight: 400;
     font-style: italic;
 }
+
 .slots-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 140px));
     gap: 10px;
     justify-content: start;
 }
+
 .slot-chip {
     padding: 10px 10px;
     min-width: 120px;
@@ -1438,39 +1507,47 @@ textarea {
     background: #f8fbff;
     box-shadow: 0 6px 16px rgba(37, 99, 235, 0.06);
 }
+
 .slot-chip:hover {
     transform: translateY(-2px);
     border-color: var(--blue, #2563eb);
     box-shadow: 0 10px 24px rgba(37, 99, 235, 0.12);
 }
+
 .slot-chip.selected {
     background: rgba(37, 99, 235, 0.08);
     border-color: var(--blue, #2563eb);
 }
+
 .chip-heure {
     font-weight: 700;
     color: var(--text-dark, #111827);
     letter-spacing: 0.01em;
 }
+
 .chip-duree,
 .chip-prix {
     font-size: .84rem;
     color: var(--text-mid, #4a4a4a);
 }
+
 .chip-prix {
     font-weight: 500;
     color: var(--text-mid, #4a4a4a);
 }
+
 .slot-chip:hover {
     transform: translateY(-2px);
     border-color: var(--blue, #2563eb);
     box-shadow: 0 16px 30px rgba(37, 99, 235, 0.16);
     background: #eaf4ff;
 }
+
 .slot-chip.selected {
     background: rgba(37, 99, 235, 0.14);
     border-color: var(--blue, #2563eb);
 }
+
 .no-slots {
     margin: 0;
     color: var(--text-soft, #888);
@@ -1486,13 +1563,16 @@ textarea {
     background: #eff7ff;
     color: #102a4a;
 }
+
 .slot-summary-text {
     margin-top: 8px;
 }
+
 #slot-auto-apply {
     display: none;
     margin-bottom: 16px;
 }
+
 #slot-auto-apply label {
     display: inline-flex;
     align-items: center;
@@ -1500,6 +1580,7 @@ textarea {
     font-weight: 600;
     color: #102a4a;
 }
+
 #slot-auto-apply input[type="checkbox"] {
     width: 18px;
     height: 18px;
@@ -1508,6 +1589,7 @@ textarea {
 .terrain-info.small {
     font-size: .9rem;
 }
+
 .terrain-error {
     color: red;
 }

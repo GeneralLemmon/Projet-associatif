@@ -25,14 +25,14 @@ function e($v)
 function levelToNumber(string $level): int
 {
   $mapping = [
-      'Débutant' => 1,
-      'Perfectionnement' => 2,
-      'Élémentaire' => 3,
-      'Intermédiaire' => 4,
-      'Confirmé' => 5,
-      'Avancé' => 6,
-      'Expert' => 7,
-      'Élite' => 8,
+    'Débutant' => 1,
+    'Perfectionnement' => 2,
+    'Élémentaire' => 3,
+    'Intermédiaire' => 4,
+    'Confirmé' => 5,
+    'Avancé' => 6,
+    'Expert' => 7,
+    'Élite' => 8,
   ];
 
   return is_numeric($level) ? (int)$level : ($mapping[$level] ?? 0);
@@ -139,20 +139,20 @@ if ($_POST) {
               </div>
 
               <?php
-                $selectedLevel = $user->getLevel();
-                if (is_numeric($selectedLevel)) {
-                    foreach ($levels as $text => $info) {
-                        if ((string)$info['num'] === (string)$selectedLevel) {
-                            $selectedLevel = $text;
-                            break;
-                        }
-                    }
+              $selectedLevel = $user->getLevel();
+              if (is_numeric($selectedLevel)) {
+                foreach ($levels as $text => $info) {
+                  if ((string)$info['num'] === (string)$selectedLevel) {
+                    $selectedLevel = $text;
+                    break;
+                  }
                 }
+              }
               ?>
 
               <select id="level" name="level">
                 <?php foreach ($levels as $text => $info): ?>
-                  <option value="<?= e($text) ?>" <?= $selectedLevel === $text ? 'selected' : '' ?> >
+                  <option value="<?= e($text) ?>" <?= $selectedLevel === $text ? 'selected' : '' ?>>
                     Niveau <?= $info['num'] ?> – <?= e($info['label']) ?>
                   </option>
                 <?php endforeach; ?>
@@ -184,6 +184,9 @@ if ($_POST) {
 
           <div class="save-bar">
             <a href="profile.php" class="btn-secondary">Annuler</a>
+            <div class="theme-toggle-btn theme-btn-inline">
+              <img class="theme-icon" src="./Images/moon.png" alt="Changer de thème">
+            </div>
             <button class="btn-primary">Enregistrer</button>
           </div>
         </form>
@@ -214,18 +217,18 @@ if ($_POST) {
               <img src="./Images/help.png" alt="Aide" id="btn-level-help" class="help-icon">
             </div>
             <?php
-              $storedLevel = $user->getLevel();
-              $levelInfo = null;
-              if (isset($levels[$storedLevel])) {
-                  $levelInfo = $levels[$storedLevel];
-              } elseif (is_numeric($storedLevel)) {
-                  foreach ($levels as $info) {
-                      if ((string)$info['num'] === (string)$storedLevel) {
-                          $levelInfo = $info;
-                          break;
-                      }
-                  }
+            $storedLevel = $user->getLevel();
+            $levelInfo = null;
+            if (isset($levels[$storedLevel])) {
+              $levelInfo = $levels[$storedLevel];
+            } elseif (is_numeric($storedLevel)) {
+              foreach ($levels as $info) {
+                if ((string)$info['num'] === (string)$storedLevel) {
+                  $levelInfo = $info;
+                  break;
+                }
               }
+            }
             ?>
             <p class="profile-value">
               <?php if ($levelInfo): ?>
@@ -243,6 +246,10 @@ if ($_POST) {
         </div>
         <div class="save-bar">
           <a href="logout.php" class="btn-secondary">Se déconnecter</a>
+          <div class="theme-toggle-btn theme-btn-inline">
+            <img class="theme-icon" src="./Images/moon.png" alt="Changer de thème">
+          </div>
+
           <a href="profile.php?mode=edit" class="btn-primary">Modifier mon profil</a>
         </div>
 
@@ -250,17 +257,6 @@ if ($_POST) {
 
     </div>
   </main>
-
-  <div class="DarkModeToggle">
-    <button id="dark-mode-toggle">Thème</button>
-    <?php
-    if (isset($_SESSION['dark_mode']) && $_SESSION['dark_mode'] === true) {
-      echo '<script>document.body.classList.add("dark-mode");</script>';
-    }
-
-
-    ?>
-  </div>
 
   <div id="level-overlay" class="level-overlay-wrapper">
     <div class="notif-panel">

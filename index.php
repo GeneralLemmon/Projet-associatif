@@ -126,9 +126,10 @@
 
             <a href="signup.php" class="btn-primary adv-btn">S'inscrire</a>
         </section>
-        <div id="theme-toggle-btn" class="theme-btn">
-            <img id="theme-icon" src="./Images/moon.png" alt="Changer de thème">
+        <div class="theme-toggle-btn theme-btn">
+            <img class="theme-icon" src="./Images/moon.png" alt="Changer de thème">
         </div>
+
 
         <a href="#" class="back-to-top" aria-label="Retour en haut">
             <img src="./Images/fleche.png" alt="Flèche vers le haut">

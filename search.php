@@ -93,7 +93,7 @@ $allSlots = $controller->readAll();
             <form method="GET" class="search-bar" style="margin-bottom: 20px;">
                 <div class="search-field">
                     <label for="date">Date du match</label>
-                    <input type="date" id="date" name="date" value="<?= $_GET['date'] ?? '' ?>">
+                    <input type="date" id="date" name="date" class="date-input" value="<?= $_GET['date'] ?? '' ?>">
                 </div>
 
                 <button type="submit" class="btn-primary" style="margin-top: 10px;">
