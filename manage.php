@@ -66,13 +66,13 @@ $slots = $controller->readAll();
 <body>
     <?php require "navbar.php"; ?>
 
-    <main class="matchs-page">
-        <?php if (!empty($message)): ?>
-            <div class="form-message form-message--success auto-dismiss" style="margin: 16px auto 0; max-width: 900px;">
-                <?= htmlspecialchars($message) ?>
-            </div>
-        <?php endif; ?>
+    <?php if (!empty($message)): ?>
+        <div class="form-message form-message--success auto-dismiss manage-form-message">
+            <?= htmlspecialchars($message) ?>
+        </div>
+    <?php endif; ?>
 
+    <main class="matchs-page">
         <?php if (empty($slots)): ?>
 
             <div class="manage-header">

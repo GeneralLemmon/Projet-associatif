@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initAlertAutoDismiss();
   initThemeToggle();
   initLevelHelp();
+  initNotificationMarkRead();
   initSearchPage();
   initManagePage();
   initPlayersPage();
@@ -35,6 +36,41 @@ function initNotifications() {
     if (!e.target.closest(".notif-panel")) {
       notifOverlay.classList.remove("open");
     }
+  });
+}
+
+function initNotificationMarkRead() {
+  document.querySelectorAll('.notif-mark-read-btn').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      const form = button.closest('.notif-mark-read-form');
+      if (!form) return;
+
+      const notificationId = form.querySelector('input[name="notification_id"]').value;
+      if (!notificationId) return;
+
+      fetch('mark_read.php', {
+        method: 'POST',
+        body: new URLSearchParams({ notification_id: notificationId }),
+      }).finally(() => {
+        const item = button.closest('.notif-item');
+        if (item) item.remove();
+
+        const badge = document.querySelector('.notif-badge');
+        if (badge) {
+          const current = parseInt(badge.textContent, 10) || 0;
+          const next = Math.max(0, current - 1);
+          if (next > 0) badge.textContent = next;
+          else badge.remove();
+        }
+
+        const body = document.querySelector('.notif-panel-body');
+        const footer = document.querySelector('.notif-panel-footer');
+        if (body && !body.querySelector('.notif-item')) {
+          body.innerHTML = '<p class="notif-empty">Aucune nouvelle notification.</p>';
+          if (footer) footer.remove();
+        }
+      });
+    });
   });
 }
 

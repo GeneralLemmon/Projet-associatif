@@ -79,10 +79,16 @@ if ($isConnected) {
                     <?php foreach ($notifs as $n): ?>
                         <div class="notif-item" data-id="<?= $n['id_notification'] ?>">
                             <p class="notif-msg"><?= htmlspecialchars($n['message']) ?></p>
-                            <span class="notif-time">
-                                <?= (new DateTime($n['created_at']))->format('d/m/Y H:i') ?>
-                                <?= $n['level'] ? ' · Niveau ' . $n['level'] : ' · Tous niveaux' ?>
-                            </span>
+                            <div class="notif-meta">
+                                <span class="notif-time">
+                                    <?= (new DateTime($n['created_at']))->format('d/m/Y H:i') ?>
+                                    <?= $n['level'] ? ' · Niveau ' . $n['level'] : ' · Tous niveaux' ?>
+                                </span>
+                                <form method="POST" action="mark_read.php" class="notif-mark-read-form">
+                                    <input type="hidden" name="notification_id" value="<?= $n['id_notification'] ?>">
+                                    <button type="button" class="btn-secondary notif-mark-read-btn">Marquer lu</button>
+                                </form>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
