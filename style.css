@@ -745,6 +745,11 @@ textarea {
     min-width: 280px;
 }
 
+.manage-form-message {
+    margin-top: -20px;
+    max-width: 900px;
+}
+
 .form-message--success {
     background: #F3F4F6;
     color: #111827;
@@ -964,6 +969,25 @@ textarea {
 
 .notif-item:hover {
     background: var(--bg-gray);
+}
+
+.notif-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.notif-mark-read-form {
+    margin: 0;
+}
+
+.notif-mark-read-btn {
+    padding: 2px 6px;
+    font-size: 0.68rem;
+    min-width: 58px;
+    white-space: nowrap;
 }
 
 .notif-msg {
