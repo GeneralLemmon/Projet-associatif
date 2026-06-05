@@ -7,15 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
     initAlertAutoDismiss();
     initThemeToggle();
     initLevelHelp();
+    initSearchPage();
+    initManagePage();
+    initPlayersPage();
 });
 
 /* ===========================
    NOTIFICATIONS
 =========================== */
 function initNotifications() {
-    const bellBtn = document.getElementById('notif-bell-btn');
+    const bellBtn      = document.getElementById('notif-bell-btn');
     const notifOverlay = document.getElementById('notif-overlay');
-    const notifClose = document.getElementById('notif-close');
+    const notifClose   = document.getElementById('notif-close');
 
     if (!bellBtn || !notifOverlay) return;
 
@@ -35,18 +38,19 @@ function initNotifications() {
     });
 }
 
+/* ===========================
+   LEVEL HELP OVERLAY
+=========================== */
 function initLevelHelp() {
-    const overlay = document.getElementById('level-overlay');
+    const overlay  = document.getElementById('level-overlay');
     const closeBtn = document.getElementById('level-close');
 
     if (!overlay) return;
 
     document.addEventListener('click', (e) => {
-        // Ouvrir si clic sur n'importe quelle .help-icon hors de l'overlay
         if (e.target.classList.contains('help-icon') && !e.target.closest('#level-overlay')) {
             e.stopPropagation();
             overlay.classList.add('open');
-            return;
         }
     });
 
@@ -67,26 +71,25 @@ function initLevelHelp() {
 =========================== */
 function initBackToTop() {
     const backToTopBtn = document.querySelector('.back-to-top');
-    const themeBtn = document.getElementById('theme-toggle-btn');
-    const footer = document.querySelector('footer');
+    const themeBtn     = document.getElementById('theme-toggle-btn');
+    const footer       = document.querySelector('footer');
 
     if (!backToTopBtn || !themeBtn || !footer) return;
 
     window.addEventListener('scroll', () => {
-
         const visible = window.scrollY > 300;
 
         backToTopBtn.classList.toggle('is-visible', visible);
         themeBtn.classList.toggle('is-visible', visible);
 
-        const footerTop = footer.getBoundingClientRect().top;
+        const footerTop    = footer.getBoundingClientRect().top;
         const windowHeight = window.innerHeight;
 
         let arrowBottom = 28;
         if (footerTop < windowHeight) arrowBottom = 80;
 
         backToTopBtn.style.bottom = arrowBottom + 'px';
-        themeBtn.style.bottom = (arrowBottom + 60) + 'px';
+        themeBtn.style.bottom     = (arrowBottom + 60) + 'px';
     });
 
     backToTopBtn.addEventListener('click', (event) => {
@@ -96,12 +99,10 @@ function initBackToTop() {
 }
 
 /* ===========================
-   CONFIRMATION SUPPRESSION
+   CONFIRMATION SUPPRESSION (manage.php)
 =========================== */
 function initDeleteConfirmation() {
-    const deleteButtons = document.querySelectorAll('button[value="supprimer"]');
-
-    deleteButtons.forEach(button => {
+    document.querySelectorAll('button[value="supprimer"]').forEach(button => {
         button.addEventListener('click', (event) => {
             if (!confirm("Êtes-vous sûr de vouloir supprimer ce match ? Cette action est définitive.")) {
                 event.preventDefault();
@@ -117,9 +118,8 @@ function initMatchDateValidation() {
     const dateInput = document.getElementById('date');
     if (!dateInput) return;
 
-    const today = new Date();
+    const today     = new Date();
     const formatted = today.toISOString().split("T")[0];
-
     dateInput.setAttribute('min', formatted);
 }
 
@@ -127,7 +127,7 @@ function initMatchDateValidation() {
    VALIDATION MOT DE PASSE
 =========================== */
 function initLoginValidation() {
-    const loginForm = document.querySelector('form[method="POST"]');
+    const loginForm    = document.querySelector('form[method="POST"]');
     const passwordInput = document.getElementById('password');
 
     if (!loginForm || !passwordInput) return;
@@ -146,19 +146,23 @@ function initLoginValidation() {
 }
 
 /* ===========================
-   AUTO-DISMISS MESSAGES
+   AUTO-DISMISS MESSAGES (2,5s)
 =========================== */
 function initAlertAutoDismiss() {
-    const paragraphs = document.querySelectorAll('p');
+    const selectors = [
+        '#toast-message',
+        '.form-message',
+        '.form-message--success',
+        '.form-message--error',
+        '.login-error'
+    ];
 
-    paragraphs.forEach(p => {
-        if (p.style.color === 'green' || p.textContent.includes('supprimé')) {
-            setTimeout(() => {
-                p.style.transition = 'opacity 0.5s ease';
-                p.style.opacity = '0';
-                setTimeout(() => p.remove(), 500);
-            }, 4000);
-        }
+    document.querySelectorAll(selectors.join(',')).forEach(el => {
+        setTimeout(() => {
+            el.style.transition = 'opacity 0.5s ease';
+            el.style.opacity    = '0';
+            setTimeout(() => el.remove(), 500);
+        }, 2500);
     });
 }
 
@@ -167,12 +171,12 @@ function initAlertAutoDismiss() {
 =========================== */
 function initThemeToggle() {
     const toggleBtn = document.getElementById("theme-toggle-btn");
-    const icon = document.getElementById("theme-icon");
+    const icon      = document.getElementById("theme-icon");
 
     if (!toggleBtn || !icon) return;
 
     const lightIcon = "./Images/sun.png";
-    const darkIcon = "./Images/moon.png";
+    const darkIcon  = "./Images/moon.png";
 
     if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark-mode");
@@ -183,5 +187,122 @@ function initThemeToggle() {
         const isDark = document.body.classList.toggle("dark-mode");
         icon.src = isDark ? lightIcon : darkIcon;
         localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+}
+
+/* ===========================
+   SEARCH PAGE
+=========================== */
+function initSearchPage() {
+    const cardModal = document.getElementById('card-action-modal');
+    if (!cardModal) return;
+
+    const modalClose         = document.getElementById('modal-close');
+    const modalCancel        = document.getElementById('modal-cancel');
+    const modalPlayersButton = document.getElementById('modal-players-button');
+    const modalMapButton     = document.getElementById('modal-map-button');
+
+    document.querySelectorAll('.match-card').forEach(card => {
+        card.addEventListener('click', event => {
+            if (event.target.closest('form') || event.target.closest('a') || event.target.closest('button')) {
+                return;
+            }
+            modalPlayersButton.dataset.timeslot = card.dataset.timeslot;
+            modalMapButton.dataset.location     = card.dataset.location || 'Lieu inconnu';
+            cardModal.classList.add('open');
+        });
+    });
+
+    function closeCardModal() {
+        cardModal.classList.remove('open');
+    }
+
+    [modalClose, modalCancel].forEach(btn => btn.addEventListener('click', closeCardModal));
+
+    cardModal.addEventListener('click', event => {
+        if (event.target === cardModal) closeCardModal();
+    });
+
+    modalPlayersButton.addEventListener('click', () => {
+        const id = modalPlayersButton.dataset.timeslot;
+        if (id) window.location.href = `players.php?id=${encodeURIComponent(id)}`;
+    });
+
+    modalMapButton.addEventListener('click', () => {
+        const location = modalMapButton.dataset.location;
+        if (location) window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`, '_blank');
+    });
+
+    document.querySelectorAll('form.join-form').forEach(form => {
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            if (window.confirm('Confirmer votre participation à ce match ?')) {
+                form.submit();
+            }
+        });
+    });
+}
+
+/* ===========================
+   MANAGE PAGE
+=========================== */
+function initManagePage() {
+    const cardModal = document.getElementById('card-action-modal');
+    if (!cardModal) return;
+
+    // Sur search.php le modal existe aussi, on différencie via un bouton spécifique à manage
+    const isManagePage = !!document.querySelector('button[value="supprimer"]');
+    if (!isManagePage) return;
+
+    const modalClose         = document.getElementById('modal-close');
+    const modalCancel        = document.getElementById('modal-cancel');
+    const modalPlayersButton = document.getElementById('modal-players-button');
+    const modalMapButton     = document.getElementById('modal-map-button');
+
+    document.querySelectorAll('.match-card').forEach(card => {
+        card.addEventListener('click', event => {
+            if (event.target.closest('form') || event.target.closest('a') || event.target.closest('button')) {
+                return;
+            }
+            modalPlayersButton.dataset.timeslot = card.dataset.timeslot;
+            modalMapButton.dataset.location     = card.dataset.location || 'Lieu inconnu';
+            cardModal.classList.add('open');
+        });
+    });
+
+    function closeCardModal() {
+        cardModal.classList.remove('open');
+    }
+
+    [modalClose, modalCancel].forEach(btn => btn.addEventListener('click', closeCardModal));
+
+    cardModal.addEventListener('click', event => {
+        if (event.target === cardModal) closeCardModal();
+    });
+
+    modalPlayersButton.addEventListener('click', () => {
+        const id = modalPlayersButton.dataset.timeslot;
+        if (id) window.location.href = `players.php?id=${encodeURIComponent(id)}`;
+    });
+
+    modalMapButton.addEventListener('click', () => {
+        const location = modalMapButton.dataset.location;
+        if (location) window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`, '_blank');
+    });
+}
+
+/* ===========================
+   PLAYERS PAGE
+=========================== */
+function initPlayersPage() {
+    document.querySelectorAll('form').forEach(form => {
+        if (!form.querySelector('input[name="remove_user_id"]')) return;
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            if (window.confirm('Êtes-vous sûr de vouloir supprimer ce joueur du match ?')) {
+                form.submit();
+            }
+        });
     });
 }

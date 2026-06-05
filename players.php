@@ -91,29 +91,6 @@ $players = $controller->getPlayers($slot->getId());
 
 
     <?php include "footer.php"; ?>
-
-    <script>
-        document.querySelectorAll('form').forEach(form => {
-            const removeField = form.querySelector('input[name="remove_user_id"]');
-            if (!removeField) return;
-
-            form.addEventListener('submit', event => {
-                event.preventDefault();
-                const confirmed = window.confirm('Êtes-vous sûr de vouloir supprimer ce joueur du match ?');
-                if (confirmed) {
-                    form.submit();
-                }
-            });
-        });
-
-        const toast = document.getElementById('toast-message');
-        if (toast) {
-            setTimeout(() => {
-                toast.classList.add('toast-hide');
-                setTimeout(() => toast.remove(), 500);
-            }, 4200);
-        }
-    </script>
 </body>
 
 </html>

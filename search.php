@@ -163,69 +163,6 @@ $allSlots = $controller->readAll();
         </div>
     </div>
 
-    <script>
-    const cardModal = document.getElementById('card-action-modal');
-    const modalClose = document.getElementById('modal-close');
-    const modalCancel = document.getElementById('modal-cancel');
-    const modalPlayersButton = document.getElementById('modal-players-button');
-    const modalMapButton = document.getElementById('modal-map-button');
-
-    document.querySelectorAll('.match-card').forEach(card => {
-        card.addEventListener('click', event => {
-            if (event.target.closest('form') || event.target.closest('a') || event.target.closest('button')) {
-                return;
-            }
-            const timeslotId = card.dataset.timeslot;
-            const location = card.dataset.location || 'Lieu inconnu';
-            modalPlayersButton.dataset.timeslot = timeslotId;
-            modalMapButton.dataset.location = location;
-            cardModal.classList.add('open');
-        });
-    });
-
-    function closeCardModal() {
-        cardModal.classList.remove('open');
-    }
-
-    [modalClose, modalCancel].forEach(button => button.addEventListener('click', closeCardModal));
-
-    cardModal.addEventListener('click', event => {
-        if (event.target === cardModal) closeCardModal();
-    });
-
-    modalPlayersButton.addEventListener('click', () => {
-        const id = modalPlayersButton.dataset.timeslot;
-        if (id) {
-            window.location.href = `players.php?id=${encodeURIComponent(id)}`;
-        }
-    });
-
-    modalMapButton.addEventListener('click', () => {
-        const location = modalMapButton.dataset.location;
-        if (location) {
-            const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
-            window.open(url, '_blank');
-        }
-    });
-
-    document.querySelectorAll('form.join-form').forEach(form => {
-        form.addEventListener('submit', event => {
-            event.preventDefault();
-            const confirmed = window.confirm('Confirmer votre participation à ce match ?');
-            if (confirmed) {
-                form.submit();
-            }
-        });
-    });
-
-    const toast = document.getElementById('toast-message');
-    if (toast) {
-        setTimeout(() => {
-            toast.classList.add('toast-hide');
-            setTimeout(() => toast.remove(), 500);
-        }, 4200);
-    }
-    </script>
 </body>
 
 </html>
