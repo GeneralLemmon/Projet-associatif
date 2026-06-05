@@ -71,7 +71,7 @@ if ($isConnected) {
         <div class="notif-panel">
             <div class="notif-panel-header">
                 <h3>Notifications</h3>
-                <button id="notif-close">✕</button>
+                <button id="notif-close">×</button>
             </div>
 
             <div class="notif-panel-body">

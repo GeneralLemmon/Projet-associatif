@@ -1013,6 +1013,18 @@ textarea {
     color: var(--text-dark);
 }
 
+#notif-close {
+    background: none;
+    border: none;
+    padding: 4px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .notif-time {
     font-size: 0.75rem;
     color: var(--text-soft);
