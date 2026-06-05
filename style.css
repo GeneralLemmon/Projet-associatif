@@ -761,6 +761,11 @@ textarea {
     color: #111827;
 }
 
+.form-message--warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
 .form-message--error {
     background: #dc2626;
 }

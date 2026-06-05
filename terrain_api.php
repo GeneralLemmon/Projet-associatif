@@ -1,6 +1,8 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
+require_once __DIR__ . '/autoload.php';
+
 date_default_timezone_set('Europe/Paris');
 
 $date = $_GET['date'] ?? '';
@@ -182,6 +184,36 @@ foreach ($clubs as $slug => $clubName) {
     }
 
     $output[$clubName] = $slots;
+}
+
+$hasSlots = false;
+$hasError = false;
+foreach ($output as $slots) {
+    if (is_array($slots) && count($slots) > 0) {
+        $hasSlots = true;
+        break;
+    }
+    if (!is_array($slots) && $slots === 'erreur') {
+        $hasError = true;
+    }
+}
+
+if (!$hasSlots && !$hasError) {
+    $notificationController = new NotificationController();
+    $message = sprintf(
+        "Aucun créneau disponible trouvé pour le %s via l'API de terrains. Vérifiez ou modifiez les créneaux concernés dans l'espace admin.",
+        $date
+    );
+
+    $check = Database::getInstance()->getConnection()->prepare(
+        "SELECT COUNT(*) FROM notification WHERE message = ? AND created_at >= DATE_SUB(NOW(), INTERVAL 6 HOUR)"
+    );
+    $check->execute([$message]);
+
+    if ((int)$check->fetchColumn() === 0) {
+        $notificationId = $notificationController->create($message, null);
+        $notificationController->hideFromAllNonAdmins($notificationId);
+    }
 }
 
 echo json_encode($output);

@@ -9,6 +9,19 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
 require_once __DIR__ . "/autoload.php";
 $controller = new TimeSlotController();
 $message = '';
+$terrainWarning = '';
+
+$notificationController = new NotificationController();
+$adminNotifications = $notificationController->getForUser(
+    $_SESSION['user']['id'], 
+    $_SESSION['user']['level'] ?? 'Débutant'
+);
+foreach ($adminNotifications as $notif) {
+    if (stripos($notif['message'], 'Aucun créneau disponible trouvé') !== false) {
+        $terrainWarning = '⚠️ Terrain indisponible détecté via l’API. Vérifiez ou modifiez les créneaux concernés dans l’espace admin.';
+        break;
+    }
+}
 
 // Actions POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -65,6 +78,12 @@ $slots = $controller->readAll();
 
 <body>
     <?php require "navbar.php"; ?>
+
+    <?php if (!empty($terrainWarning)): ?>
+        <div class="form-message form-message--warning auto-dismiss manage-form-message">
+            <?= htmlspecialchars($terrainWarning) ?>
+        </div>
+    <?php endif; ?>
 
     <?php if (!empty($message)): ?>
         <div class="form-message form-message--success auto-dismiss manage-form-message">

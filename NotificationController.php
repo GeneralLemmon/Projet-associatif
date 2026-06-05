@@ -47,6 +47,13 @@ class NotificationController
         $req->execute(array_merge([$notificationId], $allowedUserIds));
     }
 
+    public function hideFromAllNonAdmins(int $notificationId): void
+    {
+        $req = $this->db->query("SELECT id_user FROM `user` WHERE is_admin = 1");
+        $admins = $req->fetchAll(PDO::FETCH_COLUMN);
+        $this->hideFromAllUsersExcept($notificationId, $admins);
+    }
+
     public function markExistingNotificationsReadForUser(int $userId): void
     {
         $req = $this->db->prepare(
