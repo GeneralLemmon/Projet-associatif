@@ -8,26 +8,43 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
 
 require_once __DIR__ . "/autoload.php";
 $controller = new TimeSlotController();
+$errorMessage = '';
+$location = '';
+$date = '';
+$time = '18:00';
+$exactTime = 'any';
+$level = 1;
+$duration = 0;
+$price = 0;
+$autoApply = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $location   = $_POST['lieu']   ?? '';
-    $date       = $_POST['date']   ?? '';
-    $time       = $_POST['heure']  ?? '';
-    $exactTime = $_POST['exact_time']  ?? '';
+    $location   = trim($_POST['lieu']   ?? '');
+    $date       = trim($_POST['date']   ?? '');
+    $time       = trim($_POST['heure']  ?? '18:00');
+    $exactTime  = trim($_POST['exact_time'] ?? 'any');
     $level      = (int)($_POST['niveau'] ?? 1);
-    $duration   = (int)($_POST['duree'] ?? 90);
-    $price      = (float)str_replace(',', '.', $_POST['prix'] ?? '0');
+    $duration   = (int)($_POST['duree'] ?? 0);
+    $price      = (float)str_replace(',', '.', trim($_POST['prix'] ?? '0'));
     $autoApply  = !empty($_POST['auto_apply']);
 
-    if ($location && $date && $time) {
+    if ($location === '' || mb_strtolower($location) === 'peu importe') {
+        $errorMessage = 'Veuillez choisir un lieu valide pour le match.';
+    } elseif ($duration <= 0) {
+        $errorMessage = 'Veuillez sélectionner une durée différente de « Peu importe ».';
+    } elseif ($price <= 0) {
+        $errorMessage = 'Veuillez saisir un prix supérieur à zéro.';
+    } elseif ($date === '' || $time === '') {
+        $errorMessage = 'Veuillez renseigner la date et la plage horaire du match.';
+    } else {
         $slotId = $controller->create($location, $date, $time, $level, $duration, $price);
         $userId = (int)($_SESSION['user']['id'] ?? 0);
         if ($autoApply && $userId > 0) {
             $controller->join($userId, $slotId);
         }
+        header("Location: manage.php");
+        exit;
     }
-    header("Location: manage.php");
-    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -47,12 +64,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="card">
             <form action="create.php" method="POST">
+                <?php if ($errorMessage): ?>
+                    <div class="form-message form-message--error">
+                        <?= htmlspecialchars($errorMessage) ?>
+                    </div>
+                <?php endif; ?>
                 <div class="form-grid">
 
                     <!-- Date -->
                     <div class="form-group">
                         <label for="date">Date</label>
-                        <input type="date" id="date" name="date" class="date-input" required>
+                        <input type="date" id="date" name="date" class="date-input" required value="<?= htmlspecialchars($date) ?>">
                     </div>
 
                     <!-- Plage horaire -->
@@ -73,24 +95,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </button>
                         </div>
                         <!-- champ caché envoyé avec le form -->
-                        <input type="hidden" id="heure" name="heure" value="18:00">
+                        <input type="hidden" id="heure" name="heure" value="<?= htmlspecialchars($time) ?>">
                     </div>
 
                     <div class="form-group">
                         <label>Heure Précise</label>
                         <select id="exact_time" name="exact_time">
-                            <option value="any" selected>Peu importe</option>
-                            <option value="07:00">07h</option>
-                            <option value="08:00">08h</option>
-                            <option value="09:00">09h</option>
-                            <option value="12:00">12h</option>
-                            <option value="13:00">13h</option>
-                            <option value="14:00">14h</option>
-                            <option value="18:00">18h</option>
-                            <option value="19:00">19h</option>
-                            <option value="20:00">20h</option>
-                            <option value="21:00">21h</option>
-                            <option value="22:00">22h</option>
+                            <option value="any" <?= $exactTime === 'any' ? 'selected' : '' ?>>Peu importe</option>
+                            <option value="07:00" <?= $exactTime === '07:00' ? 'selected' : '' ?>>07h</option>
+                            <option value="08:00" <?= $exactTime === '08:00' ? 'selected' : '' ?>>08h</option>
+                            <option value="09:00" <?= $exactTime === '09:00' ? 'selected' : '' ?>>09h</option>
+                            <option value="12:00" <?= $exactTime === '12:00' ? 'selected' : '' ?>>12h</option>
+                            <option value="13:00" <?= $exactTime === '13:00' ? 'selected' : '' ?>>13h</option>
+                            <option value="14:00" <?= $exactTime === '14:00' ? 'selected' : '' ?>>14h</option>
+                            <option value="18:00" <?= $exactTime === '18:00' ? 'selected' : '' ?>>18h</option>
+                            <option value="19:00" <?= $exactTime === '19:00' ? 'selected' : '' ?>>19h</option>
+                            <option value="20:00" <?= $exactTime === '20:00' ? 'selected' : '' ?>>20h</option>
+                            <option value="21:00" <?= $exactTime === '21:00' ? 'selected' : '' ?>>21h</option>
+                            <option value="22:00" <?= $exactTime === '22:00' ? 'selected' : '' ?>>22h</option>
                         </select>
 
                     </div>
@@ -98,21 +120,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Durée -->
                     <div class="form-group">
                         <label for="duree">Durée</label>
-                        <select id="duree" name="duree">
-                            <option value="any" selected>Peu importe</option>
-                            <option value="60">1h</option>
-                            <option value="90">1h30</option>
-                            <option value="120">2h</option>
+                        <select id="duree" name="duree" required>
+                            <option value="" <?= $duration <= 0 ? 'selected' : '' ?> disabled>Peu importe</option>
+                            <option value="60" <?= $duration === 60 ? 'selected' : '' ?>>1h</option>
+                            <option value="90" <?= $duration === 90 ? 'selected' : '' ?>>1h30</option>
+                            <option value="120" <?= $duration === 120 ? 'selected' : '' ?>>2h</option>
                         </select>
                     </div>
 
                     <!-- Lieu -->
                     <div class="form-group full">
                         <label for="lieu">Lieu</label>
-                        <select id="lieu" name="lieu">
-                            <option value="Peu importe">Peu importe</option>
-                            <option value="Forest Hill la Défense">Forest Hill (Nanterre)</option>
-                            <option value="Sportfield la Défense">Sportfield (Courbevoie)</option>
+                        <select id="lieu" name="lieu" required>
+                            <option value="" <?= $location === '' ? 'selected' : '' ?> disabled>Peu importe</option>
+                            <option value="Forest Hill la Défense" <?= $location === 'Forest Hill la Défense' ? 'selected' : '' ?>>Forest Hill (Nanterre)</option>
+                            <option value="Sportfield la Défense" <?= $location === 'Sportfield la Défense' ? 'selected' : '' ?>>Sportfield (Courbevoie)</option>
                         </select>
                     </div>
 
@@ -134,8 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Prix (rempli automatiquement ou manuellement) -->
                     <div class="form-group full">
                         <label for="prix">Prix total du terrain (€)</label>
-                        <input type="number" id="prix" name="prix" min="0" step="0.01"
-                            placeholder="Ex : 24.00" value="0">
+                        <input type="number" id="prix" name="prix" min="0.01" step="0.01" required
+                            placeholder="Ex : 24.00" value="<?= htmlspecialchars(number_format($price, 2, '.', '')) ?>">
                     </div>
 
                 </div>
