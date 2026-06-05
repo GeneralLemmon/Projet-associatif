@@ -1216,6 +1216,34 @@ html.dark-mode .theme-icon {
     filter: brightness(0) invert(1);
 }
 
+.dark-mode .notif-panel {
+    background: #1E293B;
+    border: none;
+}
+
+.dark-mode .terrain-modal {
+    background: #1E293B !important;
+}
+
+.dark-mode .terrain-modal-body {
+    background: #1E293B !important;
+}
+
+.dark-mode .terrain-modal-footer {
+    background: #1E293B !important;
+}
+
+html.dark-mode .slot-chip {
+    background: #1E293B;
+    border-color: #334155;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+html.dark-mode .slot-chip.selected{
+    background: #273449;
+    border-color: #3B82F6;
+}
+
 /* ===========================
    DARK MODE — FORM INPUTS
 =========================== */
@@ -1468,6 +1496,27 @@ html.dark-mode .theme-icon {
     border-top: 1px solid var(--border, #dde3ec);
     background: var(--bg-white, #fff);
 }
+
+.slot-chip {
+    padding: 10px 10px;
+    min-width: 120px;
+    max-width: 140px;
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: .15s;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: #f8fbff;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.06);
+}
+
+.slot-chip.selected {
+    background: rgba(37, 99, 235, 0.14);
+    border-color: var(--blue);
+}
+
 
 .terrain-loading {
     display: flex;
