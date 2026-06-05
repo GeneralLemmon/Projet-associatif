@@ -121,13 +121,34 @@ class TimeSlotController
         return true;
     }
 
-    // Quitter un match
+    // Quitter un match (ou être supprimé par un admin)
     public function leave(int $userId, int $timeslotId): void
     {
+        // 1. Récupérer les informations du match AVANT la suppression pour composer le message descriptif
+        $slot = $this->read($timeslotId);
+
+        // 2. Supprimer l'utilisateur du créneau
         $req = $this->db->prepare(
             "DELETE FROM is_registered WHERE id_user = ? AND id_timeslot = ?"
         );
         $req->execute([$userId, $timeslotId]);
+
+        // 3. Logique de notification automatique (Point 7)
+        // On vérifie si l'utilisateur qui déclenche l'action est un administrateur et s'il éjecte un autre joueur
+        if (isset($_SESSION['user']) && !empty($_SESSION['user']['is_admin']) && (int)$_SESSION['user']['id'] !== $userId) {
+            if ($slot) {
+                $notifController = new NotificationController();
+                
+                // Préparation du message personnalisé avec les détails du match annulé
+                $message = "L'administrateur vous a retiré du match prévu le " . $slot->getFormattedDate() . " à " . $slot->getFormattedTime() . " (" . $slot->getLocation() . ").";
+                
+                // Enregistrement de la notification
+                $notifId = $notifController->create($message);
+                
+                // Masquer pour tous les comptes sauf pour le joueur exclu ($userId)
+                $notifController->hideFromAllUsersExcept($notifId, [$userId]);
+            }
+        }
     }
 
     public function getPlayers(int $timeslotId): array
