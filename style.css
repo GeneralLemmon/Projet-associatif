@@ -293,16 +293,20 @@ a {
     transform: translateY(0);
 }
 
+.theme-icon {
+    filter: brightness(0) invert(1);
+}
+
 .theme-btn img {
     width: 32px;
     height: 32px;
+    filter: brightness(0) invert(1);
 }
 
 .theme-btn-inline {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--bg-gray);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -661,6 +665,7 @@ a {
     margin: 60px auto;
     padding: 0 24px;
 }
+
 .profil-page h2 {
     font-size: 1.8rem;
     font-weight: 800;
@@ -1080,7 +1085,7 @@ textarea {
    DARK MODE — GLOBAL
 =========================== */
 .dark-mode body {
-    background-color: #0F172A;
+    background-color: #0D1117;
     color: #F1F5F9;
 }
 
@@ -1092,14 +1097,19 @@ textarea {
    DARK MODE — NAVBAR
 =========================== */
 .dark-mode .navbar {
-    background: #0F172A;
-    border-bottom: 1px solid #1E293B;
+    background: #111827;
+    border-bottom: 1px solid transparent;
 }
 
 .dark-mode .navbar a,
 .dark-mode .navbar h1 {
     color: #F1F5F9;
 }
+
+html.dark-mode .theme-icon {
+    filter: brightness(0) invert(1);
+}
+
 
 /* ===========================
    DARK MODE — FOOTER
@@ -1121,7 +1131,8 @@ textarea {
 .dark-mode .footer-left {
     filter: brightness(0) invert(1);
 }
-.dark-mode .footer-right{
+
+.dark-mode .footer-right {
     color: #9CA3AF;
 }
 
@@ -1147,8 +1158,7 @@ textarea {
 =========================== */
 .dark-mode .match-card,
 .dark-mode .adv-card,
-.dark-mode .card
-{
+.dark-mode .card {
     background: #1E293B;
     border: none;
     color: #F1F5F9;

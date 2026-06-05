@@ -184,9 +184,7 @@ if ($_POST) {
 
           <div class="save-bar">
             <a href="profile.php" class="btn-secondary">Annuler</a>
-            <div class="theme-toggle-btn theme-btn-inline">
-              <img class="theme-icon" src="./Images/moon.png" alt="Changer de thème">
-            </div>
+
             <button class="btn-primary">Enregistrer</button>
           </div>
         </form>
@@ -246,9 +244,6 @@ if ($_POST) {
         </div>
         <div class="save-bar">
           <a href="logout.php" class="btn-secondary">Se déconnecter</a>
-          <div class="theme-toggle-btn theme-btn-inline">
-            <img class="theme-icon" src="./Images/moon.png" alt="Changer de thème">
-          </div>
 
           <a href="profile.php?mode=edit" class="btn-primary">Modifier mon profil</a>
         </div>

@@ -51,7 +51,9 @@ if ($isConnected) {
                     <span class="notif-badge"><?= $notifCount ?></span>
                 <?php endif; ?>
             </button>
-
+            <div class="theme-toggle-btn theme-btn-inline">
+                <img class="theme-icon" src="./Images/moon.png" alt="Changer de thème">
+            </div>
             <a href="profile.php">
                 <img src="./Images/profilL.png" alt="Profil" class="profile-icon">
                 <?= htmlspecialchars($_SESSION['user']['firstName']) ?>
