@@ -507,7 +507,7 @@ a {
     font-size: clamp(1.6rem, 3vw, 2.2rem);
     font-weight: 800;
     color: var(--text-dark);
-    margin-bottom: 0;
+    margin-bottom: 24px;
 }
 
 .manage-header {
@@ -1116,13 +1116,14 @@ textarea {
 
 .dark-mode .btn-secondary {
     color: #000000;
+    border: none;
 }
 
 /* ===========================
    DARK MODE — NAVBAR
 =========================== */
 .dark-mode .navbar {
-    background: #111827;
+    background: #1F2937;
     border-bottom: 1px solid transparent;
 }
 
@@ -1181,6 +1182,12 @@ html.dark-mode .theme-icon {
 /* ===========================
    DARK MODE — CARTES
 =========================== */
+
+/* Mais garder les icônes des matchs complets en blanc en dark mode */
+.dark-mode .match-card--active img {
+    filter: brightness(0) invert(1) !important;
+}
+
 .dark-mode .match-card,
 .dark-mode .adv-card,
 .dark-mode .card {
@@ -1230,7 +1237,7 @@ html.dark-mode .theme-icon {
 }
 
 .dark-mode .match-card--active .match-info img {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1) !important;
 }
 
 .dark-mode .notif-panel {
