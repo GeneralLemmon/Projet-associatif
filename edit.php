@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $exactTime = $_POST['exact_time'] ?? 'any';
     $time      = ($exactTime !== 'any') ? $exactTime : ($_POST['heure'] ?? '');
     
-    $level     = (int)($_POST['niveau'] ?? 0);
+    $level     = (int)($_POST['niveau'] ?? 1);
     $duration  = (int)($_POST['duree'] ?? 90);
     $autoApply = !empty($_POST['auto_apply']);
     
@@ -128,7 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full">
                         <label for="niveau">Niveau requis</label>
                         <select id="niveau" name="niveau">
-                            <option value="0" <?= (int)$slot->getLevel() === 0 ? 'selected' : '' ?>>Tous les niveaux</option>
                             <?php 
                             $niveauxLabels = [
                                 1 => "1 – Débutant",
