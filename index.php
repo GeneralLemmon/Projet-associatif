@@ -156,7 +156,7 @@
                     <li>Les créneaux restent disponibles pendant 72 heures, après quoi ils sont automatiquement supprimés</li>
                     <li>L’administration envoie des notifications lorsque qu’un match est sur le point d’être complet</li>
                     <li>Le paiement est réparti de manière équitable entre les joueurs de chaque équipe</li>
-                    <li>Pour savoir quelle personne se sont inscrite, consultez la liste des joueurs en cliquer sur "Joueurs"</li>
+                    <li>Le détail des joueurs inscrits et le lieu du match sont accessibles en cliquant sur la carte du match</li>
                 </ul>
             </div>
 
