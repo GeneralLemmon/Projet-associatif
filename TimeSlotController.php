@@ -7,6 +7,23 @@ class TimeSlotController
     public function __construct()
     {
         $this->db = Database::getInstance()->getConnection();
+        $this->ensureUserRemovedMatchTableExists();
+    }
+
+    private function ensureUserRemovedMatchTableExists(): void
+    {
+        $this->db->exec(
+            "CREATE TABLE IF NOT EXISTS user_removed_match (
+                id_removed_match INT(11) NOT NULL AUTO_INCREMENT,
+                id_user INT(11) NOT NULL,
+                id_timeslot INT(11) NOT NULL,
+                removed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (id_removed_match),
+                UNIQUE KEY uniq_user_timeslot (id_user, id_timeslot),
+                KEY idx_user_id (id_user),
+                KEY idx_timeslot_id (id_timeslot)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+        );
     }
 
     // Lire un timeslot par ID (avec compte joueurs)
@@ -49,13 +66,25 @@ class TimeSlotController
             AND t.id_timeslot NOT IN (
                 SELECT id_timeslot FROM is_registered WHERE id_user = ?
             )
+            AND t.id_timeslot NOT IN (
+                SELECT id_timeslot FROM user_removed_match WHERE id_user = ?
+            )
             GROUP BY t.id_timeslot
             HAVING player_count < 4
             ORDER BY t.date ASC, t.time ASC
         ");
-        $req->execute([$userId]);
+        $req->execute([$userId, $userId]);
         $rows = $req->fetchAll(PDO::FETCH_ASSOC);
         return array_map(fn($row) => new TimeSlot($row), $rows);
+    }
+
+    public function isRemovedByAdmin(int $userId, int $timeslotId): bool
+    {
+        $req = $this->db->prepare(
+            "SELECT COUNT(*) FROM user_removed_match WHERE id_user = ? AND id_timeslot = ?"
+        );
+        $req->execute([$userId, $timeslotId]);
+        return (int)$req->fetchColumn() > 0;
     }
 
     // Matchs de l'utilisateur connecté
@@ -106,6 +135,10 @@ class TimeSlotController
     // Rejoindre un match
     public function join(int $userId, int $timeslotId): bool
     {
+        if ($this->isRemovedByAdmin($userId, $timeslotId)) {
+            return false;
+        }
+
         // Vérifier que le match n'est pas plein
         $req = $this->db->prepare(
             "SELECT COUNT(*) FROM is_registered WHERE id_timeslot = ?"
@@ -136,6 +169,11 @@ class TimeSlotController
         // 3. Logique de notification automatique (Point 7)
         // On vérifie si l'utilisateur qui déclenche l'action est un administrateur et s'il éjecte un autre joueur
         if (isset($_SESSION['user']) && !empty($_SESSION['user']['is_admin']) && (int)$_SESSION['user']['id'] !== $userId) {
+            $req = $this->db->prepare(
+                "INSERT IGNORE INTO user_removed_match (id_user, id_timeslot) VALUES (?, ?)"
+            );
+            $req->execute([$userId, $timeslotId]);
+
             if ($slot) {
                 $notifController = new NotificationController();
                 

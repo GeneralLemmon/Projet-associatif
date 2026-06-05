@@ -35,6 +35,19 @@ CREATE TABLE `is_registered` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `user_removed_match`
+--
+
+CREATE TABLE `user_removed_match` (
+  `id_removed_match` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `id_timeslot` int(11) NOT NULL,
+  `removed_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `notification`
 --
 
@@ -101,6 +114,15 @@ ALTER TABLE `is_registered`
   ADD KEY `id_timeslot` (`id_timeslot`);
 
 --
+-- Index pour la table `user_removed_match`
+--
+ALTER TABLE `user_removed_match`
+  ADD PRIMARY KEY (`id_removed_match`),
+  ADD UNIQUE KEY `uniq_user_timeslot` (`id_user`,`id_timeslot`),
+  ADD KEY `id_user` (`id_user`),
+  ADD KEY `id_timeslot` (`id_timeslot`);
+
+--
 -- Index pour la table `notification`
 --
 ALTER TABLE `notification`
@@ -157,6 +179,13 @@ ALTER TABLE `user`
 ALTER TABLE `is_registered`
   ADD CONSTRAINT `is_registered_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE,
   ADD CONSTRAINT `is_registered_ibfk_2` FOREIGN KEY (`id_timeslot`) REFERENCES `timeslot` (`id_timeslot`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `user_removed_match`
+--
+ALTER TABLE `user_removed_match`
+  ADD CONSTRAINT `user_removed_match_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE,
+  ADD CONSTRAINT `user_removed_match_ibfk_2` FOREIGN KEY (`id_timeslot`) REFERENCES `timeslot` (`id_timeslot`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

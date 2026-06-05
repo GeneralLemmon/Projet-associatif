@@ -36,9 +36,14 @@ $message    = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['join_id'])) {
     $joinId = (int)$_POST['join_id'];
     $ok = $controller->join($userId, $joinId);
-    $message = $ok
-        ? 'success:Vous avez rejoint le match !'
-        : 'error:Ce match est déjà complet.';
+    if ($ok) {
+        $message = 'success:Vous avez rejoint le match !';
+    } else {
+        $blocked = $controller->isRemovedByAdmin($userId, $joinId);
+        $message = $blocked
+            ? 'error:Vous ne pouvez pas rejoindre ce match après avoir été retiré par un administrateur.'
+            : 'error:Ce match est déjà complet.';
+    }
 }
 
 $slots = $controller->getAvailable($userId);
