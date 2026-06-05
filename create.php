@@ -119,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group full">
                         <label for="niveau">Niveau requis</label>
                         <select id="niveau" name="niveau">
-                            <option value="">Tous les niveaux</option>
                             <option value="1">1 – Débutant</option>
                             <option value="2">2 – Perfectionnement</option>
                             <option value="3">3 – Élémentaire</option>
