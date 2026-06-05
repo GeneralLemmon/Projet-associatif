@@ -49,15 +49,14 @@
         <section class="hero">
             <div class="hero-text">
                 <h2>Jouez au padel quand vous voulez,<br> avec qui vous voulez</h2>
-                <p>PadelConnect vous aide à trouver des partenaires compatibles, réserver un terrain en quelques secondes et
-                    profiter d'un jeu fluide, sans prise de tête.</p>
+                <p>PadelConnect vous aide à trouver des partenaires compatibles, à réserver un terrain en quelques secondes et à profiter d’un jeu fluide, sans prise de tête</p>
 
                 <div class="hero-img">
                     <img src="./Images/padelraquette.png" alt="Padel raquette">
                 </div>
 
                 <a href="signup.php" class="btn-primary hero-btn">S'inscrire gratuitement</a>
-                <p class="micro-text">Aucun engagement<br>Disponible partout en France</p>
+                <p class="micro-text">Aucun engagement — Disponible partout en France</p>
             </div>
         </section>
 
@@ -107,19 +106,19 @@
                 <div class="adv-card">
                     <img src="./Images/equilibre.png" class="icon" alt="Équilibre">
                     <h4>Matchs équilibrés</h4>
-                    <p>grâce à un système de niveau</p>
+                    <p>grâce à un système de niveaux</p>
                 </div>
 
                 <div class="adv-card">
                     <img src="./Images/reservation.png" class="icon" alt="Réservation">
                     <h4>Réservation simplifiée</h4>
-                    <p>pour réserver un terrain sans prise de tête</p>
+                    <p>pour réserver un terrain facilement</p>
                 </div>
 
                 <div class="adv-card">
                     <img src="./Images/notification.png" class="icon" alt="Notification">
                     <h4>Notifications intelligentes</h4>
-                    <p>pour vous proposer des matchs disponibles</p>
+                    <p> pour vous notifier dès qu’un match se libère</p>
                 </div>
 
             </div>
@@ -154,7 +153,7 @@
                     <li>Une fois le match complet (4/4), aucune nouvelle inscription n’est possible</li>
                     <li>Les niveaux affichés permettent d’assurer des matchs équilibrés et cohérents</li>
                     <li>Les créneaux restent disponibles pendant 72 heures, après quoi ils sont automatiquement supprimés</li>
-                    <li>L’administration envoie des notifications lorsque qu’un match est sur le point d’être complet</li>
+                    <li>L’administration envoie des notifications lorsqu’un match est sur le point d’être complet</li>
                     <li>Le paiement est réparti de manière équitable entre les joueurs de chaque équipe</li>
                     <li>Le détail des joueurs inscrits et le lieu du match sont accessibles en cliquant sur la carte du match</li>
                 </ul>

@@ -1147,8 +1147,8 @@ textarea {
 =========================== */
 .dark-mode .match-card,
 .dark-mode .adv-card,
-.dark-mode .card,
-.dark-mode .step-card {
+.dark-mode .card
+{
     background: #1E293B;
     border: none;
     color: #F1F5F9;
