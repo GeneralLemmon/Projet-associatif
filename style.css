@@ -1236,8 +1236,24 @@ html.dark-mode .theme-icon {
     color: #fff;
 }
 
-.dark-mode .match-card--active .match-info img {
-    filter: brightness(0) invert(1) !important;
+.dark-mode .match-card--active .match-icon--time {
+    content: url("Images/timeW.png");
+}
+
+.dark-mode .match-card--active .match-icon--location {
+    content: url("Images/lieuB.png");
+}
+
+html.dark-mode .match-card--active .match-icon--players {
+    content: url("Images/playerB.png");
+}
+
+.dark-mode .match-card--active .match-icon--price {
+    content: url("Images/priceW.png");
+}
+
+.dark-mode .match-card--active .match-icon--level {
+    content: url("Images/levelB.png");
 }
 
 .dark-mode .notif-panel {

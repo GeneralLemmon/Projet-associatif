@@ -119,27 +119,29 @@ $allSlots = $controller->readAll();
                                 <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
                             </p>
                             <div class="match-info">
-                                <img src="Images/time.png" alt="Durée">
+                                <img src="Images/time.png" alt="Durée" class="match-icon match-icon--time">
                                 <span>Durée : <?= $slot->getFormattedDuration() ?></span>
                             </div>
                             <div class="match-info">
-                                <img src="Images/lieu.png" alt="Lieu">
+                                <img src="Images/lieu.png" alt="Lieu" class="match-icon match-icon--location">
                                 <span><?= htmlspecialchars($slot->getLocation()) ?></span>
                             </div>
 
                             <a href="players.php?id=<?= $slot->getId() ?>" class="match-info" style="text-decoration:none;">
-                                <img src="Images/player.png" alt="Joueurs">
+                                <img src="Images/player.png" alt="Joueurs" class="match-icon match-icon--players">
                                 <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
                             </a>
+
                             <div class="match-info">
-                                <img src="Images/price.png" alt="Prix">
+                                <img src="Images/price.png" alt="Prix" class="match-icon match-icon--price">
                                 <span>Votre part : <?= $slot->getFormattedPricePerPlayer() ?></span>
                             </div>
 
                             <div class="match-info">
-                                <img src="Images/level.png" alt="Niveau">
+                                <img src="Images/level.png" alt="Niveau" class="match-icon match-icon--level">
                                 <span>Niveau : <?= $slot->getLevel() ?></span>
                             </div>
+
 
                             <form method="POST" class="join-form" style="margin-top:8px">
 
