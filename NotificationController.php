@@ -9,12 +9,51 @@ class NotificationController
     }
 
     // Créer une notification (admin)
-    public function create(string $message, ?int $level = null): void
+    public function create(string $message, ?int $level = null): int
     {
         $req = $this->db->prepare(
             "INSERT INTO notification (message, level) VALUES (?, ?)"
         );
         $req->execute([$message, $level]);
+
+        $id = (int)$this->db->lastInsertId();
+        if ($id === 0) {
+            $req = $this->db->prepare(
+                "SELECT id_notification FROM notification WHERE message = ? ORDER BY created_at DESC LIMIT 1"
+            );
+            $req->execute([$message]);
+            $id = (int)$req->fetchColumn();
+        }
+
+        return $id;
+    }
+
+    public function hideFromAllUsersExcept(int $notificationId, array $allowedUserIds): void
+    {
+        if (empty($allowedUserIds)) {
+            $req = $this->db->prepare(
+                "INSERT IGNORE INTO notification_read (id_user, id_notification)
+                 SELECT id_user, ? FROM `user`"
+            );
+            $req->execute([$notificationId]);
+            return;
+        }
+
+        $placeholders = implode(',', array_fill(0, count($allowedUserIds), '?'));
+        $req = $this->db->prepare(
+            "INSERT IGNORE INTO notification_read (id_user, id_notification)
+             SELECT id_user, ? FROM `user` WHERE id_user NOT IN ($placeholders)"
+        );
+        $req->execute(array_merge([$notificationId], $allowedUserIds));
+    }
+
+    public function markExistingNotificationsReadForUser(int $userId): void
+    {
+        $req = $this->db->prepare(
+            "INSERT IGNORE INTO notification_read (id_user, id_notification)
+             SELECT ?, id_notification FROM notification"
+        );
+        $req->execute([$userId]);
     }
 
     // Récupérer les notifications pour un utilisateur selon son niveau

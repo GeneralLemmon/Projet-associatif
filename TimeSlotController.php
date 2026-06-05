@@ -96,6 +96,9 @@ class TimeSlotController
     // Supprimer un timeslot
     public function delete(int $id): void
     {
+        $req = $this->db->prepare("DELETE FROM is_registered WHERE id_timeslot = ?");
+        $req->execute([$id]);
+
         $req = $this->db->prepare("DELETE FROM timeslot WHERE id_timeslot = ?");
         $req->execute([$id]);
     }

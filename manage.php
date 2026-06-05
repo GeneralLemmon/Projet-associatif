@@ -8,6 +8,7 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
 
 require_once __DIR__ . "/autoload.php";
 $controller = new TimeSlotController();
+$message = '';
 
 // Actions POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -15,7 +16,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     if ($action === 'supprimer' && $id) {
+        $slot = $controller->read($id);
+        $players = $controller->getPlayers($id);
+        $playerIds = array_map(fn($p) => $p->getId(), $players);
+        $adminId = $_SESSION['user']['id'];
+        $playerIds = array_filter($playerIds, fn($userId) => $userId !== $adminId);
+
+        if ($slot && !empty($playerIds)) {
+            $messageText = sprintf(
+                "Le match du %s à %s au lieu '%s' a été supprimé. Vous n'êtes plus inscrit.",
+                $slot->getFormattedDate(),
+                $slot->getFormattedTime(),
+                $slot->getLocation()
+            );
+
+            $notificationController = new NotificationController();
+            $notificationId = $notificationController->create($messageText, null);
+            $notificationController->hideFromAllUsersExcept($notificationId, $playerIds);
+        }
+
         $controller->delete($id);
+        header("Location: manage.php?success=1");
+        exit;
     }
     if ($action === 'modifier' && $id) {
         header("Location: edit.php?id=$id");
@@ -23,6 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     header("Location: manage.php");
     exit;
+}
+
+if (isset($_GET['success']) && $_GET['success'] === '1') {
+    $message = 'Le match a bien été supprimé et les joueurs ont été prévenus.';
 }
 
 $slots = $controller->readAll();
@@ -41,6 +67,12 @@ $slots = $controller->readAll();
     <?php require "navbar.php"; ?>
 
     <main class="matchs-page">
+        <?php if (!empty($message)): ?>
+            <div class="form-message form-message--success auto-dismiss" style="margin: 16px auto 0; max-width: 900px;">
+                <?= htmlspecialchars($message) ?>
+            </div>
+        <?php endif; ?>
+
         <?php if (empty($slots)): ?>
 
             <div class="manage-header">

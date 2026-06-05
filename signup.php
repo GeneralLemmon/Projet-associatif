@@ -46,6 +46,9 @@ if ($_POST) {
         $userController->create($newUser);
         $user = $userController->readByEmail($newUser->getEmail());
 
+        $notificationController = new NotificationController();
+        $notificationController->markExistingNotificationsReadForUser($user->getId());
+
         $_SESSION['user'] = [
             "id"        => $user->getId(),
             "firstName" => $user->getFirstName(),

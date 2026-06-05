@@ -155,20 +155,14 @@ function initLoginValidation() {
    AUTO-DISMISS MESSAGES (2,5s)
 =========================== */
 function initAlertAutoDismiss() {
-  const selectors = [
-    "#toast-message",
-    ".form-message",
-    ".form-message--success",
-    ".form-message--error",
-    ".login-error",
-  ];
+  const autoDismissItems = document.querySelectorAll('.auto-dismiss');
 
-  document.querySelectorAll(selectors.join(",")).forEach((el) => {
+  autoDismissItems.forEach((el) => {
     setTimeout(() => {
-      el.style.transition = "opacity 0.5s ease";
-      el.style.opacity = "0";
+      el.style.transition = 'opacity 0.5s ease';
+      el.style.opacity = '0';
       setTimeout(() => el.remove(), 500);
-    }, 2500);
+    }, 4000);
   });
 }
 
