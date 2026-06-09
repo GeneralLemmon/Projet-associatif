@@ -56,12 +56,12 @@
                 </div>
 
                 <a href="signup.php" class="btn-primary hero-btn">S'inscrire gratuitement</a>
-                <p class="micro-text">Aucun engagement — Disponible partout en France</p>
+                <p class="micro-text">Aucun engagement</p>
             </div>
         </section>
 
         <section class="steps">
-            <h3>Comment ça marche</h3>
+            <h3>Comment ça marche ?</h3>
 
             <div class="steps-body">
                 <div class="steps-grid">
@@ -118,7 +118,7 @@
                 <div class="adv-card">
                     <img src="./Images/notification.png" class="icon" alt="Notification">
                     <h4>Notifications intelligentes</h4>
-                    <p> pour vous notifier dès qu’un match se libère</p>
+                    <p>pour vous organiser facilement<br>et suivre l'évolution de vos matchs</p>
                 </div>
 
             </div>
@@ -149,13 +149,13 @@
             <div class="modalites-box">
                 <h3>Modalités</h3>
                 <ul>
-                    <li>Chaque match se joue exclusivement à 4 joueurs</li>
-                    <li>Une fois le match complet (4/4), aucune nouvelle inscription n’est possible</li>
                     <li>Les niveaux affichés permettent d’assurer des matchs équilibrés et cohérents</li>
-                    <li>Les créneaux restent disponibles pendant 72 heures, après quoi ils sont automatiquement supprimés</li>
-                    <li>L’administration envoie des notifications lorsqu’un match est sur le point d’être complet</li>
-                    <li>Le paiement est réparti de manière équitable entre les joueurs de chaque équipe</li>
-                    <li>Le détail des joueurs inscrits et le lieu du match sont accessibles en cliquant sur la carte du match</li>
+                    <li>Chaque match se joue exclusivement à 4 joueurs</li>
+                    <li>Une fois le match complet (4/4), les inscriptions sont fermées</li>
+                    <li>Les créneaux non complets dans un délai de 72 heures sont automatiquement annulés</li>
+                    <li>Le paiement s'effectue une fois le match complet. Un e-mail vous sera envoyé pour organiser le match avec votre équipe</li>
+                    <li>Retrouvez le lieu du match et la liste des joueurs inscrits dans "Mes matchs" en cliquant sur l'événement concerné</li>
+                    <li>Vous recevrez un e-mail de rappel la veille de votre match</li>
                 </ul>
             </div>
 
@@ -174,33 +174,33 @@
                                 <p class="match-date">
                                     <?= $slot->getFormattedDate() ?> – <?= $slot->getFormattedTime() ?>
                                 </p>
+
                                 <div class="match-info">
-                                    <img src="Images/time.png" alt="Durée">
+                                    <img class="match-icon--time" src="Images/time.png" alt="Durée">
                                     <span>Durée : <?= $slot->getFormattedDuration() ?></span>
                                 </div>
 
                                 <div class="match-info">
-                                    <img src="Images/lieu.png" alt="Lieu">
+                                    <img class="match-icon--location" src="Images/lieu.png" alt="Lieu">
                                     <span><?= htmlspecialchars($slot->getLocation()) ?></span>
                                 </div>
 
                                 <a href="players.php?id=<?= $slot->getId() ?>" class="match-info" style="text-decoration:none;">
-                                    <img src="Images/player.png" alt="Joueurs">
+                                    <img class="match-icon--players" src="Images/player.png" alt="Joueurs">
                                     <span><?= $slot->getPlayerCount() ?>/4 Joueurs</span>
                                 </a>
+
                                 <div class="match-info">
-                                    <img src="Images/price.png" alt="Prix">
+                                    <img class="match-icon--price" src="Images/price.png" alt="Prix">
                                     <span><?= $slot->getFormattedPrice() ?></span>
                                 </div>
 
-
-
                                 <div class="match-info">
-                                    <img src="Images/level.png" alt="Niveau">
+                                    <img class="match-icon--level" src="Images/level.png" alt="Niveau">
                                     <span>Niveau : <?= $slot->getLevel() ?></span>
                                 </div>
-
                             </div>
+
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>

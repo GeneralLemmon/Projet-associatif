@@ -65,7 +65,7 @@ $slots = $controller->getMyMatches($userId);
 
                             <div class="match-info">
                                 <img src="Images/price.png" alt="Prix" class="match-icon match-icon--price">
-                                <span>Votre part : <?= $slot->getFormattedPricePerPlayer() ?></span>
+                                <span>Prix de la session : <?= $slot->getFormattedPrice() ?></span>
                             </div>
 
                             <div class="match-info">
