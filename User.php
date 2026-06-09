@@ -6,7 +6,7 @@ class User
     private string $last_name;
     private string $first_name;
     private string $level;
-    private int $min_level = 1;
+    private string $phone;
     private string $email;
     private string $password;
     private bool $is_admin;
@@ -39,7 +39,7 @@ class User
         return $this;
     }
 
-public function getLastName(): string
+    public function getLastName(): string
     {
         return $this->last_name;
     }
@@ -76,15 +76,14 @@ public function getLastName(): string
         $this->level = $level;
         return $this;
     }
-
-    public function getMinLevel(): int
+    public function getPhone(): string
     {
-        return $this->min_level;
+        return $this->phone;
     }
 
-    public function setMin_level($min_level): self
+    public function setPhone(string $phone): self
     {
-        $this->min_level = (int)$min_level;
+        $this->phone = $phone;
         return $this;
     }
 

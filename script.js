@@ -81,25 +81,38 @@ function initLevelHelp() {
     const overlay = document.getElementById("level-overlay");
     const closeBtn = document.getElementById("level-close");
 
-    if (!overlay) return;
+    console.log("[LevelHelp] overlay =", overlay);
+    console.log("[LevelHelp] closeBtn =", closeBtn);
+
+    if (!overlay) {
+        console.warn("[LevelHelp] Pas d'overlay trouvé (#level-overlay)");
+        return;
+    }
 
     document.addEventListener("click", (e) => {
-        if (
-            e.target.classList.contains("help-icon") &&
-            !e.target.closest("#level-overlay")
-        ) {
+        console.log("[LevelHelp] click target =", e.target);
+
+        // On regarde si le clic est sur l'icône ou dedans
+        const helpIcon = e.target.closest(".help-icon");
+        console.log("[LevelHelp] helpIcon trouvé ?", helpIcon);
+
+        if (helpIcon && !e.target.closest("#level-overlay")) {
+            console.log("[LevelHelp] Ouverture overlay");
             e.stopPropagation();
             overlay.classList.add("open");
         }
     });
 
     closeBtn?.addEventListener("click", (e) => {
+        console.log("[LevelHelp] click sur close");
         e.stopPropagation();
         overlay.classList.remove("open");
     });
 
     overlay.addEventListener("click", (e) => {
+        console.log("[LevelHelp] click dans overlay, target =", e.target);
         if (!e.target.closest(".notif-panel")) {
+            console.log("[LevelHelp] Fermeture overlay (click hors panel)");
             overlay.classList.remove("open");
         }
     });

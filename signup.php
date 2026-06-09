@@ -2,60 +2,48 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . "/autoload.php";
 
-function levelToNumber(string $level): int
-{
-    $mapping = [
-        'Débutant' => 1,
-        'Perfectionnement' => 2,
-        'Élémentaire' => 3,
-        'Intermédiaire' => 4,
-        'Confirmé' => 5,
-        'Avancé' => 6,
-        'Expert' => 7,
-        'Élite' => 8,
-    ];
-
-    return is_numeric($level) ? (int)$level : ($mapping[$level] ?? 0);
-}
-
 $userController = new UserController();
 $message = "";
 
 if ($_POST) {
-    $passwordHashed = password_hash($_POST['password'], PASSWORD_BCRYPT);
-    $level = htmlspecialchars($_POST['level']);
-    $minLevel = (int)($_POST['min_level'] ?? 1);
-    $levelNumber = levelToNumber($level);
 
-    if ($minLevel > $levelNumber) {
-        $message = "Le niveau minimum doit être inférieur ou égal à votre niveau.";
-    } else {
-        $newUser = new User([
+    $passwordHashed = password_hash($_POST['password'], PASSWORD_BCRYPT);
+
+    $newUser = new User([
         'last_name'  => htmlspecialchars($_POST['last_name']),
         'first_name' => htmlspecialchars($_POST['first_name']),
         'level'      => htmlspecialchars($_POST['level']),
-        'min_level'  => (int)($_POST['min_level'] ?? 1),
+        'phone'      => htmlspecialchars($_POST['phone']),
         'email'      => htmlspecialchars($_POST['email']),
         'password'   => $passwordHashed,
     ]);
 
-    $existing = $userController->readByEmail($newUser->getEmail());
-    if ($existing) {
+    // Vérifier email unique
+    if ($userController->readByEmail($newUser->getEmail())) {
         $message = "Cet email est déjà utilisé.";
+    }
+    // Vérifier téléphone unique
+    elseif ($userController->readByPhone($newUser->getPhone())) {
+        $message = "Ce numéro de téléphone est déjà utilisé.";
     } else {
+        // Création
         $userController->create($newUser);
+
+        // Récupérer l'utilisateur créé
         $user = $userController->readByEmail($newUser->getEmail());
 
+        // Notifications existantes marquées comme lues
         $notificationController = new NotificationController();
         $notificationController->markExistingNotificationsReadForUser($user->getId());
 
+        // Session
         $_SESSION['user'] = [
             "id"        => $user->getId(),
             "firstName" => $user->getFirstName(),
             "lastName"  => $user->getLastName(),
             "name"      => $user->getFullName(),
             "level"     => $user->getLevel(),
-            "minLevel"  => $user->getMinLevel(),
+            "phone"     => $user->getPhone(),
             "is_admin"  => $user->getIsAdmin()
         ];
 
@@ -63,10 +51,7 @@ if ($_POST) {
         exit;
     }
 }
-
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="fr-FR">
 
@@ -109,37 +94,65 @@ if ($_POST) {
                 <div class="form-group full">
                     <div class="level-label-row">
                         <label for="level">Niveau</label>
-                        <img src="./Images/help.png" alt="Aide" class="help-icon">
+                        <div class="level-label-row">
+                            <label for="image">Merci de consulter l'aide des niveaux</label>
+                            <pre> </pre>
+                            <img src="./Images/help.png" alt="Aide" class="help-icon">
+                        </div>
                     </div>
-                    <select id="level" name="level">
-                        <option value="Débutant">1 – Débutant</option>
-                        <option value="Perfectionnement">2 – Perfectionnement</option>
-                        <option value="Élémentaire">3 – Élémentaire</option>
-                        <option value="Intermédiaire">4 – Intermédiaire</option>
-                        <option value="Confirmé">5 – Confirmé</option>
-                        <option value="Avancé">6 – Avancé</option>
-                        <option value="Expert">7 – Expert</option>
-                        <option value="Élite">8 – Élite</option>
-                    </select>
-                </div>
+                    <select id="level" name="level" required>
 
-                <div class="form-group full">
-                    <label for="min_level">Niveau minimum souhaité</label>
-                    <select id="min_level" name="min_level">
-                        <option value="1">1 – Débutant</option>
-                        <option value="2">2 – Perfectionnement</option>
-                        <option value="3">3 – Élémentaire</option>
-                        <option value="4">4 – Intermédiaire</option>
-                        <option value="5">5 – Confirmé</option>
-                        <option value="6">6 – Avancé</option>
-                        <option value="7">7 – Expert</option>
-                        <option value="8">8 – Élite</option>
+                        <option value="Débutant">
+                            1 – Débutant • J’apprends les bases • Pas classé
+                        </option>
+
+                        <option value="Perfectionnement">
+                            2 – Perfectionnement • Échanges courts • Pas classé
+                        </option>
+
+                        <option value="Élémentaire">
+                            3 – Élémentaire • Jeu loisir • Pas classé
+                        </option>
+
+                        <option value="Intermédiaire">
+                            4 – Intermédiaire • Jeu avec vitres • P25–P100 (fin tableau)
+                        </option>
+
+                        <option value="Confirmé">
+                            5 – Confirmé • Service-volée, smashs • P100 (milieu) / P250 (fin)
+                        </option>
+
+                        <option value="Avancé">
+                            6 – Avancé • Jeu rapide, effets • P100 (top 4) / P250 / P500 • Top 600–900 FR
+                        </option>
+
+                        <option value="Expert">
+                            7 – Expert • Bandeja, vibora • P500 / P1000 • Top 450–2000 FR
+                        </option>
+
+                        <option value="Élite">
+                            8 – Élite • Très haute intensité • P1000–P2000 • Top 150–1000 FR
+                        </option>
+
                     </select>
+
+
                 </div>
 
                 <div class="form-group full">
                     <label for="email">Adresse email</label>
                     <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group full">
+                    <label for="phone">Numéro de téléphone</label>
+                    <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        required
+                        pattern="^(?:\+33|0|0033)[67]\d{8}$"
+                        title="Numéro français valide : 06, 07, +336, +337, 00336, 00337">
                 </div>
 
                 <div class="form-group full">
@@ -159,26 +172,27 @@ if ($_POST) {
         </div>
 
     </main>
-
     <div id="level-overlay" class="level-overlay-wrapper">
         <div class="notif-panel">
             <div class="notif-panel-header">
                 <h4>Niveaux de jeu</h4>
                 <button id="level-close" style="
-                background: none;
-                border: none;
-                font-size: 1.4rem;
-                cursor: pointer;
-                color: var(--text-soft);
-                line-height: 1;
-                padding: 0 4px;
-            ">✕</button>
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        color: var(--text-soft);
+        line-height: 1;
+        padding: 0 4px;
+      ">✕</button>
             </div>
+
             <div class="notif-panel-body">
                 <img src="./Images/niveau-padel-Padel-Speak.jpg" alt="Niveaux">
             </div>
         </div>
     </div>
+
 
     <?php include('footer.php'); ?>
 

@@ -6,10 +6,11 @@ $userController = new UserController();
 $message = "";
 
 if ($_POST) {
-    $email    = htmlspecialchars($_POST['email']);
-    $password = $_POST['password'];
 
-    $user = $userController->login($email, $password);
+    $identifier = htmlspecialchars($_POST['identifier']); // email OU téléphone
+    $password   = $_POST['password'];
+
+    $user = $userController->login($identifier, $password);
 
     if ($user) {
         $_SESSION['user'] = [
@@ -18,16 +19,17 @@ if ($_POST) {
             "lastName"  => $user->getLastName(),
             "name"      => $user->getFullName(),
             "level"     => $user->getLevel(),
-            "minLevel"  => $user->getMinLevel(),
+            "phone"     => $user->getPhone(),
             "is_admin"  => $user->getIsAdmin()
         ];
+
         echo "<script>window.location.href='index.php'</script>";
+        exit;
     } else {
-        $message = "Email ou mot de passe incorrect.";
+        $message = "Identifiant ou mot de passe incorrect.";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr-FR">
 
@@ -58,8 +60,8 @@ if ($_POST) {
             <form method="POST" class="form-grid">
 
                 <div class="form-group full">
-                    <label for="email">Adresse email</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="identifier">Email ou numéro de téléphone</label>
+                    <input type="text" id="identifier" name="identifier" required>
                 </div>
 
                 <div class="form-group full">
@@ -81,9 +83,7 @@ if ($_POST) {
 
     </main>
 
-
     <?php include('footer.php'); ?>
 
 </body>
-
 </html>
