@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:3306
--- Généré le : jeu. 04 juin 2026 à 13:32
+-- Généré le : mar. 09 juin 2026 à 17:52
 -- Version du serveur : 5.7.24
 -- Version de PHP : 8.3.1
 
@@ -30,19 +30,6 @@ SET time_zone = "+00:00";
 CREATE TABLE `is_registered` (
   `id_user` int(11) NOT NULL,
   `id_timeslot` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `user_removed_match`
---
-
-CREATE TABLE `user_removed_match` (
-  `id_removed_match` int(11) NOT NULL,
-  `id_user` int(11) NOT NULL,
-  `id_timeslot` int(11) NOT NULL,
-  `removed_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -96,10 +83,23 @@ CREATE TABLE `user` (
   `last_name` varchar(50) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `level` varchar(30) DEFAULT NULL,
-  `min_level` int(11) NOT NULL DEFAULT '1',
+  `phone` varchar(20) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `is_admin` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_removed_match`
+--
+
+CREATE TABLE `user_removed_match` (
+  `id_removed_match` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `id_timeslot` int(11) NOT NULL,
+  `removed_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -111,15 +111,6 @@ CREATE TABLE `user` (
 --
 ALTER TABLE `is_registered`
   ADD PRIMARY KEY (`id_user`,`id_timeslot`),
-  ADD KEY `id_timeslot` (`id_timeslot`);
-
---
--- Index pour la table `user_removed_match`
---
-ALTER TABLE `user_removed_match`
-  ADD PRIMARY KEY (`id_removed_match`),
-  ADD UNIQUE KEY `uniq_user_timeslot` (`id_user`,`id_timeslot`),
-  ADD KEY `id_user` (`id_user`),
   ADD KEY `id_timeslot` (`id_timeslot`);
 
 --
@@ -145,7 +136,17 @@ ALTER TABLE `timeslot`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `phone` (`phone`);
+
+--
+-- Index pour la table `user_removed_match`
+--
+ALTER TABLE `user_removed_match`
+  ADD PRIMARY KEY (`id_removed_match`),
+  ADD UNIQUE KEY `uniq_user_timeslot` (`id_user`,`id_timeslot`),
+  ADD KEY `idx_user_id` (`id_user`),
+  ADD KEY `idx_timeslot_id` (`id_timeslot`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -155,19 +156,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `id_notification` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_notification` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT pour la table `timeslot`
 --
 ALTER TABLE `timeslot`
-  MODIFY `id_timeslot` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_timeslot` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT pour la table `user_removed_match`
+--
+ALTER TABLE `user_removed_match`
+  MODIFY `id_removed_match` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Contraintes pour les tables déchargées
@@ -179,13 +186,6 @@ ALTER TABLE `user`
 ALTER TABLE `is_registered`
   ADD CONSTRAINT `is_registered_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE,
   ADD CONSTRAINT `is_registered_ibfk_2` FOREIGN KEY (`id_timeslot`) REFERENCES `timeslot` (`id_timeslot`) ON DELETE CASCADE;
-
---
--- Contraintes pour la table `user_removed_match`
---
-ALTER TABLE `user_removed_match`
-  ADD CONSTRAINT `user_removed_match_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE,
-  ADD CONSTRAINT `user_removed_match_ibfk_2` FOREIGN KEY (`id_timeslot`) REFERENCES `timeslot` (`id_timeslot`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
