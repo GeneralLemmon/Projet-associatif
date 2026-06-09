@@ -45,38 +45,39 @@ class TimeSlotController
     public function readAll(): array
     {
         $req = $this->db->query("
-            SELECT t.*, COUNT(r.id_user) AS player_count
-            FROM timeslot t
-            LEFT JOIN is_registered r ON t.id_timeslot = r.id_timeslot
-            GROUP BY t.id_timeslot
-            ORDER BY t.date ASC, t.time ASC
-        ");
+        SELECT t.*, COUNT(r.id_user) AS player_count
+        FROM timeslot t
+        LEFT JOIN is_registered r ON t.id_timeslot = r.id_timeslot
+        WHERE CONCAT(t.date, ' ', t.time) >= NOW()
+        GROUP BY t.id_timeslot
+        ORDER BY t.date ASC, t.time ASC");
+
         $rows = $req->fetchAll(PDO::FETCH_ASSOC);
         return array_map(fn($row) => new TimeSlot($row), $rows);
     }
 
     // Matchs disponibles (pas encore complets, futurs, non rejoints par l'utilisateur)
-    public function getAvailable(int $userId): array
-    {
-        $req = $this->db->prepare("
-            SELECT t.*, COUNT(r.id_user) AS player_count
-            FROM timeslot t
-            LEFT JOIN is_registered r ON t.id_timeslot = r.id_timeslot
-            WHERE t.date >= CURDATE()
-            AND t.id_timeslot NOT IN (
-                SELECT id_timeslot FROM is_registered WHERE id_user = ?
-            )
-            AND t.id_timeslot NOT IN (
-                SELECT id_timeslot FROM user_removed_match WHERE id_user = ?
-            )
-            GROUP BY t.id_timeslot
-            HAVING player_count < 4
-            ORDER BY t.date ASC, t.time ASC
-        ");
-        $req->execute([$userId, $userId]);
-        $rows = $req->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new TimeSlot($row), $rows);
-    }
+    public function getAvailable($userId): array
+{
+    $sql = "
+        SELECT t.*, COUNT(r2.id_user) AS player_count
+        FROM timeslot t
+        LEFT JOIN is_registered r2 ON t.id_timeslot = r2.id_timeslot
+        WHERE t.id_timeslot NOT IN (
+            SELECT id_timeslot FROM is_registered WHERE id_user = ?
+        )
+        AND CONCAT(t.date, ' ', t.time) >= NOW()
+        GROUP BY t.id_timeslot
+        ORDER BY t.date ASC, t.time ASC
+    ";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([$userId]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return array_map(fn($row) => new TimeSlot($row), $rows);
+}
+
 
     public function isRemovedByAdmin(int $userId, int $timeslotId): bool
     {
@@ -88,20 +89,26 @@ class TimeSlotController
     }
 
     // Matchs de l'utilisateur connecté
-    public function getMyMatches(int $userId): array
+    public function getMyMatches($userId): array
     {
-        $req = $this->db->prepare("
-            SELECT t.*, COUNT(r2.id_user) AS player_count
-            FROM timeslot t
-            JOIN is_registered r ON t.id_timeslot = r.id_timeslot AND r.id_user = ?
-            LEFT JOIN is_registered r2 ON t.id_timeslot = r2.id_timeslot
-            GROUP BY t.id_timeslot
-            ORDER BY t.date ASC, t.time ASC
-        ");
-        $req->execute([$userId]);
-        $rows = $req->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "
+        SELECT t.*, COUNT(r2.id_user) AS player_count
+        FROM timeslot t
+        JOIN is_registered r ON t.id_timeslot = r.id_timeslot
+        LEFT JOIN is_registered r2 ON t.id_timeslot = r2.id_timeslot
+        WHERE r.id_user = ?
+        AND CONCAT(t.date, ' ', t.time) >= NOW()
+        GROUP BY t.id_timeslot
+        ORDER BY t.date ASC, t.time ASC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         return array_map(fn($row) => new TimeSlot($row), $rows);
     }
+
 
     // Créer un timeslot
     public function create(string $location, string $date, string $time, int $level, int $duration = 90, float $price = 0.0): int
@@ -176,13 +183,13 @@ class TimeSlotController
 
             if ($slot) {
                 $notifController = new NotificationController();
-                
+
                 // Préparation du message personnalisé avec les détails du match annulé
                 $message = "L'administrateur vous a retiré du match prévu le " . $slot->getFormattedDate() . " à " . $slot->getFormattedTime() . " (" . $slot->getLocation() . ").";
-                
+
                 // Enregistrement de la notification
                 $notifId = $notifController->create($message);
-                
+
                 // Masquer pour tous les comptes sauf pour le joueur exclu ($userId)
                 $notifController->hideFromAllUsersExcept($notifId, [$userId]);
             }
